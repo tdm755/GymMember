@@ -1,0 +1,33 @@
+/* .Members th {
+  border: 1px solid black;
+  padding: 8px 24px;
+  font-weight: 500;
+  white-space: nowrap;
+} */
+
+.Members{
+  scrollbar-width: thin;
+  scroll-behavior: smooth;
+  background-color: #fff;
+  th {
+    border: 1px solid black;
+    padding: 8px 24px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  tbody tr td {
+    border: 1px solid black;
+    padding: 12px 24px;
+    white-space: nowrap;
+  }
+
+  tr td:last-child {
+    color: #dd3939bf;
+    cursor: pointer;
+  }
+  tr td:last-child:hover {
+    color: #dc2626;
+  }
+
+}
