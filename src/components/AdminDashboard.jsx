@@ -1,27 +1,29 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Header from './Admin/Header'
 import SideBar from './Admin/sidebar'
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 
 function AdminDashboard() {
-
     const [isOpen, setIsOpen] = useState(false);
+    const location = useLocation();
 
-  return (
-    <div >
-        <SideBar isOpen={isOpen} setIsOpen={setIsOpen}/>
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [location]);
 
-        <div className={`md:ml-60`}>
-        <Header isOpen={isOpen} setIsOpen={setIsOpen}/>
+    return (
+        <div>
+            <SideBar isOpen={isOpen} setIsOpen={setIsOpen}/>
 
-        <div className="">
-          <Outlet />
+            <div className={`md:ml-60`}>
+                <Header isOpen={isOpen} setIsOpen={setIsOpen}/>
+
+                <div className="">
+                    <Outlet />
+                </div>
+            </div>
         </div>
-
-        </div>
-      
-    </div>
-  )
+    )
 }
 
 export default AdminDashboard

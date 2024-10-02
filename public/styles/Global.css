@@ -69,3 +69,17 @@
       background-size: cover;      
     }
   
+
+
+    .GymBannerImage{
+      background-size: 1000px;
+      animation: GymBannerAnimation 4s ease-out forwards;
+    }
+
+    @keyframes GymBannerAnimation {
+      from{
+        background-size: 1000px;
+      }to{
+        background-size: 1200px;
+      }
+    }

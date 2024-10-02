@@ -1,8 +1,10 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import Webcam from 'react-webcam'
-import weightLiftingBanner from '../../../public/assets/weightLiftingBanner.jpg'
+import weightLiftingBanner from '../../../public/assets/weightLiftingBanner-min.jpg'
 import CameraIcon from '../../../public/assets/CameraIcon.svg'
+import Arrow from '../../../public/assets/ArrowDown.svg'
+import BodyBuilderIcon from '../../../public/assets/BodyBuilderIcon.png'
 
 
 function AddMemberPage() {
@@ -68,9 +70,25 @@ function AddMemberPage() {
     }
   }, [showWebcam])
 
+
+  const SelectArrowRef = useRef();
+  const paymentStatusRef = useRef()
+  const MemberShipTypeRef = useRef()
+  const GenderRef = useRef()
+  
+
+  function handleSelectTrainerClick(refOf) {
+    refOf.current.style.transform = 'rotate(180deg)';    
+  }
+
+  function handleRemoverSelectClick(refOf) {       
+    refOf.current.style.transform = 'rotate(0deg)';    
+  }
+  
+
   return (
     <div className="p-6 bg-gray-100">
-      <div className="flex relative items-center justify-center rounded-2xl overflow-hidden h-36 border mb-10" style={{backgroundImage : `url(${weightLiftingBanner})`, backgroundSize : 'cover', backgroundPosition : 'center bottom -27px'}}>
+      <div className="GymBannerImage flex relative items-center justify-center rounded-2xl overflow-hidden h-36 border mb-10 " style={{backgroundImage : `url(${weightLiftingBanner})`, backgroundPosition : 'center bottom -27px'}}>
         <div className="absolute top-0 right-0 bottom-0 left-0 bg-[#db3c3c3e]"></div>
         <h2 className="text-5xl relative z-20 text-white font-bold mb-4">
           {isTrainer ? 'Add Trainer' : 'Add Member'}
@@ -158,14 +176,16 @@ function AddMemberPage() {
               required
             />
           </div>
-          <div className='col-span-2'>
+          <div className='col-span-2 relative'>
             <label htmlFor="gender" className="block text-sm font-medium text-gray-700 mb-1">Gender</label>
             <select
+              onMouseLeave={()=>handleRemoverSelectClick(GenderRef)} onMouseDownCapture={()=>handleSelectTrainerClick(GenderRef)}
+
               id="gender"
               name="gender"
               value={formData.gender}
               onChange={handleChange}
-              className="w-full border border-[#decfcf] p-2 rounded focus:border-[#db3c3c] focus:outline-none"
+              className="w-full border bg-transparent relative z-20 border-[#decfcf] p-2 rounded focus:border-[#db3c3c] focus:outline-none appearance-none"
               required
             >
               <option value="">Select Gender</option>
@@ -173,6 +193,7 @@ function AddMemberPage() {
               <option value="female">Female</option>
               <option value="other">Other</option>
             </select>
+            <span ref={GenderRef} className='absolute z-10 right-2 top-8 transition-all duration-300 ease-in-out'><img src={Arrow} alt="" /></span>
           </div>
           <div className="md:col-span-4 mb-12">
             <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">Address</label>
@@ -189,14 +210,16 @@ function AddMemberPage() {
           
           {!isTrainer && (
             <>
-              <div>
+              <div className='relative'>
                 <label htmlFor="membershipType" className="block text-sm font-medium text-gray-700 mb-1">Membership Type</label>
                 <select
+                  onMouseLeave={()=>handleRemoverSelectClick(MemberShipTypeRef)} onMouseDownCapture={()=>handleSelectTrainerClick(MemberShipTypeRef)}
+
                   id="membershipType"
                   name="membershipType"
                   value={formData.membershipType}
                   onChange={handleChange}
-                  className="w-full border border-[#decfcf] p-2 rounded focus:border-[#db3c3c] focus:outline-none"
+                  className="w-full border relative z-20 bg-transparent border-[#decfcf] p-2 rounded focus:border-[#db3c3c] focus:outline-none appearance-none"
                   required
                 >
                   <option value="">Select Membership Type</option>
@@ -204,22 +227,26 @@ function AddMemberPage() {
                   <option value="premium">Premium</option>
                   <option value="vip">VIP</option>
                 </select>
+                <span ref={MemberShipTypeRef} className='absolute z-10 right-2 top-8 transition-all duration-300 ease-in-out'><img src={Arrow} alt="" /></span>
               </div>
               
-              <div>
+              <div className='relative'>
                 <label htmlFor="paymentStatus" className="block text-sm font-medium text-gray-700 mb-1">Payment Status</label>
                 <select
+                  onMouseLeave={()=>handleRemoverSelectClick(paymentStatusRef)} onMouseDownCapture={()=>handleSelectTrainerClick(paymentStatusRef)}
+                  
                   id="paymentStatus"
                   name="paymentStatus"
                   value={formData.paymentStatus}
                   onChange={handleChange}
-                  className="w-full border border-[#decfcf] p-2 rounded focus:border-[#db3c3c] focus:outline-none"
+                  className="w-full relative z-20 bg-transparent border border-[#decfcf] p-2 rounded focus:border-[#db3c3c] focus:outline-none appearance-none"
                   required
                 >
                   <option value="">Select Payment Status</option>
                   <option value="paid">Paid</option>
                   <option value="pending">Pending</option>
                 </select>
+                <span ref={paymentStatusRef} className='absolute z-10 right-2 top-8 transition-all duration-300 ease-in-out'><img src={Arrow} alt="" /></span>
               </div>
             </>
           )}
@@ -376,6 +403,18 @@ function AddMemberPage() {
                   <span className='absolute top-[6px] left-3 text-lg font-semibold text-[#db3c3c]'>₹</span>
                 </div>
               </div> </>}
+
+              {!isTrainer && <div className="flex flex-col relative">
+                <label htmlFor="SelectTrainer" className="block text-sm font-medium text-gray-700 mb-1">SelectTrainer</label>
+                  <img className='absolute left-0 top-[35px] w-5' src={BodyBuilderIcon} alt="" />
+                  <select onMouseLeave={()=>handleRemoverSelectClick(SelectArrowRef)} onMouseDownCapture={()=>handleSelectTrainerClick(SelectArrowRef)}  className="w-full relative z-20 border bg-transparent border-[#decfcf] p-2 px-8 rounded focus:border-[#db3c3c] focus:outline-none appearance-none" name="" id="SelectTrainer">
+                    <option value="">Ayush</option>
+                    <option value="">Arun</option>
+                    <option value="">Aditya</option>
+                    <option value="">Vaibhav</option>
+                  </select>
+                  <span ref={SelectArrowRef} className='absolute z-10 right-2 top-8 transition-all duration-300 ease-in-out'><img src={Arrow} alt="" /></span>
+              </div>}
          
 
           <div className="col-span-4 h-32 flex items-center justify-center gap-7 mt-7">

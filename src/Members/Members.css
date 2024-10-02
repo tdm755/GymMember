@@ -10,14 +10,15 @@
   scroll-behavior: smooth;
   background-color: #fff;
   th {
-    border: 1px solid black;
+    border: 1px solid #dea5a5;
     padding: 8px 24px;
     font-weight: 500;
     white-space: nowrap;
+    color: #dc2626;
   }
 
   tbody tr td {
-    border: 1px solid black;
+    border: 1px solid #decfcf;
     padding: 12px 24px;
     white-space: nowrap;
   }

@@ -22,10 +22,10 @@ function SideBar({ isOpen }) {
                 <div className="border rounded-md h-20 w-20"></div>
             </div>
             <div className="flex flex-col gap-3 pl-7">
-                <NavLink to={'indexpage'} className=''>
+                <NavLink to={'/dashboard'} className=''>
                     {({ isActive }) => (
                         <div className='flex gap-2 items-center'>
-                            <div className={`${isActive && 'bg-[#f2e9e9c1]'} w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
+                            <div className={`${pathname === '/dashboard' && 'bg-[#f2e9e9c1]'} w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
                                 <img src={HomeIcon} alt="" />
                             </div>
 
