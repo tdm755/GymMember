@@ -8,9 +8,9 @@ function LoginCredentials() {
   return (
     <div className='flex h-[650px]'>
 
-        <img className='absolute z-10 w-[1120px] h-[650px]' src={RectangleImage} alt="" />
-        <div className="relative z-20 border-black h-full w-1/2 flex items-center justify-center " >
-            <div className="w-[70%] flex flex-col items-center  gap-9">
+        <img className='absolute hidden md:block z-10 w-[1120px] h-[650px]' src={RectangleImage} alt="" />
+        <div className="relative z-20 border-black h-full w-full md:w-1/2 px-6 flex items-center justify-center " >
+            <div className="w-full md:w-[70%] flex flex-col items-center  gap-9">
                 <h1 className='text-5xl  font-bold'>Sign In</h1>
                 <span className="text-sm text-gray-600">
                     Forgot your password? <a href="/forgotpassword" className="text-[#dc2626] hover:underline">Click here</a> to reset it.
@@ -37,7 +37,7 @@ function LoginCredentials() {
                 
             </div>
         </div>
-        <div className="flex items-center justify-center overflow-hidden h-full w-1/2 relative"  style={{backgroundImage : ``, backgroundSize : '750px', backgroundPosition : 'bottom 140px'}}>
+        <div className="hidden md:flex items-center justify-center overflow-hidden h-full md:w-1/2 relative"  style={{backgroundImage : ``, backgroundSize : '750px', backgroundPosition : 'bottom 140px'}}>
           <div className="flex items-center bg-[#e92a2a20] justify-end absolute  top-0 right-0 bottom-0 left-0"></div>
             <video 
             autoPlay

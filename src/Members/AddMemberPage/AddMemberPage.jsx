@@ -87,16 +87,16 @@ function AddMemberPage() {
   
 
   return (
-    <div className="p-6 bg-gray-100">
+    <div className="p-2 md:p-6 bg-gray-100">
       <div className="GymBannerImage flex relative items-center justify-center rounded-2xl overflow-hidden h-36 border mb-10 " style={{backgroundImage : `url(${weightLiftingBanner})`, backgroundPosition : 'center bottom -27px'}}>
         <div className="absolute top-0 right-0 bottom-0 left-0 bg-[#db3c3c3e]"></div>
         <h2 className="text-5xl relative z-20 text-white font-bold mb-4">
           {isTrainer ? 'Add Trainer' : 'Add Member'}
         </h2>
       </div>
-      <form onSubmit={handleSubmit} className="space-y-4 bg-white p-6 rounded-2xl ">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
+      <form onSubmit={handleSubmit} className=" bg-white p-4 md:p-6 rounded-2xl ">
+        <div className="grid gap-4">
+          <div className='col-span-4 md:col-span-2 lg:col-span-1'>
             <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">First Name</label>
             <input
               type="text"
@@ -109,7 +109,7 @@ function AddMemberPage() {
               required
             />
           </div>
-          <div>
+          <div  className='col-span-4 md:col-span-2 lg:col-span-1'>
             <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
             <input
               type="text"
@@ -122,7 +122,7 @@ function AddMemberPage() {
               required
             />
           </div>
-          <div>
+          <div className='col-span-4 md:col-span-2 lg:col-span-1'>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email</label>
             <input
               type="email"
@@ -135,7 +135,7 @@ function AddMemberPage() {
               required
             />
           </div>
-          <div>
+          <div className='col-span-4 md:col-span-2 lg:col-span-1'>
             <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
             <input
               type="tel"
@@ -148,7 +148,7 @@ function AddMemberPage() {
               required
             />
           </div>
-          <div>
+          <div className='col-span-4 md:col-span-2 lg:col-span-1'>
             <label htmlFor="dateOfBirth" className="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
             <div className="relative">
               <input
@@ -163,7 +163,7 @@ function AddMemberPage() {
               />
             </div>
           </div>
-          <div>
+          <div className='col-span-4 md:col-span-2 lg:col-span-1'>
             <label htmlFor="emergencyContact" className="block text-sm font-medium text-gray-700 mb-1">Emergency Contact</label>
             <input
               type="text"
@@ -176,7 +176,7 @@ function AddMemberPage() {
               required
             />
           </div>
-          <div className='col-span-2 relative'>
+          <div className='col-span-4 md:col-span-2 lg:col-span-1 relative'>
             <label htmlFor="gender" className="block text-sm font-medium text-gray-700 mb-1">Gender</label>
             <select
               onMouseLeave={()=>handleRemoverSelectClick(GenderRef)} onMouseDownCapture={()=>handleSelectTrainerClick(GenderRef)}
@@ -195,7 +195,7 @@ function AddMemberPage() {
             </select>
             <span ref={GenderRef} className='absolute z-10 right-2 top-8 transition-all duration-300 ease-in-out'><img src={Arrow} alt="" /></span>
           </div>
-          <div className="md:col-span-4 mb-12">
+          <div className="col-span-4  mb-12">
             <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">Address</label>
             <textarea
               id="address"
@@ -210,7 +210,7 @@ function AddMemberPage() {
           
           {!isTrainer && (
             <>
-              <div className='relative'>
+              <div className='relative col-span-4 md:col-span-2 '>
                 <label htmlFor="membershipType" className="block text-sm font-medium text-gray-700 mb-1">Membership Type</label>
                 <select
                   onMouseLeave={()=>handleRemoverSelectClick(MemberShipTypeRef)} onMouseDownCapture={()=>handleSelectTrainerClick(MemberShipTypeRef)}
@@ -230,7 +230,7 @@ function AddMemberPage() {
                 <span ref={MemberShipTypeRef} className='absolute z-10 right-2 top-8 transition-all duration-300 ease-in-out'><img src={Arrow} alt="" /></span>
               </div>
               
-              <div className='relative'>
+              <div className='relative col-span-4 md:col-span-2'>
                 <label htmlFor="paymentStatus" className="block text-sm font-medium text-gray-700 mb-1">Payment Status</label>
                 <select
                   onMouseLeave={()=>handleRemoverSelectClick(paymentStatusRef)} onMouseDownCapture={()=>handleSelectTrainerClick(paymentStatusRef)}
@@ -250,7 +250,7 @@ function AddMemberPage() {
               </div>
             </>
           )}
-              <div>
+              <div className='col-span-4 md:col-span-2 lg:col-span-1'>
                 <label htmlFor="startDate" className="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
                 <div className="relative">
                   <input
@@ -265,7 +265,7 @@ function AddMemberPage() {
                   />
                 </div>
               </div>
-              <div>
+              <div className='col-span-4 md:col-span-2 lg:col-span-1'>
                 <label htmlFor="endDate" className="block text-sm font-medium text-gray-700 mb-1">End Date</label>
                 <div className="relative">
                   <input
@@ -280,7 +280,7 @@ function AddMemberPage() {
                   />
                 </div>
               </div>
-              {isTrainer && <div className="col-span-2">
+              {isTrainer && <div className="col-span-2 lg:col-span-1">
             <label htmlFor="experience" className="block text-sm font-medium text-gray-700 mb-1">Experience</label>
             <input
               type='number'
@@ -292,7 +292,7 @@ function AddMemberPage() {
               className="w-full border border-[#decfcf] p-2 rounded focus:border-[#db3c3c] focus:outline-none"
             />
           </div>}
-          {isTrainer && <div className="col-span-1">
+          {isTrainer && <div className="col-span-2 lg:col-span-1">
             <label htmlFor="salary" className="block text-sm font-medium text-gray-700 mb-1">Salary</label>
             <input
               type='number'
@@ -304,8 +304,8 @@ function AddMemberPage() {
               className="w-full border border-[#decfcf] p-2 rounded focus:border-[#db3c3c] focus:outline-none"
             />
           </div>}
-         <div className="w-full col-span-4 flex gap-4 mb-12">
-         <div className="w-1/2">
+         <div className="w-full col-span-4  flex flex-col md:flex-row  gap-4 mb-12">
+         <div className="lg:w-1/2 col-span-4">
             <label htmlFor="medicalConditions" className="block text-sm font-medium text-gray-700 mb-1">Medical Conditions (if any)</label>
             <textarea
               id="medicalConditions"
@@ -318,8 +318,8 @@ function AddMemberPage() {
           </div>
 
 
-          {isTrainer && <div className="w-1/2">
-            <label htmlFor="fitnessGoals" className="block text-sm font-medium text-gray-700 mb-1">Certifications</label>
+          {isTrainer && <div className="lg:w-1/2 col-span-4 md:col-span-2">
+            <label htmlFor="Certifications" className="block text-sm font-medium text-gray-700 mb-1">Certifications</label>
             <textarea
               id="Certifications"
               name="Certifications"
@@ -329,8 +329,8 @@ function AddMemberPage() {
               className="w-full border border-[#decfcf] p-2 rounded focus:border-[#db3c3c] focus:outline-none"
             ></textarea>
           </div>}
-          <div className="w-1/2">
-            <label htmlFor="fitnessGoals" className="block text-sm font-medium text-gray-700 mb-1">Brief Bio</label>
+          <div className="lg:w-1/2 col-span-4">
+            <label htmlFor="BriefBio" className="block text-sm font-medium text-gray-700 mb-1">Brief Bio</label>
             <textarea
               id="BriefBio"
               name="BriefBio"
@@ -343,7 +343,7 @@ function AddMemberPage() {
          
           
           
-          {!isTrainer && <div className="w-1/2">
+          {!isTrainer && <div className="lg:w-1/2 col-span-4 md:col-span-2">
             <label htmlFor="fitnessGoals" className="block text-sm font-medium text-gray-700 mb-1">Fitness Goals</label>
             <textarea
               id="fitnessGoals"
@@ -355,7 +355,7 @@ function AddMemberPage() {
             ></textarea>
           </div>}
          </div>
-             {!isTrainer && <> <div>
+             {!isTrainer && <> <div className='col-span-4 md:col-span-2 lg:col-span-1'>
                 <label htmlFor="paidamount" className="block text-sm font-medium text-gray-700 mb-1">Paid Amount</label>
                 <div className="relative">
                   <input
@@ -371,7 +371,7 @@ function AddMemberPage() {
                   <span className='absolute top-[6px] left-3 text-lg font-semibold text-[#db3c3c]'>₹</span>
                 </div>
               </div>
-              <div>
+              <div className='col-span-4 md:col-span-2 lg:col-span-1'>
                 <label htmlFor="balance" className="block text-sm font-medium text-gray-700 mb-1">Balance Amount</label>
                 <div className="relative">
                   <input
@@ -387,7 +387,7 @@ function AddMemberPage() {
                   <span className='absolute top-[6px] left-3 text-lg font-semibold text-[#db3c3c]'>₹</span>
                 </div>
               </div>
-              <div className='col-span-2'>
+              <div className='col-span-4 md:col-span-2 lg:col-span-1'>
                 <label htmlFor="totalAmount" className="block text-sm font-medium text-gray-700 mb-1">Total Amount</label>
                 <div className="relative">
                   <input
@@ -404,7 +404,7 @@ function AddMemberPage() {
                 </div>
               </div> </>}
 
-              {!isTrainer && <div className="flex flex-col relative">
+              {!isTrainer && <div className="flex flex-col relative col-span-4 md:col-span-2 lg:col-span-1">
                 <label htmlFor="SelectTrainer" className="block text-sm font-medium text-gray-700 mb-1">SelectTrainer</label>
                   <img className='absolute left-0 top-[35px] w-5' src={BodyBuilderIcon} alt="" />
                   <select onMouseLeave={()=>handleRemoverSelectClick(SelectArrowRef)} onMouseDownCapture={()=>handleSelectTrainerClick(SelectArrowRef)}  className="w-full relative z-20 border bg-transparent border-[#decfcf] p-2 px-8 rounded focus:border-[#db3c3c] focus:outline-none appearance-none" name="" id="SelectTrainer">
@@ -417,7 +417,7 @@ function AddMemberPage() {
               </div>}
          
 
-          <div className="col-span-4 h-32 flex items-center justify-center gap-7 mt-7">
+          <div className="col-span-4  h-32 flex items-center justify-center  gap-7 mt-7">
             <div className="border h-32 w-32 rounded-lg flex flex-col items-center justify-center overflow-hidden">
               {capturedImage ? (
                 <img src={capturedImage} alt="Receiver" className="h-full w-full object-cover" />

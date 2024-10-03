@@ -5,6 +5,8 @@ import { Outlet, useLocation } from 'react-router-dom';
 
 function AdminDashboard() {
     const [isOpen, setIsOpen] = useState(false);
+    const [DropDownView, setDropDownView] = useState(false);
+
     const location = useLocation();
 
     useEffect(() => {
@@ -13,12 +15,12 @@ function AdminDashboard() {
 
     return (
         <div>
-            <SideBar isOpen={isOpen} setIsOpen={setIsOpen}/>
+            <SideBar isOpen={isOpen} setIsOpen={setIsOpen} DropDownView={DropDownView} setDropDownView={setDropDownView} />
 
             <div className={`md:ml-60`}>
-                <Header isOpen={isOpen} setIsOpen={setIsOpen}/>
+                <Header isOpen={isOpen} setIsOpen={setIsOpen} DropDownView={DropDownView} setDropDownView={setDropDownView} />
 
-                <div className="">
+                <div onClick={()=>setIsOpen(false)} className="min-h-[670px] border">
                     <Outlet />
                 </div>
             </div>

@@ -13,11 +13,11 @@ function IndesPage() {
     navigate(navto)
   }
   return (
-    <div className='p-8 flex gap-10 flex-wrap'>
+    <div className='p-8 flex flex-col lg:flex-row gap-10'>
 
 
         {/* Total number of active users */}
-        <div className="border w-80 p-4 flex flex-col gap-4 items-center rounded-xl border-[#eac4c4] shadow-md">
+        <div className="border w-full lg:w-80 p-4 flex flex-col gap-4 items-center rounded-xl border-[#eac4c4] shadow-md">
           <div className="">
             <p className='text-md font-semibold uppercase'>Total number of active users</p>
           </div>
@@ -31,31 +31,32 @@ function IndesPage() {
           </div>
         </div> 
         
-        {/* New member sign-ups this week/month */}
-        <div className="flex flex-col gap-4">
-        <div className="border w-80 h-1/2 p-4 flex flex-col gap-4 items-center justify-between rounded-xl border-[#eac4c4] shadow-md">
-          <div className="">
-            <p className='text-md font-semibold uppercase'>New member sign-ups this month</p>
-          </div>
-          <div className="flex items-center justify-around w-full">
-          <div className="text-4xl font-semibold">
-            20
-          </div>        
-             <button onClick={()=>handleAddMemNavigateClick('addmember')} className='font-semibold px-4 py-2 text-sm bg-[#dc2626] text-white rounded-md'>Add Members</button>        
-          </div>
-        </div>  
+        
+        <div className="flex flex-col md:flex-row lg:flex-col gap-4">
+            <div className="border w-full md:w-1/2 lg:w-80 lg:h-1/2 p-4 flex flex-col gap-4 items-center justify-between rounded-xl border-[#eac4c4] shadow-md">
+              <div className="">
+                <p className='text-md font-semibold uppercase'>New member sign-ups this month</p>
+              </div>
+              <div className="flex items-center justify-around w-full">
+              <div className="text-4xl font-semibold">
+                20
+              </div>        
+                <button onClick={()=>handleAddMemNavigateClick('addmember')} className='font-semibold px-4 py-2 text-sm bg-[#dc2626] text-white rounded-md'>Add Members</button>        
+              </div>
+            </div>  
 
-         <div className="border w-80 h-1/2 p-4 flex flex-col gap-4 items-center rounded-xl border-[#eac4c4] shadow-md">
-            <div className="text-md font-semibold uppercase">
-               Membership renewals due
-            </div>
-            <div className="flex items-center justify-around w-full">
-          <div className="text-4xl font-semibold">
-            20
-          </div>        
-             <button onClick={handleNavigateClick} className='font-semibold px-12 py-2 text-sm bg-[#dc2626] text-white rounded-md'>View</button>        
-          </div>
-        </div> </div> 
+            <div className="border w-full md:w-1/2 lg:w-80 lg:h-1/2 p-4 flex flex-col gap-4 items-center rounded-xl border-[#eac4c4] shadow-md">
+                <div className="text-md font-semibold uppercase">
+                  Membership renewals due
+                </div>
+                <div className="flex items-center justify-around w-full">
+              <div className="text-4xl font-semibold">
+                20
+              </div>        
+                <button onClick={handleNavigateClick} className='font-semibold px-12 py-2 text-sm bg-[#dc2626] text-white rounded-md'>View</button>        
+              </div>
+            </div> 
+        </div> 
         
 
     </div>

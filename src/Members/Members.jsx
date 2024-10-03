@@ -482,12 +482,12 @@ function Members() {
         </div>
 
           {/* headerpart */}
-          <div className="flex items-center justify-evenly">
+          <div className="flex flex-col md:flex-row  gap-7 w-full items-center justify-evenly">
 
-            <div className="relative">
+            <div className="relative w-full">
               <select
                onMouseLeave={()=>handleRemoverSelectClick()} onMouseDownCapture={()=>handleSelectTrainerClick()}
-               className='border border-[#dc2626] w-52 py-1 outline-none rounded-md px-2 appearance-none relative z-20 bg-transparent' 
+               className='border border-[#dc2626] h-10 w-full md:w-52 py-1 outline-none rounded-md px-2 appearance-none relative z-20 bg-transparent' 
                name="" id="">
                 <option value="">select</option>
                 <option value="">due date</option>
@@ -496,10 +496,10 @@ function Members() {
               </select>
             <span ref={shortRef} className='absolute z-10 right-2 top-1 transition-all duration-300 ease-in-out'><img src={Arrow} alt="" /></span>
             </div>           
-            <div className="relative flex items-center">
+            <div className="relative w-full flex items-center">
               <img className='absolute  left-2' src={SearchIcon} alt="" />
               <input 
-                className='border border-[#decfcf] pl-10 w-96 py-[5px] outline-none focus:border-[#dc2626] rounded-md' 
+                className='border border-[#decfcf] pl-10 w-96 h-10 py-[5px] outline-none focus:border-[#dc2626] rounded-md' 
                 placeholder='search....'
                 type="text" 
               />
@@ -557,7 +557,7 @@ function Members() {
           </table>
         </div>
 
-        <div className="border h-32 flex items-center justify-end px-16 gap-3">
+        <div className="border h-32 flex items-center justify-center md:justify-end lg:px-16 gap-3">
             <div  onClick={()=>{HandleBackwardClick()}} className="border h-9 w-9 flex items-center justify-center rotate-90 rounded-md border-[#decfcf]"><img src={Arrow} alt="" /></div>
 
             <div onClick={()=>setSelectedPage(1)}  className={`${selectedPage <= 2 ? 'hidden' : 'flex'} cursor-pointer border h-10 w-10 items-center justify-center rounded-md `}>1</div>

@@ -19,25 +19,26 @@ function Setting() {
             
             <div className=" flex flex-wrap justify-evenly items-center">
 
-                <div className="w-[422px]">
+                <div className="w-full">
                     <div className="flex items-center justify-center my-6"><h2>Forgot Password</h2></div>
 
-                    {toggleChangePass ? <div className="w-full">
+                    {toggleChangePass ? 
+                    <div className="w-full">
                         <div className="flex flex-col gap-2">
                             <div className="flex gap-2">
-                                <div className="border rounded-xl flex flex-col px-3 py-2 bg-[#] outline-dashed outline-1">
+                                <div className="border rounded-xl flex flex-col px-3 py-2 outline-dashed outline-1 w-1/2">
                                     <label htmlFor="oldpass">Old Password</label>
                                     <input
                                         id='oldpass'
-                                        className='bg-transparent outline-none'
+                                        className='bg-transparent outline-none w-full'
                                         placeholder='GeekRider@123'
                                         type="password" />
                                 </div>
-                                <div className="border rounded-xl flex flex-col px-3 py-2 bg-[#] outline-dashed outline-1">
+                                <div className="border rounded-xl flex flex-col px-3 py-2 bg-[#] outline-dashed outline-1 w-1/2">
                                     <label htmlFor="newpass">New Password</label>
                                     <input
                                         id='newpass'
-                                        className='bg-transparent outline-none'
+                                        className='bg-transparent outline-none w-full'
                                         placeholder='GeekRider@123'
                                         type="password" />
                                 </div>
@@ -65,13 +66,13 @@ function Setting() {
                             </button>
                         </div>
                     </div>
-                        : <div className="w-full">
+                        : <div className="">
                             <div className="flex flex-col gap-2">
                                 <div className="border rounded-xl flex flex-col px-3 py-2 bg-[#] outline-dashed outline-1">
                                     <label htmlFor="email">Email</label>
                                     <input
                                         id='email'
-                                        className='bg-transparent outline-none'
+                                        className='bg-transparent outline-none w-full'
                                         placeholder='geekrider@gmail.com'
                                         type="email" />
                                 </div>
@@ -93,25 +94,26 @@ function Setting() {
                 </div>
 
 
-                <div className="w-[422px]">
+                <div className="w-full">
                     <div className="flex items-center justify-center my-6"><h2>Forgot MPin</h2></div>
 
-                    {toggleChangePin ? <div className="w-full">
+                    {toggleChangePin ? 
+                    <div className="w-full">
                         <div className="flex flex-col gap-2">
-                            <div className="flex gap-2">
-                                <div className="border rounded-xl flex flex-col px-3 py-2 bg-[#] outline-dashed outline-1">
+                            <div className="flex gap-2 w-full">
+                                <div className="border rounded-xl flex flex-col px-3 py-2 bg-[#] outline-dashed outline-1 w-1/2">
                                     <label htmlFor="oldpin">Old Pin</label>
                                     <input
                                         id='oldpin'
-                                        className='bg-transparent outline-none'
+                                        className='bg-transparent outline-none w-full'
                                         placeholder='7777'
                                         type="password" />
                                 </div>
-                                <div className="border rounded-xl flex flex-col px-3 py-2 bg-[#] outline-dashed outline-1">
+                                <div className="border rounded-xl flex flex-col px-3 py-2 bg-[#] outline-dashed outline-1 w-1/2">
                                     <label htmlFor="newpin">New Pin</label>
                                     <input
                                         id='newpin'
-                                        className='bg-transparent outline-none'
+                                        className='bg-transparent outline-none w-full'
                                         placeholder='7777'
                                         type="password" />
                                 </div>
@@ -120,7 +122,7 @@ function Setting() {
                                 <label htmlFor="confirmpin">Confirm Pin</label>
                                 <input
                                     id='confirmpin'
-                                    className='bg-transparent outline-none'
+                                    className='bg-transparent outline-none w-full'
                                     placeholder='7777'
                                     type="password" />
                             </div>
@@ -145,7 +147,7 @@ function Setting() {
                                     <label htmlFor="email">Email</label>
                                     <input
                                         id='email'
-                                        className='bg-transparent outline-none'
+                                        className='bg-transparent outline-none w-full'
                                         placeholder='geekrider@gmail.com'
                                         type="email" />
                                 </div>
