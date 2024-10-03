@@ -1,17 +1,29 @@
-import React from 'react'
+import React, { useState } from 'react'
 import NotificationIcon from '../../../public/assets/NotificationIcon.svg'
 import QRSccanner from '../../../public/assets/QRSccanner.svg'
 import ProfileImage from '../../../public/assets/GymProfileImage.jpg'
+import Arrow from '../../../public/assets/ArrowDown.svg'
 import '../../../public/styles/Global.css';
 
 function Header({setShowQR, isOpen, setIsOpen}) {
+
+
+  const [DropDownView, setDropDownView] = useState(false);
+
+  function DropDownClick() {
+    setDropDownView(!DropDownView);
+  }
+
   return (
     <div className='flex abstolute top-0 items-center justify-between w-full px-7 md:px-24 h-24'>
 
       <div className="bg-[#f9fafc] h-12 w-12 flex items-center justify-center rounded-full"><img src={NotificationIcon} alt="" /></div>
-       <div className="flex gap-6 items-center">
+       <div className="flex gap-2 items-center">
             {/* <div onClick={()=>{setShowQR(true)}} className="rounded-full h-12 w-12 flex items-center justify-center bg-[#f9fafc]"><img src={QRSccanner} alt="" /></div> */}
-            <div className="border rounded-full h-14 w-14" style={{backgroundImage : `url(${ProfileImage})`, backgroundSize: 'contain', backgroundPosition : 'center'}}></div>
+            <div onClick={()=>DropDownClick()} className="border cursor-pointer relative z-50 rounded-full h-14 w-14" style={{backgroundImage : `url(${ProfileImage})`, backgroundSize: 'contain', backgroundPosition : 'center'}}>
+            </div>
+            <div onClick={()=>DropDownClick()} className={`cursor-pointer transition-all duration-500 ease-in-out ${DropDownView && 'rotate-180'} `}><img src={Arrow} alt="" /></div>
+            <div className={` absolute z-50 bg-white shadow-md border border-[#decfcf] rounded-lg transition-all duration-500 ease-in-out ${DropDownView ? 'block top-24 h-40 w-64 right-20' : 'top-16 h-0 w-0 right-36'}`}></div>
             <div className=" md:hidden">
                 <input onClick={()=>{setIsOpen(!isOpen)}} type="checkbox" id="checkbox" />
                     <label for="checkbox" className="toggle">

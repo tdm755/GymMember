@@ -85,6 +85,9 @@ function Calendar() {
 
   return (
     <div className='px-10'>
+      <div className="flex items-center justify-end">
+         <button onClick={()=>{setSelectedDate(new Date())}} className='border px-6 py-2'>Today</button>
+      </div>
       <div className="border h-16 flex items-center justify-around">
         <button onClick={handlePrevMonth}><img className='rotate-90 h-10' src={Arrow} alt="Previous Month" /></button>
         <div className='text-3xl font-medium flex gap-2 items-center'>

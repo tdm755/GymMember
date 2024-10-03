@@ -24,7 +24,7 @@ function SideBar({ isOpen }) {
             <div className="flex flex-col gap-3 pl-7">
                 <NavLink to={'/dashboard'} className=''>
                     {({ isActive }) => (
-                        <div className='flex gap-2 items-center'>
+                        <div onClick={()=>setAccordian1(false)} className='flex gap-2 items-center'>
                             <div className={`${pathname === '/dashboard' && 'bg-[#f2e9e9c1]'} w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
                                 <img src={HomeIcon} alt="" />
                             </div>
@@ -38,7 +38,7 @@ function SideBar({ isOpen }) {
 
 
                 <div className="">
-                    <div onClick={()=> setAccordian1(!Accordian1)} className='flex gap-2 items-center'>
+                    <div onClick={()=> setAccordian1(!Accordian1)} className='flex cursor-pointer gap-2 items-center'>
                         <div className={`${(pathname.includes('addmember') || pathname.includes('addtrainer')) && 'bg-[#f2e9e9c1]'}  w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
                             <img src={ProfileIcon} alt="" />
                         </div>
@@ -73,7 +73,7 @@ function SideBar({ isOpen }) {
 
                 <NavLink to={'trainers'} className=''>
                     {({ isActive }) => (
-                        <div className='flex gap-2 items-center'>
+                        <div onClick={()=>setAccordian1(false)} className='flex gap-2 items-center'>
                             <div className={`${isActive && 'bg-[#f2e9e9c1]'} w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
                                 <img src={TrainersIcon} alt="" />
                             </div>
@@ -84,7 +84,7 @@ function SideBar({ isOpen }) {
                 </NavLink>
                 <NavLink to={'members'} className=''>
                     {({ isActive }) => (
-                        <div className='flex gap-2 items-center'>
+                        <div onClick={()=>setAccordian1(false)} className='flex gap-2 items-center'>
                             <div className={`${isActive && 'bg-[#f2e9e9c1]'} w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
                                 <img src={TrainersIcon} alt="" />
                             </div>
@@ -97,7 +97,7 @@ function SideBar({ isOpen }) {
             <div className="mt-10 pl-7" >
                 <NavLink to={'setting'}>
                     {({ isActive }) => (
-                        <div className='flex gap-2 items-center'>
+                        <div onClick={()=>setAccordian1(false)} className='flex gap-2 items-center'>
                             <div className={`${isActive && 'bg-[#f2e9e9c1]'} w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
                                 <img src={SettingIcon} alt="" />
                             </div>

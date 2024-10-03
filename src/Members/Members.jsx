@@ -8,7 +8,7 @@ import SearchIcon from '../../public/assets/SearchIcon.svg';
 function Members() {
   
   const Mpin = 7777;
-  const [MPinCheck, setMpinCheck] = useState(7777);
+  const [MPinCheck, setMpinCheck] = useState(0);
   const [enteredMpin, setEnteredMpin] = useState('');
 
   const location = useLocation();
