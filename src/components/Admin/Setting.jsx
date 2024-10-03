@@ -19,7 +19,7 @@ function Setting() {
             
             <div className=" flex flex-wrap justify-evenly items-center">
 
-                <div className="w-full">
+                <div className="">
                     <div className="flex items-center justify-center my-6"><h2>Forgot Password</h2></div>
 
                     {toggleChangePass ? 
@@ -94,7 +94,7 @@ function Setting() {
                 </div>
 
 
-                <div className="w-full">
+                <div className="">
                     <div className="flex items-center justify-center my-6"><h2>Forgot MPin</h2></div>
 
                     {toggleChangePin ? 
