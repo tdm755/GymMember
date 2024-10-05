@@ -82,7 +82,7 @@ function Calendar() {
   
 
   return (
-    <div className='px-10'>
+    <div className='md:px-7 lg:px-10'>
       <div className="flex items-center justify-end">
          <button onClick={()=>{setSelectedDate(new Date())}} className='border px-6 py-2'>Today</button>
       </div>

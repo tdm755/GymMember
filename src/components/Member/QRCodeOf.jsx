@@ -321,6 +321,8 @@ function QRCodeOf({setShowQR}) {
     handleClose();
   }, [navigate]);
 
+  
+
   return (
     <div className='fixed inset-0 z-50 bg-black bg-opacity-60 flex items-center justify-center'>
       <div className="bg-white relative w-full max-w-md rounded-2xl flex flex-col items-center gap-6 p-6">

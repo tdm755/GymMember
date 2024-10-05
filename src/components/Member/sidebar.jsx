@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import HomeIcon from '../../../public/assets/HomeIcon.svg'
-import ProfileIcon from '../../../public/assets/ProfileIcon.svg'
 import ProfileAddIcon from '../../../public/assets/ProfileAddIcon.svg'
-import NotificationIcon from '../../../public/assets/NotificationIcon.svg'
 import SettingIcon from '../../../public/assets/SettingIcon.svg'
-import ArrowDown from '../../../public/assets/ArrowDown.svg'
 import TrainersIcon from '../../../public/assets/TrainersIcon.svg'
+import ScheduleIcon from '../../../public/assets/ScheduleIcon.svg'
+import CalendarIcon from '../../../public/assets/CalendarIcon2.svg'
+import ProfileIcon from '../../../public/assets/ProfileIcon2.svg'
+import SessionsIcon from '../../../public/assets/SessionsIcon.svg'
 import { useSwipeable } from 'react-swipeable'
 
 
@@ -93,7 +94,7 @@ function SideBar({ isOpen, setIsOpen, DropDownView, setDropDownView }) {
                     {({ isActive }) => (
                         <div onClick={()=>{setAccordian1(false); setIsOpen(false); setDropDownView(false)}} className='flex gap-2 items-center'>
                             <div className={`${isActive && 'bg-[#f2e9e9c1]'} w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
-                                <img src={TrainersIcon} alt="" />
+                                <img src={CalendarIcon} alt="" />
                             </div>
                             <span>Calendar</span>
                         </div>
@@ -105,7 +106,7 @@ function SideBar({ isOpen, setIsOpen, DropDownView, setDropDownView }) {
                     {({ isActive }) => (
                         <div onClick={()=>{setAccordian1(false); setIsOpen(false); setDropDownView(false)}} className='flex gap-2 items-center'>
                             <div className={`${isActive && 'bg-[#f2e9e9c1]'} w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
-                                <img src={TrainersIcon} alt="" />
+                                <img src={SessionsIcon} alt="" />
                             </div>
                             <span>Sessions</span>
                         </div>
@@ -117,7 +118,7 @@ function SideBar({ isOpen, setIsOpen, DropDownView, setDropDownView }) {
                     {({ isActive }) => (
                         <div onClick={()=>{setAccordian1(false); setIsOpen(false); setDropDownView(false)}} className='flex gap-2 items-center'>
                             <div className={`${isActive && 'bg-[#f2e9e9c1]'} w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
-                                <img src={TrainersIcon} alt="" />
+                                <img src={ScheduleIcon} alt="" />
                             </div>
                             <span>Schedule</span>
                         </div>
@@ -128,7 +129,7 @@ function SideBar({ isOpen, setIsOpen, DropDownView, setDropDownView }) {
                     {({ isActive }) => (
                         <div onClick={()=>{setAccordian1(false); setIsOpen(false); setDropDownView(false)}} className='flex gap-2 items-center'>
                             <div className={`${isActive && 'bg-[#f2e9e9c1]'} w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
-                                <img src={ProfileAddIcon} alt="" />
+                                <img src={ProfileIcon} alt="" />
                             </div>
                             <span>Profile</span>
                         </div>
