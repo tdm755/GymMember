@@ -206,6 +206,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Html5Qrcode } from "html5-qrcode";
 import CrossIcon from '../../../public/assets/CrossIcon.svg';
+import { useNavigate } from 'react-router-dom';
 
 function QRCodeOf({setShowQR}) {
   const [isCheckedIn, setIsCheckedIn] = useState(false);
@@ -275,6 +276,7 @@ function QRCodeOf({setShowQR}) {
   const onScanSuccess = (decodedText, decodedResult) => {
     setData(decodedText);
     setIsCheckedIn(!isCheckedIn);
+    handleNavigateToLink(decodedText);
   };
 
   const onScanFailure = (error) => {
@@ -304,6 +306,21 @@ function QRCodeOf({setShowQR}) {
     setShowQR(false);
   }, [setShowQR]);
 
+
+  const navigate = useNavigate();
+  
+  const handleNavigateToLink = useCallback((scannedData) => {
+    if (scannedData.includes('youtube.com') || scannedData.includes('youtu.be')) {
+      // YouTube link: open in a new tab
+      window.open(scannedData, '_blank', 'noopener,noreferrer');
+    } else {
+      // Non-YouTube link: navigate within the app
+      navigate(``);
+    }
+    // Close the QR scanner after redirection
+    handleClose();
+  }, [navigate]);
+
   return (
     <div className='fixed inset-0 z-50 bg-black bg-opacity-60 flex items-center justify-center'>
       <div className="bg-white relative w-full max-w-md rounded-2xl flex flex-col items-center gap-6 p-6">
@@ -315,7 +332,7 @@ function QRCodeOf({setShowQR}) {
         </button>
         {/* <h2 className="text-2xl font-bold text-blue-600">{isCheckedIn ? 'Check Out' : 'Check In'}</h2> */}
         
-        <div id="reader" ref={qrRef} className="min-h-52 w-[95%] bg-gray-100 flex items-center justify-center">
+        <div id="reader" ref={qrRef} className="min-h-52 my-7 w-[95%] bg-gray-100 flex items-center justify-center">
           {permissionStatus === 'checking' && (
             <p className="text-gray-500">Checking camera permission...</p>
           )}
@@ -365,7 +382,8 @@ function QRCodeOf({setShowQR}) {
         </div>
         
         <p className="text-gray-700 text-center px-4 text-sm">
-          {data === 'No result' ? 'Scan a QR code to check in/out' : `Scanned: ${data}`}
+          {/* {data === 'No result' ? 'Scan a QR code to visit' : <a className='text-blue-500 hover:text-blue-700' href={data} target='blank'>{data}</a>} */}
+          {data === 'No result' ? 'Scan a QR code to visit' : data}
         </p>
 
        
