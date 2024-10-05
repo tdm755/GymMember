@@ -20,6 +20,10 @@ function Profile() {
     healthCondition : '',
   });
 
+  const handleinnputchange = () =>{
+
+  }
+
 
   return (
     <div className='pb-32'>
