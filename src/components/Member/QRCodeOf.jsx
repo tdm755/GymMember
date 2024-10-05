@@ -313,9 +313,9 @@ function QRCodeOf({setShowQR}) {
         >
           <img className='w-full h-full' src={CrossIcon} alt="Close" />
         </button>
-        <h2 className="text-2xl font-bold text-blue-600">{isCheckedIn ? 'Check Out' : 'Check In'}</h2>
+        {/* <h2 className="text-2xl font-bold text-blue-600">{isCheckedIn ? 'Check Out' : 'Check In'}</h2> */}
         
-        <div id="reader" ref={qrRef} className="min-h-52 w-[95%] bg-gray-100 flex items-center justify-center">
+        <div id="reader" ref={qrRef} className="min-h-44 bg-gray-100 flex items-center justify-center">
           {permissionStatus === 'checking' && (
             <p className="text-gray-500">Checking camera permission...</p>
           )}
@@ -341,7 +341,8 @@ function QRCodeOf({setShowQR}) {
           )}
         </div>
         
-        <div className="w-full">
+        <div className="w-full flex">
+          <div className="">
           <p className="text-sm text-gray-600 mb-2">Or upload a QR code image:</p>
           <input 
             type="file" 
@@ -354,19 +355,20 @@ function QRCodeOf({setShowQR}) {
               file:bg-blue-50 file:text-blue-700
               hover:file:bg-blue-100"
           />
+          </div>
+           {/* <div className="text-center">
+          <p className="text-gray-600 text-sm">Current Time:</p>
+          <p className="text-xl font-bold text-blue-600">
+            {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}
+          </p>
+        </div> */}
         </div>
         
         <p className="text-gray-700 text-center px-4 text-sm">
           {data === 'No result' ? 'Scan a QR code to check in/out' : `Scanned: ${data}`}
         </p>
 
-        <div className="text-center">
-          <p className="text-gray-600 text-sm">Current Time:</p>
-          <p className="text-xl font-bold text-blue-600">
-            {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}
-          </p>
-        </div>
-
+       
         <button 
           onClick={handleClose}
           className="bg-gray-200 text-gray-700 px-8 py-2 rounded-full text-lg font-semibold hover:bg-gray-300 transition duration-300 shadow-sm w-full max-w-xs"
