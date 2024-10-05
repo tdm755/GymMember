@@ -300,10 +300,10 @@ function QRCodeOf({setShowQR}) {
   };
 
   const handleClose = useCallback(() => {
+    setShowQR(false);
     if (scannerRef.current) {
       scannerRef.current.stop().catch(err => console.error("Error stopping QR scanner:", err));
     }
-    setShowQR(false);
   }, [setShowQR]);
 
 
@@ -315,7 +315,7 @@ function QRCodeOf({setShowQR}) {
       window.open(scannedData, '_blank', 'noopener,noreferrer');
     } else {
       // Non-YouTube link: navigate within the app
-      navigate(``);
+      
     }
     // Close the QR scanner after redirection
     handleClose();
