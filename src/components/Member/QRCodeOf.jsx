@@ -203,6 +203,7 @@
 // }
 
 // export default QRCodeOf;
+
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Html5Qrcode } from "html5-qrcode";
 import CrossIcon from '../../../public/assets/CrossIcon.svg';
