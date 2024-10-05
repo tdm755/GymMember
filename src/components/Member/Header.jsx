@@ -19,7 +19,7 @@ function Header({setShowQR, isOpen, setIsOpen, DropDownView, setDropDownView}) {
       <div className="bg-[#f9fafc] h-12 w-12 flex items-center justify-center rounded-full"><img src={NotificationIcon} alt="" /></div>
        <div className="flex gap-2 items-center">
 
-            {/* <div onClick={()=>{setShowQR(true)}} className="rounded-full h-12 w-12 flex items-center justify-center bg-[#f9fafc]"><img src={QRSccanner} alt="" /></div> */}
+            <div onClick={()=>{setShowQR(true)}} className="rounded-full h-12 w-12 flex items-center justify-center bg-[#f9fafc]"><img src={QRSccanner} alt="" /></div>
             <div onClick={()=>{DropDownClick(); setIsOpen(false)}} className="border cursor-pointer relative z-40 rounded-full h-14 w-14" style={{backgroundImage : `url(${ProfileImage})`, backgroundSize: 'contain', backgroundPosition : 'center'}}>
             </div>
             <div onClick={()=>{DropDownClick(); setIsOpen(false)}} className={`cursor-pointer transition-all duration-500 ease-in-out ${DropDownView && 'rotate-180'} `}><img src={Arrow} alt="" /></div>

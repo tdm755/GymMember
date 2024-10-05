@@ -56,7 +56,7 @@ function SideBar({ isOpen, setIsOpen, DropDownView, setDropDownView }) {
                 </NavLink>
 
 
-                <div className="">
+                {/* <div className="">
                     <div onClick={()=> {setAccordian1(!Accordian1); setDropDownView(false);}} className='flex cursor-pointer gap-2 items-center'>
                         <div className={`${(pathname.includes('addmember') || pathname.includes('addtrainer')) && 'bg-[#f2e9e9c1]'}  w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
                             <img src={ProfileIcon} alt="" />
@@ -87,27 +87,50 @@ function SideBar({ isOpen, setIsOpen, DropDownView, setDropDownView }) {
                             )}
                         </NavLink>
                     </div>
-                </div>
+                </div> */}
 
-
-                <NavLink to={'trainers'} className=''>
+                <NavLink to={'calendar'} className=''>
                     {({ isActive }) => (
                         <div onClick={()=>{setAccordian1(false); setIsOpen(false); setDropDownView(false)}} className='flex gap-2 items-center'>
                             <div className={`${isActive && 'bg-[#f2e9e9c1]'} w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
                                 <img src={TrainersIcon} alt="" />
                             </div>
-                            <span>Trainers</span>
+                            <span>Calendar</span>
                         </div>
 
                     )}
                 </NavLink>
-                <NavLink to={'members'} className=''>
+
+                <NavLink to={'sessions'} className=''>
                     {({ isActive }) => (
                         <div onClick={()=>{setAccordian1(false); setIsOpen(false); setDropDownView(false)}} className='flex gap-2 items-center'>
                             <div className={`${isActive && 'bg-[#f2e9e9c1]'} w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
                                 <img src={TrainersIcon} alt="" />
                             </div>
-                            <span>Members</span>
+                            <span>Sessions</span>
+                        </div>
+
+                    )}
+                </NavLink>
+
+                <NavLink to={'schedule'} className=''>
+                    {({ isActive }) => (
+                        <div onClick={()=>{setAccordian1(false); setIsOpen(false); setDropDownView(false)}} className='flex gap-2 items-center'>
+                            <div className={`${isActive && 'bg-[#f2e9e9c1]'} w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
+                                <img src={TrainersIcon} alt="" />
+                            </div>
+                            <span>Schedule</span>
+                        </div>
+
+                    )}
+                </NavLink>
+                <NavLink to={'profile'} className=''>
+                    {({ isActive }) => (
+                        <div onClick={()=>{setAccordian1(false); setIsOpen(false); setDropDownView(false)}} className='flex gap-2 items-center'>
+                            <div className={`${isActive && 'bg-[#f2e9e9c1]'} w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
+                                <img src={ProfileAddIcon} alt="" />
+                            </div>
+                            <span>Profile</span>
                         </div>
 
                     )}

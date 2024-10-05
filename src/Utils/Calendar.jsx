@@ -1,7 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import Arrow from '../../public/assets/ArrowDown.svg'
-import GymSessionModal from './DateViewModelDetails';
-
 function Calendar() {
   const [currentDate, setselectedDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(currentDate);
@@ -116,15 +114,14 @@ function Calendar() {
         {renderCalendarDays()}
       </div>  
       {/* <div className="fixed flex items-center justify-center top-0 right-0 bottom-0 left-0 bg-[#00000010]"> */}
-        <GymSessionModal
+        {/* <GymSessionModal
           isOpen={showModel}
           onClose={()=>setShowModel(false)}
           date={`12/12/2024`}
           sessions={[
             { userName: "Arpit Tiwari", bodyPart: "Legs", time: "10:00 AM" },
-            // { userName: "Jane Smith", bodyPart: "Arms", time: "2:00 PM" },
           ]}
-         />
+         /> */}
       {/* </div>  */}
     </div>
   )

@@ -23,12 +23,12 @@
     white-space: nowrap;
   }
 
-  tr td:last-child {
+  /* tr td:last-child {
     color: #dd3939bf;
     cursor: pointer;
-  }
-  tr td:last-child:hover {
+  } */
+  /* tr td:last-child:hover {
     color: #dc2626;
-  }
+  } */
 
 }

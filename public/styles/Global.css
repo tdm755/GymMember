@@ -72,14 +72,14 @@
 
 
     .GymBannerImage{
-      background-size: 1000px;
+      background-size: 700px;
       animation: GymBannerAnimation 4s ease-out forwards;
     }
 
     @keyframes GymBannerAnimation {
       from{
-        background-size: 1000px;
+        background-size: 700px;
       }to{
-        background-size: 1200px;
+        background-size: 1000px;
       }
     }
