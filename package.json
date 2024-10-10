@@ -22,6 +22,7 @@
     "react-lottie": "^1.2.4",
     "react-router-dom": "^6.26.2",
     "react-swipeable": "^7.0.1",
+    "react-toastify": "^10.0.5",
     "react-webcam": "^7.2.0"
   },
   "devDependencies": {

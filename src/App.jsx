@@ -1,21 +1,33 @@
 import { useState, useEffect } from 'react'
 import { Routes, Route } from 'react-router-dom'
-import AddMemberPage from './Members/AddMemberPage/AddMemberPage'
-import Members from './Members/Members'
-import MemberDetail from './Members/MemberDetail'
-import IndesPage from './components/Member/IndesPage'
 import PreLoader from './Utils/PreLoader'
 import LoginCredentials from './Authentication/LoginCredentials'
 import SignIn from './Authentication/SignIn'
-import ForGotPassword from './Authentication/ForGotPassword'
+import ForgotPass from './Authentication/ForgotPass'
+
+
+// Member
+import IndexPage from './components/Member/IndesPage'
 import Setting from './components/Member/Setting'
 import MembersDashDashboard from './components/MemberDashboard'
-import ForgotPass from './Authentication/ForgotPass'
 import Profile from './components/Member/Profile'
 import Schedule from './components/Member/Schedule'
 import CalendarPage from './components/Member/CalendarPage'
 import Sessions from './components/Member/Sessions'
 import QRCodeOf from './components/Member/QRCodeOf'
+
+
+//Trainer
+import TIndexPage from './components/Trainers/IndesPage'
+import TSetting from './components/Trainers/Setting'
+import TrainerDashboard from './components/TrainerDashboard'
+import TProfile from './components/Trainers/Profile'
+import TSchedule from './components/Trainers/Schedule'
+import TCalendarPage from './components/Trainers/CalendarPage'
+import TSessions from './components/Trainers/Sessions'
+import AllMembers from './components/Trainers/AllMembers'
+// import TQRCodeOf from './components/Trainers/QRCodeOf'
+
 
 function App() {
 
@@ -38,19 +50,23 @@ function App() {
     <>
 
     <Routes>
-      <Route path='/dashboard' element={<MembersDashDashboard ShowQR={ShowQR} setShowQR={setShowQR} />} >
-        <Route index  element={<IndesPage />} />
+      <Route path='/memberdashboard' element={<MembersDashDashboard ShowQR={ShowQR} setShowQR={setShowQR} />} >
+        <Route index  element={<IndexPage />} />
         <Route path='setting' element={<Setting />} />
         <Route path='profile' element={<Profile />} />
         <Route path='schedule' element={<Schedule />} />
         <Route path='calendar' element={<CalendarPage />} />
         <Route path='sessions' element={<Sessions />} />
-        <Route path='addmember' element={<AddMemberPage />} />
-        <Route path='addtrainer' element={<AddMemberPage />} />
-        <Route path='members' element={<Members />} />
-        <Route path='trainers' element={<Members />} />
-        <Route path='trainers/memberdetail' element={<MemberDetail />} />
-        <Route path='members/memberdetail' element={<MemberDetail />} />
+      </Route>
+
+      <Route path='/trainerdashboard' element={<TrainerDashboard ShowQR={ShowQR} setShowQR={setShowQR} />} >
+        <Route index  element={<TIndexPage />} />
+        <Route path='setting' element={<TSetting />} />
+        <Route path='profile' element={<TProfile />} />
+        <Route path='schedule' element={<TSchedule />} />
+        <Route path='calendar' element={<TCalendarPage />} />
+        <Route path='sessions' element={<TSessions />} />
+        <Route path='allmembers' element={<AllMembers />} />
       </Route>
 
       <Route path='/' element={<LoginCredentials />} >

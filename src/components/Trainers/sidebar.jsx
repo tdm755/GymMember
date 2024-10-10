@@ -11,7 +11,7 @@ import SessionsIcon from '../../../public/assets/SessionsIcon.svg'
 import { useSwipeable } from 'react-swipeable'
 
 
-function SideBar({ isOpen, setIsOpen, DropDownView, setDropDownView }) {
+function TSideBar({ isOpen, setIsOpen, DropDownView, setDropDownView }) {
 
     const [Accordian1, setAccordian1] = useState(false);
 
@@ -42,7 +42,7 @@ function SideBar({ isOpen, setIsOpen, DropDownView, setDropDownView }) {
                 <div className="border rounded-md h-20 w-20"></div>
             </div>
             <div className="flex flex-col gap-3 pl-7">
-                <NavLink to={'/memberdashboard'} className=''>
+                <NavLink to={'/trainerdashboard'} className=''>
                     {({ isActive }) => (
                         <div onClick={()=>{setAccordian1(false); setIsOpen(false); setDropDownView(false)}} className='flex gap-2 items-center'>
                             <div className={`${pathname === '/dashboard' && 'bg-[#f2e9e9c1]'} w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
@@ -114,6 +114,18 @@ function SideBar({ isOpen, setIsOpen, DropDownView, setDropDownView }) {
                     )}
                 </NavLink>
 
+                <NavLink to={'allmembers'} className=''>
+                    {({ isActive }) => (
+                        <div onClick={()=>{setAccordian1(false); setIsOpen(false); setDropDownView(false)}} className='flex gap-2 items-center'>
+                            <div className={`${isActive && 'bg-[#f2e9e9c1]'} w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
+                                <img src={SessionsIcon} alt="" />
+                            </div>
+                            <span>Members</span>
+                        </div>
+
+                    )}
+                </NavLink>
+
                 <NavLink to={'schedule'} className=''>
                     {({ isActive }) => (
                         <div onClick={()=>{setAccordian1(false); setIsOpen(false); setDropDownView(false)}} className='flex gap-2 items-center'>
@@ -154,4 +166,4 @@ function SideBar({ isOpen, setIsOpen, DropDownView, setDropDownView }) {
     )
 }
 
-export default SideBar
+export default TSideBar

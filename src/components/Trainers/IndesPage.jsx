@@ -1,7 +1,7 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
-function IndexPage() {
+function TIndexPage() {
 
   const navigate = useNavigate();
 
@@ -63,4 +63,4 @@ function IndexPage() {
   )
 }
 
-export default IndexPage
+export default TIndexPage

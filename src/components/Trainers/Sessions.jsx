@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import weightLiftingBanner from '../../../public/assets/weightLiftingBanner-min.jpg'
 
-function Sessions() {
+function TSessions() {
   const [sessions, setSessions] = useState([])
 
   useEffect(() => {
@@ -95,4 +95,4 @@ function Sessions() {
   )
 }
 
-export default Sessions
+export default TSessions

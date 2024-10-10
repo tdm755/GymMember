@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { UserCircle, Users } from 'lucide-react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function SignIn() {
   const navigate = useNavigate();
@@ -8,9 +10,21 @@ function SignIn() {
 
 
 
+  function handleUserRedirect() {
+    if (user === '') {
+      toast.error('To login to dashboard select user first.')
+    }
+    else if (user === 'member') {
+      navigate('memberdashboard')      
+    }else{
+      navigate('trainerdashboard')
+    }
+  }
+
 
   return (
     <div className="w-full md:w-[70%] flex flex-col items-center  gap-9">
+     <ToastContainer />
     <h1 className='text-5xl  font-bold'>Sign In</h1>
     
     <span className="text-sm text-gray-600">
@@ -59,7 +73,7 @@ function SignIn() {
         </div>
     </div>
    
-    <button onClick={()=>{navigate('dashboard')}} className='border py-2 w-[90%] bg-[#dc2626] text-white text-lg rounded-md'>sign In</button>
+    <button onClick={()=>{handleUserRedirect()}} className='border py-2 w-[90%] bg-[#dc2626] text-white text-lg rounded-md'>sign In</button>
     
 </div>
   )
