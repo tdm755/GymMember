@@ -146,19 +146,36 @@ function TQRCodeOf({setShowQR}) {
   const toggleFlashlight = useCallback(async () => {
     if (!isMountedRef.current) return;
     try {
-      if (!streamRef.current) {
-        streamRef.current = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+      if (!flashLight) {
+        // Turn on the flashlight
+        if (!streamRef.current) {
+          streamRef.current = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: 'environment' }
+          });
+        }
+        const track = streamRef.current.getVideoTracks()[0];
+        const capabilities = track.getCapabilities();
+        
+        if (!('torch' in capabilities)) {
+          throw new Error('Flashlight not supported on this device');
+        }
+        
+        await track.applyConstraints({
+          advanced: [{ torch: true }]
+        });
+      } else {
+        // Turn off the flashlight
+        if (streamRef.current) {
+          const tracks = streamRef.current.getVideoTracks();
+          tracks.forEach(track => {
+            track.applyConstraints({
+              advanced: [{ torch: false }]
+            });
+            track.stop();
+          });
+          streamRef.current = null;
+        }
       }
-      const track = streamRef.current.getVideoTracks()[0];
-      const capabilities = track.getCapabilities();
-      
-      if (!('torch' in capabilities)) {
-        throw new Error('Flashlight not supported on this device');
-      }
-      
-      await track.applyConstraints({
-        advanced: [{ torch: !flashLight }]
-      });
       
       setFlashLight(prevState => !prevState);
     } catch (err) {
@@ -220,10 +237,10 @@ function TQRCodeOf({setShowQR}) {
             />
           </div>
           <div className="text-center">
-            <button onClick={toggleFlashlight}>
-              {flashLight ? <Flashlight strokeWidth={'1px'} size={'32px'} /> : <FlashlightOff strokeWidth={'1px'} size={'32px'} />}
-            </button>
-          </div>
+      <button onClick={toggleFlashlight} className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors">
+        {flashLight ? <Flashlight strokeWidth={'1px'} size={'32px'} /> : <FlashlightOff strokeWidth={'1px'} size={'32px'} />}
+      </button>
+    </div>
         </div>
         
         <p className="text-gray-700 text-center px-4 text-sm">
