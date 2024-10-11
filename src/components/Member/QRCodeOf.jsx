@@ -2,9 +2,15 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Html5Qrcode } from "html5-qrcode";
 import CrossIcon from '../../../public/assets/CrossIcon.svg';
 import { useNavigate } from 'react-router-dom';
-import { Flashlight, FlashlightOff } from 'lucide-react';
+import { Flashlight, FlashlightOff, QrCode, QrCodeIcon, ScanBarcode } from 'lucide-react';
+import QRCode from "react-qr-code";
+
 
 function TQRCodeOf({setShowQR}) {
+
+  const [view, setView] = useState('QR')
+  const [value, setValue]  = useState('')
+
   const [isCheckedIn, setIsCheckedIn] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [data, setData] = useState('No result');
@@ -152,17 +158,32 @@ function TQRCodeOf({setShowQR}) {
     }
   };
 
+  function handleQRView() {
+    if(view === 'QR'){
+      setView('scanner')
+    }else{
+      setView('QR');
+    }
+  }
+
   return (
     <div className='fixed inset-0 z-50 bg-black bg-opacity-60 flex items-center justify-center'>
-      <div className="bg-white relative w-full max-w-md rounded-2xl flex flex-col items-center gap-6 p-6">
+      <div className="bg-white relative w-full max-w-md rounded-md flex flex-col items-center gap-6 p-6">
         <button 
           onClick={handleClose} 
           className='absolute top-4 right-4 w-7 h-7 flex items-center justify-center'
         >
           <img className='w-full h-full' src={CrossIcon} alt="Close" />
         </button>
+        <button 
+          onClick={handleQRView} 
+          className='absolute top-4 right-14 w-7 h-7 flex items-center justify-center'
+        >
+          {/* <img className='w-full h-full' src={} alt="Close" /> */}
+          {view === 'QR' ? <ScanBarcode strokeWidth={'1.5px'} /> :<QrCodeIcon strokeWidth={'1.5px'} />}
+        </button>
         
-        <div id="reader" ref={qrRef} className="min-h-40 md:min-h-52 my-7 w-[95%] bg-gray-100 flex items-center justify-center">
+       {view === 'scanner' ? <><div id="reader" ref={qrRef} className="min-h-40 md:min-h-52 my-7 w-[95%] bg-gray-100 flex items-center justify-center transition-all duration-500 ease-in-out">
           {permissionStatus === 'checking' && (
             <p className="text-gray-500">Checking camera permission...</p>
           )}
@@ -214,7 +235,15 @@ function TQRCodeOf({setShowQR}) {
         
         <p className="text-gray-700 text-center px-4 text-sm">
           {data === 'No result' ? 'Scan a QR code to visit' : <span className='text-blue-500'>{data}</span>}
-        </p>
+        </p> </> :
+          <div className='flex flex-col items-center justify-center mt-12'>
+               <QRCode
+                size={300}
+                value={value || "https://example.com"}
+                className="mb-6"
+               />
+               <p className='text-[#dc2626] text-lg mt-2'>Show QR To Trainer</p>
+          </div>}
 
        
         {/* <button 
