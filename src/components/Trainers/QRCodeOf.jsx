@@ -166,11 +166,13 @@ function TQRCodeOf({setShowQR}) {
       } else {
         // Turn off the flashlight
         if (streamRef.current) {
-          const track = streamRef.current.getVideoTracks()[0];
-          await track.applyConstraints({
-            advanced: [{ torch: false }]
+          const tracks = streamRef.current.getVideoTracks();
+          tracks.forEach(track => {
+            track.applyConstraints({
+              advanced: [{ torch: false }]
+            });
+            track.stop();
           });
-          track.stop();
           streamRef.current = null;
         }
       }
@@ -235,10 +237,10 @@ function TQRCodeOf({setShowQR}) {
             />
           </div>
           <div className="text-center">
-      <button onClick={toggleFlashlight} className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors">
-        {flashLight ? <FlashlightOff strokeWidth={'1px'} size={'32px'} /> : <Flashlight strokeWidth={'1px'} size={'32px'} />}
-      </button>
-    </div>
+            <button onClick={toggleFlashlight} className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors">
+              {flashLight ? <Flashlight strokeWidth={'1px'} size={'32px'} /> : <FlashlightOff strokeWidth={'1px'} size={'32px'} />}
+            </button>
+          </div>
         </div>
         
         <p className="text-gray-700 text-center px-4 text-sm">
