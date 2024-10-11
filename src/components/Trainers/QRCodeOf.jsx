@@ -54,7 +54,7 @@ function TQRCodeOf({setShowQR}) {
         scannerRef.current = new Html5Qrcode("reader");
         const cameras = await Html5Qrcode.getCameras();
         if (cameras && cameras.length) {
-          const cameraId = cameras[cameras.length - 1].id;
+          const cameraId = cameras[cameras.length - 1].id; // Use the last camera (usually back camera on mobile)
           await scannerRef.current.start(
             cameraId,
             {
@@ -104,7 +104,6 @@ function TQRCodeOf({setShowQR}) {
         .then(decodedText => {
           setData(decodedText);
           setIsCheckedIn(!isCheckedIn);
-          handleNavigateToLink(decodedText);
         })
         .catch(err => {
           console.error("Error scanning file:", err);
@@ -114,15 +113,9 @@ function TQRCodeOf({setShowQR}) {
   };
 
   const handleClose = useCallback(() => {
+    setShowQR(false);
     if (scannerRef.current) {
-      scannerRef.current.stop().then(() => {
-        setShowQR(false);
-      }).catch(err => {
-        console.error("Error stopping QR scanner:", err);
-        setShowQR(false);
-      });
-    } else {
-      setShowQR(false);
+      scannerRef.current.stop().catch(err => console.error("Error stopping QR scanner:", err));
     }
   }, [setShowQR]);
 
@@ -130,25 +123,22 @@ function TQRCodeOf({setShowQR}) {
   
   const handleNavigateToLink = useCallback((scannedData) => {
     if (scannedData.includes('youtube.com') || scannedData.includes('youtu.be')) {
+      // YouTube link: open in a new tab
       window.open(scannedData, '_blank', 'noopener,noreferrer');
     } else {
-      // Handle non-YouTube links as needed
-      console.log("Non-YouTube link scanned:", scannedData);
+      // Non-YouTube link: navigate within the app
+      
     }
+    // Close the QR scanner after redirection
     handleClose();
-  }, [handleClose]);
+  }, [navigate]);
 
   const toggleFlashLight = async () => {
-    try {
-      setFlashLight(!flashLight);
-      if (scannerRef.current) {
-        await scannerRef.current.applyVideoConstraints({
-          advanced: [{ torch: !flashLight }]
-        });
-      }
-    } catch (error) {
-      console.error("Error toggling flashlight:", error);
-      setError("Unable to toggle flashlight. This feature may not be supported on your device.");
+    setFlashLight(!flashLight);
+    if (scannerRef.current) {
+      await scannerRef.current.applyVideoConstraints({
+        advanced: [{ torch: !flashLight }]
+      });
     }
   };
 
@@ -161,8 +151,9 @@ function TQRCodeOf({setShowQR}) {
         >
           <img className='w-full h-full' src={CrossIcon} alt="Close" />
         </button>
+        {/* <h2 className="text-2xl font-bold text-blue-600">{isCheckedIn ? 'Check Out' : 'Check In'}</h2> */}
         
-        <div id="reader" ref={qrRef} className="min-h-40 md:min-h-52 my-7 w-[95%] bg-gray-100 flex items-center justify-center">
+        <div id="reader" ref={qrRef} className="min-h-52 my-7 w-[95%] bg-gray-100 flex items-center justify-center">
           {permissionStatus === 'checking' && (
             <p className="text-gray-500">Checking camera permission...</p>
           )}
@@ -213,16 +204,17 @@ function TQRCodeOf({setShowQR}) {
         </div>
         
         <p className="text-gray-700 text-center px-4 text-sm">
-          {data === 'No result' ? 'Scan a QR code to visit' : <span className='text-blue-500'>{data}</span>}
+          {/* {data === 'No result' ? 'Scan a QR code to visit' : <a className='text-blue-500 hover:text-blue-700' href={data} target='blank'>{data}</a>} */}
+          {data === 'No result' ? 'Scan a QR code to visit' : <a className='text-blue-500 hover:text-blue-700' href={data}>{data}</a>}
         </p>
 
        
-        {/* <button 
+        <button 
           onClick={handleClose}
           className="bg-[#f9f5f5] text-gray-700 px-8 py-2 rounded-full text-lg font-semibold hover:bg-[#f5eeee] transition duration-300 shadow-sm w-full max-w-xs"
         >
           Close
-        </button> */}
+        </button>
       </div>
     </div>
   );
