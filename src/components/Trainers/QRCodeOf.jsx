@@ -28,9 +28,16 @@ function TQRCodeOf({setShowQR}) {
       setIsCameraReady(true);
       initializeScanner();
     } catch (error) {
-      console.error("Camera permission not granted:", error);
+      console.error("Camera permission not granted or camera not accessible:", error);
       setPermissionStatus('denied');
       setIsCameraReady(false);
+      if (error.name === 'NotAllowedError') {
+        setError("Camera permission denied. Please grant permission in your browser settings.");
+      } else if (error.name === 'NotFoundError') {
+        setError("No camera found on your device. Please ensure a camera is connected and not in use by another application.");
+      } else {
+        setError("Unable to access the camera. Please check your device settings and try again.");
+      }
     }
   }, []);
 
@@ -43,7 +50,7 @@ function TQRCodeOf({setShowQR}) {
       await checkCameraPermission();
     } catch (error) {
       console.error("Error requesting camera permission:", error);
-      setError("Camera permission denied. Please grant permission in your browser settings.");
+      setError("Unable to request camera permission. Please check your browser settings and try again.");
       setIsCameraReady(false);
     }
   };
@@ -74,7 +81,7 @@ function TQRCodeOf({setShowQR}) {
         }
       } catch (err) {
         console.error("Error starting QR scanner:", err);
-        setError("Unable to start the QR scanner. Your browser might not support this feature.");
+        setError("Unable to start the QR scanner. Your browser might not support this feature or the camera might be in use by another application.");
         setIsCameraReady(false);
       }
     }
@@ -131,7 +138,7 @@ function TQRCodeOf({setShowQR}) {
     }
     // Close the QR scanner after redirection
     handleClose();
-  }, [navigate]);
+  }, [navigate, handleClose]);
 
   const toggleFlashLight = async () => {
     setFlashLight(!flashLight);
@@ -151,7 +158,6 @@ function TQRCodeOf({setShowQR}) {
         >
           <img className='w-full h-full' src={CrossIcon} alt="Close" />
         </button>
-        {/* <h2 className="text-2xl font-bold text-blue-600">{isCheckedIn ? 'Check Out' : 'Check In'}</h2> */}
         
         <div id="reader" ref={qrRef} className="min-h-52 my-7 w-[95%] bg-gray-100 flex items-center justify-center">
           {permissionStatus === 'checking' && (
@@ -204,7 +210,6 @@ function TQRCodeOf({setShowQR}) {
         </div>
         
         <p className="text-gray-700 text-center px-4 text-sm">
-          {/* {data === 'No result' ? 'Scan a QR code to visit' : <a className='text-blue-500 hover:text-blue-700' href={data} target='blank'>{data}</a>} */}
           {data === 'No result' ? 'Scan a QR code to visit' : <a className='text-blue-500 hover:text-blue-700' href={data}>{data}</a>}
         </p>
 
