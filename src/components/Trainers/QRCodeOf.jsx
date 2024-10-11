@@ -12,7 +12,9 @@ function TQRCodeOf({setShowQR}) {
   const [permissionStatus, setPermissionStatus] = useState('checking');
   const qrRef = useRef(null);
   const scannerRef = useRef(null);
-  const [flashLight, setFlashLight] = useState(false);
+
+
+  const [FlashLight, setFlashLight] = useState(false)
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
@@ -56,10 +58,6 @@ function TQRCodeOf({setShowQR}) {
             {
               fps: 10,
               qrbox: { width: 250, height: 250 },
-              experimentalFeatures: {
-                useBarCodeDetectorIfSupported: true,
-                torch: flashLight
-              }
             },
             onScanSuccess,
             onScanFailure
@@ -107,6 +105,7 @@ function TQRCodeOf({setShowQR}) {
     }
   }, [setShowQR]);
 
+
   const navigate = useNavigate();
   
   const handleNavigateToLink = useCallback((scannedData) => {
@@ -121,14 +120,7 @@ function TQRCodeOf({setShowQR}) {
     handleClose();
   }, [navigate]);
 
-  const toggleFlashLight = async () => {
-    setFlashLight(!flashLight);
-    if (scannerRef.current) {
-      await scannerRef.current.applyVideoConstraints({
-        advanced: [{ torch: !flashLight }]
-      });
-    }
-  };
+  
 
   return (
     <div className='fixed inset-0 z-50 bg-black bg-opacity-60 flex items-center justify-center'>
@@ -184,7 +176,7 @@ function TQRCodeOf({setShowQR}) {
           />
           </div>
             <div className="text-center">
-              <button onClick={toggleFlashLight}>{flashLight ? <Flashlight strokeWidth={'1px'} size={'32px'} /> : <FlashlightOff strokeWidth={'1px'} size={'32px'} />}</button>
+              <button onClick={()=>{setFlashLight(!FlashLight)}}>{FlashLight ? <Flashlight strokeWidth={'1px'} size={'32px'} /> : <FlashlightOff strokeWidth={'1px'} size={'32px'} />}</button>
             </div>
         </div>
         
