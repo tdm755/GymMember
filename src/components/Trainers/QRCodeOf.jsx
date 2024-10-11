@@ -13,24 +13,15 @@ function TQRCodeOf({setShowQR}) {
   const qrRef = useRef(null);
   const scannerRef = useRef(null);
   const [flashLight, setFlashLight] = useState(false);
-  const streamRef = useRef(null);
-  const isMountedRef = useRef(true);
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
-    return () => {
-      clearInterval(timer);
-      isMountedRef.current = false;
-    };
+    return () => clearInterval(timer);
   }, []);
 
   const checkCameraPermission = useCallback(async () => {
-    if (!isMountedRef.current) return;
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
-      streamRef.current = stream;
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
       stream.getTracks().forEach(track => track.stop());
       setPermissionStatus('granted');
       initializeScanner();
@@ -42,19 +33,9 @@ function TQRCodeOf({setShowQR}) {
 
   useEffect(() => {
     checkCameraPermission();
-    return () => {
-      isMountedRef.current = false;
-      if (streamRef.current) {
-        streamRef.current.getTracks().forEach(track => track.stop());
-      }
-      if (scannerRef.current) {
-        scannerRef.current.stop().catch(err => console.error("Error stopping QR scanner:", err));
-      }
-    };
   }, [checkCameraPermission]);
 
   const requestCameraPermission = async () => {
-    if (!isMountedRef.current) return;
     try {
       await checkCameraPermission();
     } catch (error) {
@@ -64,18 +45,21 @@ function TQRCodeOf({setShowQR}) {
   };
 
   const initializeScanner = async () => {
-    if (!isMountedRef.current) return;
     if (qrRef.current && !scannerRef.current) {
       try {
         scannerRef.current = new Html5Qrcode("reader");
         const cameras = await Html5Qrcode.getCameras();
         if (cameras && cameras.length) {
-          const cameraId = cameras[cameras.length - 1].id;
+          const cameraId = cameras[cameras.length - 1].id; // Use the last camera (usually back camera on mobile)
           await scannerRef.current.start(
             cameraId,
             {
               fps: 10,
               qrbox: { width: 250, height: 250 },
+              experimentalFeatures: {
+                useBarCodeDetectorIfSupported: true,
+                torch: flashLight
+              }
             },
             onScanSuccess,
             onScanFailure
@@ -90,82 +74,61 @@ function TQRCodeOf({setShowQR}) {
     }
   };
 
-  const onScanSuccess = useCallback((decodedText, decodedResult) => {
-    if (!isMountedRef.current) return;
+  const onScanSuccess = (decodedText, decodedResult) => {
     setData(decodedText);
-    setIsCheckedIn(prevState => !prevState);
+    setIsCheckedIn(!isCheckedIn);
     handleNavigateToLink(decodedText);
-  }, []);
+  };
 
-  const onScanFailure = useCallback((error) => {
+  const onScanFailure = (error) => {
     // Silently handle scan failures to avoid flooding the console
-  }, []);
+  };
 
-  const handleFileUpload = useCallback((event) => {
-    if (!isMountedRef.current) return;
+  const handleFileUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
       const html5QrCode = new Html5Qrcode("reader");
       html5QrCode.scanFile(file, true)
         .then(decodedText => {
-          if (isMountedRef.current) {
-            setData(decodedText);
-            setIsCheckedIn(prevState => !prevState);
-          }
+          setData(decodedText);
+          setIsCheckedIn(!isCheckedIn);
         })
         .catch(err => {
           console.error("Error scanning file:", err);
-          if (isMountedRef.current) {
-            setError("Unable to scan the uploaded file. Please try a different image.");
-          }
+          setError("Unable to scan the uploaded file. Please try a different image.");
         });
     }
-  }, []);
+  };
 
   const handleClose = useCallback(() => {
     setShowQR(false);
     if (scannerRef.current) {
       scannerRef.current.stop().catch(err => console.error("Error stopping QR scanner:", err));
     }
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach(track => track.stop());
-    }
   }, [setShowQR]);
 
+  const navigate = useNavigate();
+  
   const handleNavigateToLink = useCallback((scannedData) => {
-    if (!isMountedRef.current) return;
     if (scannedData.includes('youtube.com') || scannedData.includes('youtu.be')) {
+      // YouTube link: open in a new tab
       window.open(scannedData, '_blank', 'noopener,noreferrer');
     } else {
       // Non-YouTube link: navigate within the app
-      // You can add your navigation logic here
+      
     }
+    // Close the QR scanner after redirection
     handleClose();
-  }, [navigate, handleClose]);
+  }, [navigate]);
 
-  const toggleFlashlight = useCallback(async () => {
-    if (!isMountedRef.current) return;
-    try {
-      if (!streamRef.current) {
-        streamRef.current = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
-      }
-      const track = streamRef.current.getVideoTracks()[0];
-      const capabilities = track.getCapabilities();
-      
-      if (!('torch' in capabilities)) {
-        throw new Error('Flashlight not supported on this device');
-      }
-      
-      await track.applyConstraints({
+  const toggleFlashLight = async () => {
+    setFlashLight(!flashLight);
+    if (scannerRef.current) {
+      await scannerRef.current.applyVideoConstraints({
         advanced: [{ torch: !flashLight }]
       });
-      
-      setFlashLight(prevState => !prevState);
-    } catch (err) {
-      console.error('Error accessing flashlight:', err);
-      setError(err.message);
     }
-  }, [flashLight]);
+  };
 
   return (
     <div className='fixed inset-0 z-50 bg-black bg-opacity-60 flex items-center justify-center'>
@@ -176,6 +139,7 @@ function TQRCodeOf({setShowQR}) {
         >
           <img className='w-full h-full' src={CrossIcon} alt="Close" />
         </button>
+        {/* <h2 className="text-2xl font-bold text-blue-600">{isCheckedIn ? 'Check Out' : 'Check In'}</h2> */}
         
         <div id="reader" ref={qrRef} className="min-h-52 my-7 w-[95%] bg-gray-100 flex items-center justify-center">
           {permissionStatus === 'checking' && (
@@ -205,31 +169,31 @@ function TQRCodeOf({setShowQR}) {
         
         <div className="w-full flex justify-between items-center px-7">
           <div className="">
-            <p className="text-sm text-gray-600 mb-2">Or upload a QR code image:</p>
-            <input 
-              type="file" 
-              accept="image/*" 
-              onChange={handleFileUpload}
-              className="w-full text-sm text-gray-500
-                cursor-pointer
-                file:mr-4 file:py-2 file:px-4
-                file:rounded-full file:border-0
-                file:text-sm file:font-semibold
-                file:bg-[#f9f5f5] file:text-[#dc2626]
-                hover:file:bg-[#f5eeee]"
-            />
+          <p className="text-sm text-gray-600 mb-2">Or upload a QR code image:</p>
+          <input 
+            type="file" 
+            accept="image/*" 
+            onChange={handleFileUpload}
+            className="w-full text-sm text-gray-500
+              cursor-pointer
+              file:mr-4 file:py-2 file:px-4
+              file:rounded-full file:border-0
+              file:text-sm file:font-semibold
+              file:bg-[#f9f5f5] file:text-[#dc2626]
+              hover:file:bg-[#f5eeee]"
+          />
           </div>
-          <div className="text-center">
-            <button onClick={toggleFlashlight}>
-              {flashLight ? <Flashlight strokeWidth={'1px'} size={'32px'} /> : <FlashlightOff strokeWidth={'1px'} size={'32px'} />}
-            </button>
-          </div>
+            <div className="text-center">
+              <button onClick={toggleFlashLight}>{flashLight ? <Flashlight strokeWidth={'1px'} size={'32px'} /> : <FlashlightOff strokeWidth={'1px'} size={'32px'} />}</button>
+            </div>
         </div>
         
         <p className="text-gray-700 text-center px-4 text-sm">
+          {/* {data === 'No result' ? 'Scan a QR code to visit' : <a className='text-blue-500 hover:text-blue-700' href={data} target='blank'>{data}</a>} */}
           {data === 'No result' ? 'Scan a QR code to visit' : <a className='text-blue-500 hover:text-blue-700' href={data}>{data}</a>}
         </p>
 
+       
         <button 
           onClick={handleClose}
           className="bg-[#f9f5f5] text-gray-700 px-8 py-2 rounded-full text-lg font-semibold hover:bg-[#f5eeee] transition duration-300 shadow-sm w-full max-w-xs"
