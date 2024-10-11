@@ -26,12 +26,14 @@ import TSchedule from './components/Trainers/Schedule'
 import TCalendarPage from './components/Trainers/CalendarPage'
 import TSessions from './components/Trainers/Sessions'
 import AllMembers from './components/Trainers/AllMembers'
+import TQRCodeOf from './components/Trainers/QRCodeOf'
 // import TQRCodeOf from './components/Trainers/QRCodeOf'
 
 
 function App() {
 
   const [ShowQR, setShowQR] = useState(false);
+  const [TShowQR, setTShowQR] = useState(false);
 
   const [loader, setLoader] = useState(true);
 
@@ -59,7 +61,7 @@ function App() {
         <Route path='sessions' element={<Sessions />} />
       </Route>
 
-      <Route path='/trainerdashboard' element={<TrainerDashboard ShowQR={ShowQR} setShowQR={setShowQR} />} >
+      <Route path='/trainerdashboard' element={<TrainerDashboard ShowQR={TShowQR} setShowQR={setTShowQR} />} >
         <Route index  element={<TIndexPage />} />
         <Route path='setting' element={<TSetting />} />
         <Route path='profile' element={<TProfile />} />
@@ -76,6 +78,8 @@ function App() {
       </Route>
     </Routes>
     {ShowQR && <QRCodeOf setShowQR={setShowQR} />}
+    {TShowQR && <TQRCodeOf setShowQR={setTShowQR} />}
+
     </>
   )
 }

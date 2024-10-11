@@ -8,6 +8,7 @@ import ScheduleIcon from '../../../public/assets/ScheduleIcon.svg'
 import CalendarIcon from '../../../public/assets/CalendarIcon2.svg'
 import ProfileIcon from '../../../public/assets/ProfileIcon2.svg'
 import SessionsIcon from '../../../public/assets/SessionsIcon.svg'
+import members from '../../../public/assets/members.svg'
 import { useSwipeable } from 'react-swipeable'
 
 
@@ -118,7 +119,7 @@ function TSideBar({ isOpen, setIsOpen, DropDownView, setDropDownView }) {
                     {({ isActive }) => (
                         <div onClick={()=>{setAccordian1(false); setIsOpen(false); setDropDownView(false)}} className='flex gap-2 items-center'>
                             <div className={`${isActive && 'bg-[#f2e9e9c1]'} w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
-                                <img src={SessionsIcon} alt="" />
+                                <img src={members} alt="" />
                             </div>
                             <span>Members</span>
                         </div>

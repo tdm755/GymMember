@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Html5Qrcode } from "html5-qrcode";
 import CrossIcon from '../../../public/assets/CrossIcon.svg';
 import { useNavigate } from 'react-router-dom';
+import { Flashlight, FlashlightOff } from 'lucide-react';
 
 function TQRCodeOf({setShowQR}) {
   const [isCheckedIn, setIsCheckedIn] = useState(false);
@@ -11,6 +12,8 @@ function TQRCodeOf({setShowQR}) {
   const [permissionStatus, setPermissionStatus] = useState('checking');
   const qrRef = useRef(null);
   const scannerRef = useRef(null);
+  const [flashLight, setFlashLight] = useState(false);
+  const streamRef = useRef(null);
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
@@ -19,7 +22,8 @@ function TQRCodeOf({setShowQR}) {
 
   const checkCameraPermission = useCallback(async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+      streamRef.current = stream;
       stream.getTracks().forEach(track => track.stop());
       setPermissionStatus('granted');
       initializeScanner();
@@ -31,6 +35,11 @@ function TQRCodeOf({setShowQR}) {
 
   useEffect(() => {
     checkCameraPermission();
+    return () => {
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => track.stop());
+      }
+    };
   }, [checkCameraPermission]);
 
   const requestCameraPermission = async () => {
@@ -48,7 +57,7 @@ function TQRCodeOf({setShowQR}) {
         scannerRef.current = new Html5Qrcode("reader");
         const cameras = await Html5Qrcode.getCameras();
         if (cameras && cameras.length) {
-          const cameraId = cameras[cameras.length - 1].id; // Use the last camera (usually back camera on mobile)
+          const cameraId = cameras[cameras.length - 1].id;
           await scannerRef.current.start(
             cameraId,
             {
@@ -99,24 +108,44 @@ function TQRCodeOf({setShowQR}) {
     if (scannerRef.current) {
       scannerRef.current.stop().catch(err => console.error("Error stopping QR scanner:", err));
     }
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(track => track.stop());
+    }
   }, [setShowQR]);
-
 
   const navigate = useNavigate();
   
   const handleNavigateToLink = useCallback((scannedData) => {
     if (scannedData.includes('youtube.com') || scannedData.includes('youtu.be')) {
-      // YouTube link: open in a new tab
       window.open(scannedData, '_blank', 'noopener,noreferrer');
     } else {
       // Non-YouTube link: navigate within the app
-      
     }
-    // Close the QR scanner after redirection
     handleClose();
-  }, [navigate]);
+  }, [navigate, handleClose]);
 
-  
+  const toggleFlashlight = async () => {
+    try {
+      if (!streamRef.current) {
+        streamRef.current = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+      }
+      const track = streamRef.current.getVideoTracks()[0];
+      const capabilities = track.getCapabilities();
+      
+      if (!('torch' in capabilities)) {
+        throw new Error('Flashlight not supported on this device');
+      }
+      
+      await track.applyConstraints({
+        advanced: [{ torch: !flashLight }]
+      });
+      
+      setFlashLight(!flashLight);
+    } catch (err) {
+      console.error('Error accessing flashlight:', err);
+      setError(err.message);
+    }
+  };
 
   return (
     <div className='fixed inset-0 z-50 bg-black bg-opacity-60 flex items-center justify-center'>
@@ -127,7 +156,6 @@ function TQRCodeOf({setShowQR}) {
         >
           <img className='w-full h-full' src={CrossIcon} alt="Close" />
         </button>
-        {/* <h2 className="text-2xl font-bold text-blue-600">{isCheckedIn ? 'Check Out' : 'Check In'}</h2> */}
         
         <div id="reader" ref={qrRef} className="min-h-52 my-7 w-[95%] bg-gray-100 flex items-center justify-center">
           {permissionStatus === 'checking' && (
@@ -138,7 +166,7 @@ function TQRCodeOf({setShowQR}) {
               <p className="text-red-500 mb-2">Camera access is required for QR scanning.</p>
               <button 
                 onClick={requestCameraPermission}
-                className="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition duration-300"
+                className="bg-[#de3131] text-white px-4 py-2 rounded-full hover:bg-[#dc2626] transition duration-300"
               >
                 Request Camera Permission
               </button>
@@ -155,38 +183,36 @@ function TQRCodeOf({setShowQR}) {
           )}
         </div>
         
-        <div className="w-full flex">
+        <div className="w-full flex justify-between items-center px-7">
           <div className="">
-          <p className="text-sm text-gray-600 mb-2">Or upload a QR code image:</p>
-          <input 
-            type="file" 
-            accept="image/*" 
-            onChange={handleFileUpload}
-            className="w-full text-sm text-gray-500
-              file:mr-4 file:py-2 file:px-4
-              file:rounded-full file:border-0
-              file:text-sm file:font-semibold
-              file:bg-blue-50 file:text-blue-700
-              hover:file:bg-blue-100"
-          />
+            <p className="text-sm text-gray-600 mb-2">Or upload a QR code image:</p>
+            <input 
+              type="file" 
+              accept="image/*" 
+              onChange={handleFileUpload}
+              className="w-full text-sm text-gray-500
+                cursor-pointer
+                file:mr-4 file:py-2 file:px-4
+                file:rounded-full file:border-0
+                file:text-sm file:font-semibold
+                file:bg-[#f9f5f5] file:text-[#dc2626]
+                hover:file:bg-[#f5eeee]"
+            />
           </div>
-           {/* <div className="text-center">
-          <p className="text-gray-600 text-sm">Current Time:</p>
-          <p className="text-xl font-bold text-blue-600">
-            {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}
-          </p>
-        </div> */}
+          <div className="text-center">
+            <button onClick={toggleFlashlight}>
+              {flashLight ? <Flashlight strokeWidth={'1px'} size={'32px'} /> : <FlashlightOff strokeWidth={'1px'} size={'32px'} />}
+            </button>
+          </div>
         </div>
         
         <p className="text-gray-700 text-center px-4 text-sm">
-          {/* {data === 'No result' ? 'Scan a QR code to visit' : <a className='text-blue-500 hover:text-blue-700' href={data} target='blank'>{data}</a>} */}
-          {data === 'No result' ? 'Scan a QR code to visit' : data}
+          {data === 'No result' ? 'Scan a QR code to visit' : <a className='text-blue-500 hover:text-blue-700' href={data}>{data}</a>}
         </p>
 
-       
         <button 
           onClick={handleClose}
-          className="bg-gray-200 text-gray-700 px-8 py-2 rounded-full text-lg font-semibold hover:bg-gray-300 transition duration-300 shadow-sm w-full max-w-xs"
+          className="bg-[#f9f5f5] text-gray-700 px-8 py-2 rounded-full text-lg font-semibold hover:bg-[#f5eeee] transition duration-300 shadow-sm w-full max-w-xs"
         >
           Close
         </button>
