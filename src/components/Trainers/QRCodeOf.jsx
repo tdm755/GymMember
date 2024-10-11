@@ -14,13 +14,20 @@ function TQRCodeOf({setShowQR}) {
   const scannerRef = useRef(null);
   const [flashLight, setFlashLight] = useState(false);
   const streamRef = useRef(null);
+  const isMountedRef = useRef(true);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
-    return () => clearInterval(timer);
+    return () => {
+      clearInterval(timer);
+      isMountedRef.current = false;
+    };
   }, []);
 
   const checkCameraPermission = useCallback(async () => {
+    if (!isMountedRef.current) return;
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
       streamRef.current = stream;
@@ -36,13 +43,18 @@ function TQRCodeOf({setShowQR}) {
   useEffect(() => {
     checkCameraPermission();
     return () => {
+      isMountedRef.current = false;
       if (streamRef.current) {
         streamRef.current.getTracks().forEach(track => track.stop());
+      }
+      if (scannerRef.current) {
+        scannerRef.current.stop().catch(err => console.error("Error stopping QR scanner:", err));
       }
     };
   }, [checkCameraPermission]);
 
   const requestCameraPermission = async () => {
+    if (!isMountedRef.current) return;
     try {
       await checkCameraPermission();
     } catch (error) {
@@ -52,6 +64,7 @@ function TQRCodeOf({setShowQR}) {
   };
 
   const initializeScanner = async () => {
+    if (!isMountedRef.current) return;
     if (qrRef.current && !scannerRef.current) {
       try {
         scannerRef.current = new Html5Qrcode("reader");
@@ -77,31 +90,37 @@ function TQRCodeOf({setShowQR}) {
     }
   };
 
-  const onScanSuccess = (decodedText, decodedResult) => {
+  const onScanSuccess = useCallback((decodedText, decodedResult) => {
+    if (!isMountedRef.current) return;
     setData(decodedText);
-    setIsCheckedIn(!isCheckedIn);
+    setIsCheckedIn(prevState => !prevState);
     handleNavigateToLink(decodedText);
-  };
+  }, []);
 
-  const onScanFailure = (error) => {
+  const onScanFailure = useCallback((error) => {
     // Silently handle scan failures to avoid flooding the console
-  };
+  }, []);
 
-  const handleFileUpload = (event) => {
+  const handleFileUpload = useCallback((event) => {
+    if (!isMountedRef.current) return;
     const file = event.target.files[0];
     if (file) {
       const html5QrCode = new Html5Qrcode("reader");
       html5QrCode.scanFile(file, true)
         .then(decodedText => {
-          setData(decodedText);
-          setIsCheckedIn(!isCheckedIn);
+          if (isMountedRef.current) {
+            setData(decodedText);
+            setIsCheckedIn(prevState => !prevState);
+          }
         })
         .catch(err => {
           console.error("Error scanning file:", err);
-          setError("Unable to scan the uploaded file. Please try a different image.");
+          if (isMountedRef.current) {
+            setError("Unable to scan the uploaded file. Please try a different image.");
+          }
         });
     }
-  };
+  }, []);
 
   const handleClose = useCallback(() => {
     setShowQR(false);
@@ -113,18 +132,19 @@ function TQRCodeOf({setShowQR}) {
     }
   }, [setShowQR]);
 
-  const navigate = useNavigate();
-  
   const handleNavigateToLink = useCallback((scannedData) => {
+    if (!isMountedRef.current) return;
     if (scannedData.includes('youtube.com') || scannedData.includes('youtu.be')) {
       window.open(scannedData, '_blank', 'noopener,noreferrer');
     } else {
       // Non-YouTube link: navigate within the app
+      // You can add your navigation logic here
     }
     handleClose();
   }, [navigate, handleClose]);
 
-  const toggleFlashlight = async () => {
+  const toggleFlashlight = useCallback(async () => {
+    if (!isMountedRef.current) return;
     try {
       if (!streamRef.current) {
         streamRef.current = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
@@ -140,12 +160,12 @@ function TQRCodeOf({setShowQR}) {
         advanced: [{ torch: !flashLight }]
       });
       
-      setFlashLight(!flashLight);
+      setFlashLight(prevState => !prevState);
     } catch (err) {
       console.error('Error accessing flashlight:', err);
       setError(err.message);
     }
-  };
+  }, [flashLight]);
 
   return (
     <div className='fixed inset-0 z-50 bg-black bg-opacity-60 flex items-center justify-center'>
