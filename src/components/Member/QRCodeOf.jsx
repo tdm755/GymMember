@@ -21,10 +21,10 @@ function TQRCodeOf({setShowQR}) {
   const [flashLight, setFlashLight] = useState(false);
   const [isCameraReady, setIsCameraReady] = useState(false);
 
-  useEffect(() => {
-    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
-    return () => clearInterval(timer);
-  }, []);
+  // useEffect(() => {
+  //   const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+  //   return () => clearInterval(timer);
+  // }, []);
 
   const checkCameraPermission = useCallback(async () => {
     try {
@@ -161,6 +161,7 @@ function TQRCodeOf({setShowQR}) {
   function handleQRView() {
     if(view === 'QR'){
       setView('scanner')
+      checkCameraPermission();      
     }else{
       setView('QR');
     }
@@ -232,7 +233,7 @@ function TQRCodeOf({setShowQR}) {
               <button onClick={toggleFlashLight}>{flashLight ? <Flashlight strokeWidth={'1px'} size={'32px'} /> : <FlashlightOff strokeWidth={'1px'} size={'32px'} />}</button>
             </div>
         </div>
-        
+
         <p className="text-gray-700 text-center px-4 text-sm">
           {data === 'No result' ? 'Scan a QR code to visit' : <span className='text-blue-500'>{data}</span>}
         </p> </> :
