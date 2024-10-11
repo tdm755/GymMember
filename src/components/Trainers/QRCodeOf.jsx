@@ -12,9 +12,8 @@ function TQRCodeOf({setShowQR}) {
   const [permissionStatus, setPermissionStatus] = useState('checking');
   const qrRef = useRef(null);
   const scannerRef = useRef(null);
-
-
-  const [FlashLight, setFlashLight] = useState(false)
+  const [flashLight, setFlashLight] = useState(false);
+  const [isCameraReady, setIsCameraReady] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
@@ -26,10 +25,12 @@ function TQRCodeOf({setShowQR}) {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true });
       stream.getTracks().forEach(track => track.stop());
       setPermissionStatus('granted');
+      setIsCameraReady(true);
       initializeScanner();
     } catch (error) {
       console.error("Camera permission not granted:", error);
       setPermissionStatus('denied');
+      setIsCameraReady(false);
     }
   }, []);
 
@@ -43,34 +44,47 @@ function TQRCodeOf({setShowQR}) {
     } catch (error) {
       console.error("Error requesting camera permission:", error);
       setError("Camera permission denied. Please grant permission in your browser settings.");
+      setIsCameraReady(false);
     }
   };
 
   const initializeScanner = async () => {
-    if (qrRef.current && !scannerRef.current) {
+    if (qrRef.current && !scannerRef.current && isCameraReady) {
       try {
         scannerRef.current = new Html5Qrcode("reader");
         const cameras = await Html5Qrcode.getCameras();
         if (cameras && cameras.length) {
-          const cameraId = cameras[cameras.length - 1].id; // Use the last camera (usually back camera on mobile)
+          const cameraId = cameras[cameras.length - 1].id;
           await scannerRef.current.start(
             cameraId,
             {
               fps: 10,
               qrbox: { width: 250, height: 250 },
+              experimentalFeatures: {
+                useBarCodeDetectorIfSupported: true,
+                torch: flashLight
+              }
             },
             onScanSuccess,
             onScanFailure
           );
         } else {
           setError("No cameras found on the device.");
+          setIsCameraReady(false);
         }
       } catch (err) {
         console.error("Error starting QR scanner:", err);
         setError("Unable to start the QR scanner. Your browser might not support this feature.");
+        setIsCameraReady(false);
       }
     }
   };
+
+  useEffect(() => {
+    if (isCameraReady) {
+      initializeScanner();
+    }
+  }, [isCameraReady]);
 
   const onScanSuccess = (decodedText, decodedResult) => {
     setData(decodedText);
@@ -90,6 +104,7 @@ function TQRCodeOf({setShowQR}) {
         .then(decodedText => {
           setData(decodedText);
           setIsCheckedIn(!isCheckedIn);
+          handleNavigateToLink(decodedText);
         })
         .catch(err => {
           console.error("Error scanning file:", err);
@@ -99,28 +114,43 @@ function TQRCodeOf({setShowQR}) {
   };
 
   const handleClose = useCallback(() => {
-    setShowQR(false);
     if (scannerRef.current) {
-      scannerRef.current.stop().catch(err => console.error("Error stopping QR scanner:", err));
+      scannerRef.current.stop().then(() => {
+        setShowQR(false);
+      }).catch(err => {
+        console.error("Error stopping QR scanner:", err);
+        setShowQR(false);
+      });
+    } else {
+      setShowQR(false);
     }
   }, [setShowQR]);
-
 
   const navigate = useNavigate();
   
   const handleNavigateToLink = useCallback((scannedData) => {
     if (scannedData.includes('youtube.com') || scannedData.includes('youtu.be')) {
-      // YouTube link: open in a new tab
       window.open(scannedData, '_blank', 'noopener,noreferrer');
     } else {
-      // Non-YouTube link: navigate within the app
-      
+      // Handle non-YouTube links as needed
+      console.log("Non-YouTube link scanned:", scannedData);
     }
-    // Close the QR scanner after redirection
     handleClose();
-  }, [navigate]);
+  }, [handleClose]);
 
-  
+  const toggleFlashLight = async () => {
+    try {
+      setFlashLight(!flashLight);
+      if (scannerRef.current) {
+        await scannerRef.current.applyVideoConstraints({
+          advanced: [{ torch: !flashLight }]
+        });
+      }
+    } catch (error) {
+      console.error("Error toggling flashlight:", error);
+      setError("Unable to toggle flashlight. This feature may not be supported on your device.");
+    }
+  };
 
   return (
     <div className='fixed inset-0 z-50 bg-black bg-opacity-60 flex items-center justify-center'>
@@ -131,9 +161,8 @@ function TQRCodeOf({setShowQR}) {
         >
           <img className='w-full h-full' src={CrossIcon} alt="Close" />
         </button>
-        {/* <h2 className="text-2xl font-bold text-blue-600">{isCheckedIn ? 'Check Out' : 'Check In'}</h2> */}
         
-        <div id="reader" ref={qrRef} className="min-h-52 my-7 w-[95%] bg-gray-100 flex items-center justify-center">
+        <div id="reader" ref={qrRef} className="min-h-40 md:min-h-52 my-7 w-[95%] bg-gray-100 flex items-center justify-center">
           {permissionStatus === 'checking' && (
             <p className="text-gray-500">Checking camera permission...</p>
           )}
@@ -151,8 +180,11 @@ function TQRCodeOf({setShowQR}) {
               </p>
             </div>
           )}
-          {permissionStatus === 'granted' && !error && (
+          {permissionStatus === 'granted' && !error && isCameraReady && (
             <p className="text-gray-500">QR Scanner is active</p>
+          )}
+          {permissionStatus === 'granted' && !error && !isCameraReady && (
+            <p className="text-yellow-500">Camera permission granted, but camera is not ready. Please wait or refresh the page.</p>
           )}
           {error && (
             <p className="text-red-500 text-center">{error}</p>
@@ -176,13 +208,12 @@ function TQRCodeOf({setShowQR}) {
           />
           </div>
             <div className="text-center">
-              <button onClick={()=>{setFlashLight(!FlashLight)}}>{FlashLight ? <Flashlight strokeWidth={'1px'} size={'32px'} /> : <FlashlightOff strokeWidth={'1px'} size={'32px'} />}</button>
+              <button onClick={toggleFlashLight}>{flashLight ? <Flashlight strokeWidth={'1px'} size={'32px'} /> : <FlashlightOff strokeWidth={'1px'} size={'32px'} />}</button>
             </div>
         </div>
         
         <p className="text-gray-700 text-center px-4 text-sm">
-          {/* {data === 'No result' ? 'Scan a QR code to visit' : <a className='text-blue-500 hover:text-blue-700' href={data} target='blank'>{data}</a>} */}
-          {data === 'No result' ? 'Scan a QR code to visit' : <a className='text-blue-500 hover:text-blue-700' href={data}>{data}</a>}
+          {data === 'No result' ? 'Scan a QR code to visit' : <span className='text-blue-500'>{data}</span>}
         </p>
 
        
