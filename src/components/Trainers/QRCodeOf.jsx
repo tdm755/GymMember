@@ -171,9 +171,7 @@ function TQRCodeOf({setShowQR}) {
             track.applyConstraints({
               advanced: [{ torch: false }]
             });
-            track.stop();
           });
-          streamRef.current = null;
         }
       }
       
