@@ -8,7 +8,7 @@ import QRCode from "react-qr-code";
 
 function TQRCodeOf({setShowQR}) {
 
-  const [view, setView] = useState('QR')
+  const [view, setView] = useState('scanner')
   const [value, setValue]  = useState('')
 
   const [isCheckedIn, setIsCheckedIn] = useState(false);
