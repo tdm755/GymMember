@@ -19,7 +19,12 @@ function QRCodeOf({setShowQR}) {
 
   const checkCameraPermission = useCallback(async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+      const stream = await navigator.mediaDevices.getUserMedia({ 
+        video: { 
+          facingMode: 'environment',
+          advanced: [{ torch: true }]
+        } 
+      });
       const track = stream.getVideoTracks()[0];
       const capabilities = track.getCapabilities();
       setHasFlashlight('torch' in capabilities);
@@ -147,13 +152,18 @@ function QRCodeOf({setShowQR}) {
       const newFlashLightState = !flashLight;
       setFlashLight(newFlashLightState);
       if (scannerRef.current) {
-        await scannerRef.current.applyVideoConstraints({
-          advanced: [{ torch: newFlashLightState }]
-        });
+        const track = scannerRef.current.getRunningTrack();
+        if (track) {
+          await track.applyConstraints({
+            advanced: [{ torch: newFlashLightState }]
+          });
+        } else {
+          throw new Error("Camera track not found");
+        }
       }
     } catch (error) {
       console.error("Error toggling flashlight:", error);
-      setError("Unable to toggle flashlight. This feature may not be supported on your device.");
+      setError("Unable to toggle flashlight. This feature may not be supported on your device or browser.");
       setFlashLight(false);
     }
   };
