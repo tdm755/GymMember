@@ -55,8 +55,11 @@ function TQRCodeOf({setShowQR}) {
   };
 
   const initializeScanner = async () => {
-    if (qrRef.current && !scannerRef.current && isCameraReady) {
+    if (qrRef.current && isCameraReady && view === 'scanner') {
       try {
+        if (scannerRef.current) {
+          await scannerRef.current.stop();
+        }
         scannerRef.current = new Html5Qrcode("reader");
         const cameras = await Html5Qrcode.getCameras();
         if (cameras && cameras.length) {
@@ -160,9 +163,10 @@ function TQRCodeOf({setShowQR}) {
 
   function handleQRView() {
     if(view === 'QR'){
-      setView('scanner')
-      checkCameraPermission();
-    }else{
+      setView('scanner');
+      setIsCameraReady(false);  // Reset camera ready state
+      checkCameraPermission();  // Re-check permission and initialize scanner
+    } else {
       if (scannerRef.current) {
         scannerRef.current.stop().catch(err => {
           console.error("Error stopping QR scanner:", err);
@@ -211,7 +215,7 @@ function TQRCodeOf({setShowQR}) {
             <p className="text-gray-500">QR Scanner is active</p>
           )}
           {permissionStatus === 'granted' && !error && !isCameraReady && (
-            <p className="text-yellow-500">Camera permission granted, but camera is not ready. Please wait or refresh the page.</p>
+            <p className="text-yellow-500">Initializing camera... Please wait.</p>
           )}
           {error && (
             <p className="text-red-500 text-center">{error}</p>
