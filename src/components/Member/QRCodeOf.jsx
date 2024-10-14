@@ -36,8 +36,10 @@ function TQRCodeOf({setShowQR}) {
   }, []);
 
   useEffect(() => {
-    checkCameraPermission();
-  }, [checkCameraPermission]);
+    if (view === 'scanner') {
+      checkCameraPermission();
+    }
+  }, [checkCameraPermission, view]);
 
   const requestCameraPermission = async () => {
     try {
@@ -167,7 +169,7 @@ function TQRCodeOf({setShowQR}) {
           setView('QR');
         }).catch(err => {
           console.error("Error stopping QR scanner:", err);
-          // If there's an error stopping the scanner, don't change the view
+          setView('QR');  // Change view even if there's an error
         });
       } else {
         setView('QR');
