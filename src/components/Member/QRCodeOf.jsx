@@ -2,15 +2,9 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Html5Qrcode } from "html5-qrcode";
 import CrossIcon from '../../../public/assets/CrossIcon.svg';
 import { useNavigate } from 'react-router-dom';
-import { Flashlight, FlashlightOff, QrCode, QrCodeIcon, ScanBarcode } from 'lucide-react';
-import QRCode from "react-qr-code";
+import { Flashlight, FlashlightOff } from 'lucide-react';
 
-
-function TQRCodeOf({setShowQR}) {
-
-  const [view, setView] = useState('scanner')
-  const [value, setValue]  = useState('')
-
+function QRCodeOf({setShowQR}) {
   const [isCheckedIn, setIsCheckedIn] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [data, setData] = useState('No result');
@@ -20,10 +14,14 @@ function TQRCodeOf({setShowQR}) {
   const scannerRef = useRef(null);
   const [flashLight, setFlashLight] = useState(false);
   const [isCameraReady, setIsCameraReady] = useState(false);
+  const [hasFlashlight, setHasFlashlight] = useState(false);
 
   const checkCameraPermission = useCallback(async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+      const track = stream.getVideoTracks()[0];
+      const capabilities = track.getCapabilities();
+      setHasFlashlight('torch' in capabilities);
       stream.getTracks().forEach(track => track.stop());
       setPermissionStatus('granted');
       setIsCameraReady(true);
@@ -36,10 +34,8 @@ function TQRCodeOf({setShowQR}) {
   }, []);
 
   useEffect(() => {
-    if (view === 'scanner') {
-      checkCameraPermission();
-    }
-  }, [checkCameraPermission, view]);
+    checkCameraPermission();
+  }, [checkCameraPermission]);
 
   const requestCameraPermission = async () => {
     try {
@@ -52,7 +48,7 @@ function TQRCodeOf({setShowQR}) {
   };
 
   const initializeScanner = useCallback(async () => {
-    if (qrRef.current && isCameraReady && view === 'scanner') {
+    if (qrRef.current && isCameraReady) {
       try {
         if (scannerRef.current) {
           await scannerRef.current.stop();
@@ -84,13 +80,13 @@ function TQRCodeOf({setShowQR}) {
         setIsCameraReady(false);
       }
     }
-  }, [isCameraReady, view, flashLight]);
+  }, [isCameraReady, flashLight]);
 
   useEffect(() => {
-    if (isCameraReady && view === 'scanner') {
+    if (isCameraReady) {
       initializeScanner();
     }
-  }, [isCameraReady, view, initializeScanner]);
+  }, [isCameraReady, initializeScanner]);
 
   const onScanSuccess = (decodedText, decodedResult) => {
     setData(decodedText);
@@ -144,6 +140,7 @@ function TQRCodeOf({setShowQR}) {
   }, [handleClose]);
 
   const toggleFlashLight = async () => {
+    if (!hasFlashlight) return;
     try {
       setFlashLight(!flashLight);
       if (scannerRef.current) {
@@ -157,29 +154,6 @@ function TQRCodeOf({setShowQR}) {
     }
   };
 
-  const handleQRView = useCallback(() => {
-    if(view === 'QR'){
-      setView('scanner');
-      setIsCameraReady(false);  // Reset camera ready state
-      setError(null);  // Clear any previous errors
-      checkCameraPermission();  // Re-check permission and initialize scanner
-    } else {
-      if (scannerRef.current) {
-        scannerRef.current.stop().then(() => {
-          setView('QR');
-          setError(null);  // Clear any previous errors
-        }).catch(err => {
-          console.error("Error stopping QR scanner:", err);
-          setView('QR');  // Change view even if there's an error
-          setError(null);  // Clear any previous errors
-        });
-      } else {
-        setView('QR');
-        setError(null);  // Clear any previous errors
-      }
-    }
-  }, [view, checkCameraPermission]);
-
   return (
     <div className='fixed inset-0 z-50 bg-black bg-opacity-60 flex items-center justify-center'>
       <div className="bg-white relative w-full max-w-md rounded-md flex flex-col items-center gap-6 p-6">
@@ -189,14 +163,8 @@ function TQRCodeOf({setShowQR}) {
         >
           <img className='w-full h-full' src={CrossIcon} alt="Close" />
         </button>
-        <button 
-          onClick={handleQRView} 
-          className='absolute top-4 right-14 w-7 h-7 flex items-center justify-center'
-        >
-          {view === 'QR' ? <ScanBarcode strokeWidth={'1.5px'} /> :<QrCodeIcon strokeWidth={'1.5px'} />}
-        </button>
         
-       {view === 'scanner' ? <><div id="reader" ref={qrRef} className="min-h-40 md:min-h-52 my-7 w-[95%] bg-gray-100 flex items-center justify-center transition-all duration-500 ease-in-out">
+        <div id="reader" ref={qrRef} className="min-h-40 md:min-h-52 my-7 w-[95%] bg-gray-100 flex items-center justify-center transition-all duration-500 ease-in-out">
           {permissionStatus === 'checking' && (
             <p className="text-gray-500">Checking camera permission...</p>
           )}
@@ -242,24 +210,25 @@ function TQRCodeOf({setShowQR}) {
           />
           </div>
             <div className="text-center">
-              <button onClick={toggleFlashLight}>{flashLight ? <Flashlight strokeWidth={'1px'} size={'32px'} /> : <FlashlightOff strokeWidth={'1px'} size={'32px'} />}</button>
+              <button 
+                onClick={toggleFlashLight}
+                disabled={!hasFlashlight}
+                className={`${!hasFlashlight ? 'opacity-50 cursor-not-allowed' : ''}`}
+              >
+                {flashLight ? 
+                  <Flashlight strokeWidth={'1px'} size={'32px'} color={hasFlashlight ? 'currentColor' : 'gray'} /> : 
+                  <FlashlightOff strokeWidth={'1px'} size={'32px'} color={hasFlashlight ? 'currentColor' : 'gray'} />
+                }
+              </button>
             </div>
         </div>
 
         <p className="text-gray-700 text-center px-4 text-sm">
           {data === 'No result' ? 'Scan a QR code to visit' : <span className='text-blue-500'>{data}</span>}
-        </p> </> :
-          <div className='flex flex-col items-center justify-center mt-12'>
-               <QRCode
-                size={300}
-                value={value || "https://example.com"}
-                className="mb-6"
-               />
-               <p className='text-[#dc2626] text-lg mt-2'>Show QR To Trainer</p>
-          </div>}
+        </p>
       </div>
     </div>
   );
 }
 
-export default TQRCodeOf;
+export default QRCodeOf;
