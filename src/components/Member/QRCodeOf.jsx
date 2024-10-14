@@ -234,7 +234,6 @@ function QRCodeOf({setShowQR}) {
                   <FlashlightOff strokeWidth={'1px'} size={'32px'} color={(hasFlashlight && isScannerOpen) ? 'currentColor' : 'gray'} />
                 }
               </button>
-              {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
             </div>
         </div>
 
