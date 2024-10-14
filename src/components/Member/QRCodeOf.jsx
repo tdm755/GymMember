@@ -21,7 +21,8 @@ function QRCodeOf({setShowQR}) {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ 
         video: { 
-          facingMode: 'environment'
+          facingMode: 'environment',
+          advanced: [{ torch: true }]
         } 
       });
       const track = stream.getVideoTracks()[0];
@@ -233,6 +234,7 @@ function QRCodeOf({setShowQR}) {
                   <FlashlightOff strokeWidth={'1px'} size={'32px'} color={(hasFlashlight && isScannerOpen) ? 'currentColor' : 'gray'} />
                 }
               </button>
+              {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
             </div>
         </div>
 
