@@ -87,10 +87,10 @@ function TQRCodeOf({setShowQR}) {
   };
 
   useEffect(() => {
-    if (isCameraReady) {
+    if (isCameraReady && view === 'scanner') {
       initializeScanner();
     }
-  }, [isCameraReady]);
+  }, [isCameraReady, view]);
 
   const onScanSuccess = (decodedText, decodedResult) => {
     setData(decodedText);
@@ -161,8 +161,13 @@ function TQRCodeOf({setShowQR}) {
   function handleQRView() {
     if(view === 'QR'){
       setView('scanner')
-      checkCameraPermission();      
+      checkCameraPermission();
     }else{
+      if (scannerRef.current) {
+        scannerRef.current.stop().catch(err => {
+          console.error("Error stopping QR scanner:", err);
+        });
+      }
       setView('QR');
     }
   }
