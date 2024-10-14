@@ -120,6 +120,7 @@ function QRCodeOf({setShowQR}) {
   };
 
   const handleClose = useCallback(() => {
+    setShowQR(false);
     if (scannerRef.current) {
       scannerRef.current.stop().catch(err => {
         console.error("Error stopping QR scanner:", err);
