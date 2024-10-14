@@ -16,10 +16,10 @@ function Header({setShowQR, isOpen, setIsOpen, DropDownView, setDropDownView, se
   return (
     <div className='flex abstolute z-40 top-0 items-center justify-between w-full px-7 md:px-24 h-24'>
 
-      <div onClick={()=>{setShowQRCode(true)}} className="bg-[#f9fafc] h-12 w-12 flex items-center justify-center rounded-full"><ScanBarcode color='#dc2626' /></div>
+      <div onClick={()=>{setShowQRCode(true)}} className="bg-[#f9fafc] h-12 w-12 flex items-center justify-center rounded-full"><img src={QRSccanner} alt="" /></div>
        <div className="flex gap-2 items-center">
 
-            <div onClick={()=>{setShowQR(true)}} className="rounded-full h-12 w-12 flex items-center justify-center bg-[#f9fafc]"><img src={QRSccanner} alt="" /></div>
+            <div onClick={()=>{setShowQR(true)}} className="rounded-full h-12 w-12 flex items-center justify-center bg-[#f9fafc]"><ScanBarcode color='#dc2626' strokeWidth={'1.5px'} width={'30px'} height={'30px'} /></div>
             <div onClick={()=>{DropDownClick(); setIsOpen(false)}} className="border cursor-pointer relative z-40 rounded-full h-14 w-14" style={{backgroundImage : `url(${ProfileImage})`, backgroundSize: 'contain', backgroundPosition : 'center'}}>
             </div>
             <div onClick={()=>{DropDownClick(); setIsOpen(false)}} className={`cursor-pointer transition-all duration-500 ease-in-out ${DropDownView && 'rotate-180'} `}><img src={Arrow} alt="" /></div>
