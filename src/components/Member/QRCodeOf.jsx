@@ -127,6 +127,7 @@ function QRCodeOf({setShowQR}) {
       }).finally(() => {
         setShowQR(false);
         setIsScannerOpen(false);
+        setFlashLight(false);
       });
     } else {
       setShowQR(false);
@@ -149,16 +150,15 @@ function QRCodeOf({setShowQR}) {
     if (!hasFlashlight || !isScannerOpen) return;
     try {
       const newFlashLightState = !flashLight;
-      setFlashLight(newFlashLightState);
       if (scannerRef.current) {
         await scannerRef.current.applyVideoConstraints({
           advanced: [{ torch: newFlashLightState }]
         });
+        setFlashLight(newFlashLightState);
       }
     } catch (error) {
       console.error("Error toggling flashlight:", error);
       setError("Unable to toggle flashlight. This feature may not be supported on your device or browser.");
-      setFlashLight(false);
     }
   };
 
