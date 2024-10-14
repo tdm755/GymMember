@@ -33,6 +33,7 @@ import TQRCodeOf from './components/Trainers/QRCodeOf'
 function App() {
 
   const [ShowQR, setShowQR] = useState(false);
+  const [ShowQRCode, setShowQRCode] = useState(false);
   const [TShowQR, setTShowQR] = useState(false);
 
   const [loader, setLoader] = useState(true);

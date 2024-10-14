@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
-import NotificationIcon from '../../../public/assets/NotificationIcon.svg'
+// import QR from '../../../public/assets/QR.svg'
 import QRSccanner from '../../../public/assets/QRSccanner.svg'
 import ProfileImage from '../../../public/assets/GymProfileImage.jpg'
 import Arrow from '../../../public/assets/ArrowDown.svg'
 import '../../../public/styles/Global.css';
-import { CheckCheck } from 'lucide-react'
+import { CheckCheck, QrCodeIcon, ScanBarcode, ScanIcon } from 'lucide-react'
 
 function Header({setShowQR, isOpen, setIsOpen, DropDownView, setDropDownView}) {
 
@@ -16,7 +16,7 @@ function Header({setShowQR, isOpen, setIsOpen, DropDownView, setDropDownView}) {
   return (
     <div className='flex abstolute z-40 top-0 items-center justify-between w-full px-7 md:px-24 h-24'>
 
-      <div className="bg-[#f9fafc] h-12 w-12 flex items-center justify-center rounded-full"><img src={NotificationIcon} alt="" /></div>
+      <div className="bg-[#f9fafc] h-12 w-12 flex items-center justify-center rounded-full"><ScanBarcode /></div>
        <div className="flex gap-2 items-center">
 
             <div onClick={()=>{setShowQR(true)}} className="rounded-full h-12 w-12 flex items-center justify-center bg-[#f9fafc]"><img src={QRSccanner} alt="" /></div>

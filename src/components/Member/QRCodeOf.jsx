@@ -21,8 +21,7 @@ function QRCodeOf({setShowQR}) {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ 
         video: { 
-          facingMode: 'environment',
-          advanced: [{ torch: true }]
+          facingMode: 'environment'
         } 
       });
       const track = stream.getVideoTracks()[0];
