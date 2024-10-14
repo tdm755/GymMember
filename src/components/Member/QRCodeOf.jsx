@@ -21,8 +21,7 @@ function QRCodeOf({setShowQR}) {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ 
         video: { 
-          facingMode: 'environment',
-          // advanced: [{ torch: true }]
+          facingMode: 'environment'
         } 
       });
       const track = stream.getVideoTracks()[0];
@@ -152,14 +151,9 @@ function QRCodeOf({setShowQR}) {
       const newFlashLightState = !flashLight;
       setFlashLight(newFlashLightState);
       if (scannerRef.current) {
-        const track = scannerRef.current.getRunningTrack();
-        if (track) {
-          await track.applyConstraints({
-            advanced: [{ torch: newFlashLightState }]
-          });
-        } else {
-          throw new Error("Camera track not found");
-        }
+        await scannerRef.current.applyVideoConstraints({
+          advanced: [{ torch: newFlashLightState }]
+        });
       }
     } catch (error) {
       console.error("Error toggling flashlight:", error);
