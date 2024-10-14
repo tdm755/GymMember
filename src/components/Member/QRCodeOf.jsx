@@ -51,7 +51,7 @@ function TQRCodeOf({setShowQR}) {
     }
   };
 
-  const initializeScanner = async () => {
+  const initializeScanner = useCallback(async () => {
     if (qrRef.current && isCameraReady && view === 'scanner') {
       try {
         if (scannerRef.current) {
@@ -84,13 +84,13 @@ function TQRCodeOf({setShowQR}) {
         setIsCameraReady(false);
       }
     }
-  };
+  }, [isCameraReady, view, flashLight]);
 
   useEffect(() => {
     if (isCameraReady && view === 'scanner') {
       initializeScanner();
     }
-  }, [isCameraReady, view]);
+  }, [isCameraReady, view, initializeScanner]);
 
   const onScanSuccess = (decodedText, decodedResult) => {
     setData(decodedText);
@@ -157,7 +157,7 @@ function TQRCodeOf({setShowQR}) {
     }
   };
 
-  function handleQRView() {
+  const handleQRView = useCallback(() => {
     if(view === 'QR'){
       setView('scanner');
       setIsCameraReady(false);  // Reset camera ready state
@@ -178,7 +178,7 @@ function TQRCodeOf({setShowQR}) {
         setError(null);  // Clear any previous errors
       }
     }
-  }
+  }, [view, checkCameraPermission]);
 
   return (
     <div className='fixed inset-0 z-50 bg-black bg-opacity-60 flex items-center justify-center'>
