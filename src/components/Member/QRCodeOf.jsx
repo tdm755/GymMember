@@ -15,6 +15,7 @@ function QRCodeOf({setShowQR}) {
   const [flashLight, setFlashLight] = useState(false);
   const [isCameraReady, setIsCameraReady] = useState(false);
   const [hasFlashlight, setHasFlashlight] = useState(false);
+  const [isScannerOpen, setIsScannerOpen] = useState(false);
 
   const checkCameraPermission = useCallback(async () => {
     try {
@@ -63,13 +64,13 @@ function QRCodeOf({setShowQR}) {
               fps: 10,
               qrbox: { width: 250, height: 250 },
               experimentalFeatures: {
-                useBarCodeDetectorIfSupported: true,
-                torch: flashLight
+                useBarCodeDetectorIfSupported: true
               }
             },
             onScanSuccess,
             onScanFailure
           );
+          setIsScannerOpen(true);
         } else {
           setError("No cameras found on the device.");
           setIsCameraReady(false);
@@ -80,7 +81,7 @@ function QRCodeOf({setShowQR}) {
         setIsCameraReady(false);
       }
     }
-  }, [isCameraReady, flashLight]);
+  }, [isCameraReady]);
 
   useEffect(() => {
     if (isCameraReady) {
@@ -121,6 +122,7 @@ function QRCodeOf({setShowQR}) {
         console.error("Error stopping QR scanner:", err);
       }).finally(() => {
         setShowQR(false);
+        setIsScannerOpen(false);
       });
     } else {
       setShowQR(false);
@@ -140,17 +142,19 @@ function QRCodeOf({setShowQR}) {
   }, [handleClose]);
 
   const toggleFlashLight = async () => {
-    if (!hasFlashlight) return;
+    if (!hasFlashlight || !isScannerOpen) return;
     try {
-      setFlashLight(!flashLight);
+      const newFlashLightState = !flashLight;
+      setFlashLight(newFlashLightState);
       if (scannerRef.current) {
         await scannerRef.current.applyVideoConstraints({
-          advanced: [{ torch: !flashLight }]
+          advanced: [{ torch: newFlashLightState }]
         });
       }
     } catch (error) {
       console.error("Error toggling flashlight:", error);
       setError("Unable to toggle flashlight. This feature may not be supported on your device.");
+      setFlashLight(false);
     }
   };
 
@@ -212,12 +216,12 @@ function QRCodeOf({setShowQR}) {
             <div className="text-center">
               <button 
                 onClick={toggleFlashLight}
-                disabled={!hasFlashlight}
-                className={`${!hasFlashlight ? 'opacity-50 cursor-not-allowed' : ''}`}
+                disabled={!hasFlashlight || !isScannerOpen}
+                className={`${(!hasFlashlight || !isScannerOpen) ? 'opacity-50 cursor-not-allowed' : ''}`}
               >
                 {flashLight ? 
-                  <Flashlight strokeWidth={'1px'} size={'32px'} color={hasFlashlight ? 'currentColor' : 'gray'} /> : 
-                  <FlashlightOff strokeWidth={'1px'} size={'32px'} color={hasFlashlight ? 'currentColor' : 'gray'} />
+                  <Flashlight strokeWidth={'1px'} size={'32px'} color={(hasFlashlight && isScannerOpen) ? 'currentColor' : 'gray'} /> : 
+                  <FlashlightOff strokeWidth={'1px'} size={'32px'} color={(hasFlashlight && isScannerOpen) ? 'currentColor' : 'gray'} />
                 }
               </button>
             </div>
