@@ -121,10 +121,9 @@ function TQRCodeOf({setShowQR}) {
 
   const handleClose = useCallback(() => {
     if (scannerRef.current) {
-      scannerRef.current.stop().then(() => {
-        setShowQR(false);
-      }).catch(err => {
+      scannerRef.current.stop().catch(err => {
         console.error("Error stopping QR scanner:", err);
+      }).finally(() => {
         setShowQR(false);
       });
     } else {
