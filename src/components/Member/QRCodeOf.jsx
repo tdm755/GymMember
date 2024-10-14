@@ -162,17 +162,21 @@ function TQRCodeOf({setShowQR}) {
     if(view === 'QR'){
       setView('scanner');
       setIsCameraReady(false);  // Reset camera ready state
+      setError(null);  // Clear any previous errors
       checkCameraPermission();  // Re-check permission and initialize scanner
     } else {
       if (scannerRef.current) {
         scannerRef.current.stop().then(() => {
           setView('QR');
+          setError(null);  // Clear any previous errors
         }).catch(err => {
           console.error("Error stopping QR scanner:", err);
           setView('QR');  // Change view even if there's an error
+          setError(null);  // Clear any previous errors
         });
       } else {
         setView('QR');
+        setError(null);  // Clear any previous errors
       }
     }
   }
