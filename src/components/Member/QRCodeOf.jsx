@@ -21,11 +21,6 @@ function TQRCodeOf({setShowQR}) {
   const [flashLight, setFlashLight] = useState(false);
   const [isCameraReady, setIsCameraReady] = useState(false);
 
-  // useEffect(() => {
-  //   const timer = setInterval(() => setCurrentTime(new Date()), 1000);
-  //   return () => clearInterval(timer);
-  // }, []);
-
   const checkCameraPermission = useCallback(async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true });
@@ -168,11 +163,15 @@ function TQRCodeOf({setShowQR}) {
       checkCameraPermission();  // Re-check permission and initialize scanner
     } else {
       if (scannerRef.current) {
-        scannerRef.current.stop().catch(err => {
+        scannerRef.current.stop().then(() => {
+          setView('QR');
+        }).catch(err => {
           console.error("Error stopping QR scanner:", err);
+          // If there's an error stopping the scanner, don't change the view
         });
+      } else {
+        setView('QR');
       }
-      setView('QR');
     }
   }
 
@@ -189,7 +188,6 @@ function TQRCodeOf({setShowQR}) {
           onClick={handleQRView} 
           className='absolute top-4 right-14 w-7 h-7 flex items-center justify-center'
         >
-          {/* <img className='w-full h-full' src={} alt="Close" /> */}
           {view === 'QR' ? <ScanBarcode strokeWidth={'1.5px'} /> :<QrCodeIcon strokeWidth={'1.5px'} />}
         </button>
         
@@ -254,14 +252,6 @@ function TQRCodeOf({setShowQR}) {
                />
                <p className='text-[#dc2626] text-lg mt-2'>Show QR To Trainer</p>
           </div>}
-
-       
-        {/* <button 
-          onClick={handleClose}
-          className="bg-[#f9f5f5] text-gray-700 px-8 py-2 rounded-full text-lg font-semibold hover:bg-[#f5eeee] transition duration-300 shadow-sm w-full max-w-xs"
-        >
-          Close
-        </button> */}
       </div>
     </div>
   );
