@@ -3,7 +3,7 @@ import Header from './Member/Header'
 import SideBar from './Member/sidebar'
 import { Outlet, useLocation } from 'react-router-dom';
 
-function MembersDashDashboard({ShowQR, setShowQR}) {
+function MembersDashDashboard({ShowQR, setShowQR, setShowQRCode}) {
     const [isOpen, setIsOpen] = useState(false);
     const [DropDownView, setDropDownView] = useState(false);
     const [] = useState(false);
@@ -19,7 +19,7 @@ function MembersDashDashboard({ShowQR, setShowQR}) {
             <SideBar isOpen={isOpen} setIsOpen={setIsOpen} DropDownView={DropDownView} setDropDownView={setDropDownView} />
 
             <div className={`md:ml-60`}>
-                <Header isOpen={isOpen} setIsOpen={setIsOpen} DropDownView={DropDownView} setDropDownView={setDropDownView} setShowQR={setShowQR} />
+                <Header isOpen={isOpen} setIsOpen={setIsOpen} DropDownView={DropDownView} setDropDownView={setDropDownView} setShowQR={setShowQR} setShowQRCode={setShowQRCode} />
 
                 <div onClick={()=>setIsOpen(false)} className="min-h-[670px] border">
                     <Outlet />

@@ -27,6 +27,7 @@ import TCalendarPage from './components/Trainers/CalendarPage'
 import TSessions from './components/Trainers/Sessions'
 import AllMembers from './components/Trainers/AllMembers'
 import TQRCodeOf from './components/Trainers/QRCodeOf'
+import QRCodeView from './components/Member/QRCodeView'
 // import TQRCodeOf from './components/Trainers/QRCodeOf'
 
 
@@ -53,7 +54,7 @@ function App() {
     <>
 
     <Routes>
-      <Route path='/memberdashboard' element={<MembersDashDashboard ShowQR={ShowQR} setShowQR={setShowQR} />} >
+      <Route path='/memberdashboard' element={<MembersDashDashboard ShowQR={ShowQR} setShowQR={setShowQR} setShowQRCode={setShowQRCode} />} >
         <Route index  element={<IndexPage />} />
         <Route path='setting' element={<Setting />} />
         <Route path='profile' element={<Profile />} />
@@ -80,6 +81,7 @@ function App() {
     </Routes>
     {ShowQR && <QRCodeOf setShowQR={setShowQR} />}
     {TShowQR && <TQRCodeOf setShowQR={setTShowQR} />}
+    {ShowQRCode && <QRCodeView setShowQR={setShowQRCode} />}
 
     </>
   )

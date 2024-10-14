@@ -25,15 +25,8 @@ function QRCodeView({ setShowQR }) {
             value={value || "https://example.com"}
             className="mb-6"
           />
-          <p className='text-[#dc2626] text-lg mt-2'>Show QR To Trainer</p>
+          <p className='text-[#dc2626] text-lg mt-2'>Show QR To Trainer</p>      
           
-          <input
-            type="text"
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-            placeholder="Enter URL for QR code"
-            className="mt-4 p-2 border rounded w-full max-w-xs"
-          />
         </div>
       </div>
     </div>
