@@ -37,7 +37,7 @@ function App() {
   const [ShowQR, setShowQR] = useState(false);
   const [ShowQRCode, setShowQRCode] = useState(false);
   const [TShowQR, setTShowQR] = useState(false);
-  const [showLogoutModal, setShowLogoutModal] = useState(true)
+  const [showLogoutModal, setShowLogoutModal] = useState(false)
   const [loader, setLoader] = useState(true);
   const navigate = useNavigate();
 
