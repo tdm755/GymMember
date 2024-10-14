@@ -185,7 +185,7 @@ function Profile() {
                 <div className='border border-[#decfcf] mt-7 py-7 w-full flex flex-col'>
                    <div className="flex flex-col items-center justify-center relative">
                     <h2 className='pb-6 relative bg-white z-10 px-4' style={{ fontSize: '1.5em', marginBottom: '20px', textAlign: 'center' }}>Health Considerations</h2>
-                    <hr className='absolute top-7 z-0 border-1 w-[50%] border-[#dc2626]' />
+                    <hr className='absolute top-6 z-0 border-1 w-[90%] md:w-[50%] border-[#dc2626]' />
                    </div>
 
                     <div className="w-full p-5 rounded-md grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
