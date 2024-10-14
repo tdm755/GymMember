@@ -30,7 +30,6 @@ function QRCodeOf({setShowQR}) {
       stream.getTracks().forEach(track => track.stop());
       setPermissionStatus('granted');
       setIsCameraReady(true);
-      initializeScanner();
     } catch (error) {
       console.error("Camera permission not granted:", error);
       setPermissionStatus('denied');
@@ -146,21 +145,19 @@ function QRCodeOf({setShowQR}) {
     handleClose();
   }, [handleClose]);
 
-  const toggleFlashLight = async () => {
-    if (!hasFlashlight || !isScannerOpen) return;
+  const toggleFlashLight = useCallback(async () => {
+    if (!hasFlashlight || !isScannerOpen || !scannerRef.current) return;
     try {
       const newFlashLightState = !flashLight;
-      if (scannerRef.current) {
-        await scannerRef.current.applyVideoConstraints({
-          advanced: [{ torch: newFlashLightState }]
-        });
-        setFlashLight(newFlashLightState);
-      }
+      await scannerRef.current.applyVideoConstraints({
+        advanced: [{ torch: newFlashLightState }]
+      });
+      setFlashLight(newFlashLightState);
     } catch (error) {
       console.error("Error toggling flashlight:", error);
       setError("Unable to toggle flashlight. This feature may not be supported on your device or browser.");
     }
-  };
+  }, [hasFlashlight, isScannerOpen, flashLight]);
 
   return (
     <div className='fixed inset-0 z-50 bg-black bg-opacity-60 flex items-center justify-center'>
