@@ -22,7 +22,8 @@ function Sessions() {
             date: '',
             startTime: "09:00:00",
             endTime: "10:30:00",
-            rating: 4
+            rating: 0,
+            isRated: false
           },
           {
             id: 2,
@@ -31,7 +32,8 @@ function Sessions() {
             date: '',
             startTime: "14:00:00",
             endTime: "15:30:00",
-            rating: 5
+            rating: 0,
+            isRated: false
           },
           // Add more session objects as needed
         ])
@@ -46,7 +48,7 @@ function Sessions() {
   const handleRatingChange = (sessionId, newValue) => {
     setSessions(prevSessions =>
       prevSessions.map(session =>
-        session.id === sessionId ? { ...session, rating: newValue } : session
+        session.id === sessionId ? { ...session, rating: newValue, isRated: true } : session
       )
     )
     // Here you would also send the updated rating to your backend
@@ -77,16 +79,22 @@ function Sessions() {
               {[1, 2, 3, 4, 5].map((star) => (
                 <span
                   key={star}
-                  onClick={() => {handleRatingChange(session.id, star); button.disabled = true;}}
+                  onClick={() => {
+                    if (!session.isRated) {
+                      handleRatingChange(session.id, star);
+                    }
+                  }}
                   style={{
-                    cursor: 'pointer',
-                    color: star <= session.rating ? 'gold' : 'gray'
+                    cursor: session.isRated ? 'default' : 'pointer',
+                    color: star <= session.rating ? 'gold' : 'gray',
+                    opacity: session.isRated ? 0.5 : 1
                   }}
                 >
                   ★
                 </span>
               ))}
               </div>
+              {session.isRated && <p className="text-sm text-gray-500 mt-2">Rating submitted</p>}
             </div>
           </div>
         ))}

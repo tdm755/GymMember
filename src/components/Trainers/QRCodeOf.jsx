@@ -14,6 +14,8 @@ function TQRCodeOf({setShowQR}) {
   const scannerRef = useRef(null);
   const [flashLight, setFlashLight] = useState(false);
   const [isCameraReady, setIsCameraReady] = useState(false);
+  const [hasFlashlight, setHasFlashlight] = useState(false);
+  const [isScannerOpen, setIsScannerOpen] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
@@ -22,7 +24,14 @@ function TQRCodeOf({setShowQR}) {
 
   const checkCameraPermission = useCallback(async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      const stream = await navigator.mediaDevices.getUserMedia({ 
+        video: { 
+          facingMode: 'environment'
+        } 
+      });
+      const track = stream.getVideoTracks()[0];
+      const capabilities = track.getCapabilities();
+      setHasFlashlight('torch' in capabilities);
       stream.getTracks().forEach(track => track.stop());
       setPermissionStatus('granted');
       setIsCameraReady(true);
@@ -75,6 +84,7 @@ function TQRCodeOf({setShowQR}) {
             onScanSuccess,
             onScanFailure
           );
+          setIsScannerOpen(true);
         } else {
           setError("No cameras found on the device.");
           setIsCameraReady(false);
@@ -122,7 +132,15 @@ function TQRCodeOf({setShowQR}) {
   const handleClose = useCallback(() => {
     setShowQR(false);
     if (scannerRef.current) {
-      scannerRef.current.stop().catch(err => console.error("Error stopping QR scanner:", err));
+      scannerRef.current.stop().catch(err => {
+        console.error("Error stopping QR scanner:", err);
+      }).finally(() => {
+        setShowQR(false);
+        setIsScannerOpen(false);
+        setFlashLight(false);
+      });
+    } else {
+      setShowQR(false);
     }
   }, [setShowQR]);
 
@@ -140,14 +158,19 @@ function TQRCodeOf({setShowQR}) {
     handleClose();
   }, [navigate, handleClose]);
 
-  const toggleFlashLight = async () => {
-    setFlashLight(!flashLight);
-    if (scannerRef.current) {
+  const toggleFlashLight = useCallback(async () => {
+    if (!hasFlashlight || !isScannerOpen || !scannerRef.current) return;
+    try {
+      const newFlashLightState = !flashLight;
       await scannerRef.current.applyVideoConstraints({
-        advanced: [{ torch: !flashLight }]
+        advanced: [{ torch: newFlashLightState }]
       });
+      setFlashLight(newFlashLightState);
+    } catch (error) {
+      console.error("Error toggling flashlight:", error);
+      setError("Unable to toggle flashlight. This feature may not be supported on your device or browser.");
     }
-  };
+  }, [hasFlashlight, isScannerOpen, flashLight]);
 
   return (
     <div className='fixed inset-0 z-50 bg-black bg-opacity-60 flex items-center justify-center'>
@@ -205,7 +228,16 @@ function TQRCodeOf({setShowQR}) {
           />
           </div>
             <div className="text-center">
-              <button onClick={toggleFlashLight}>{flashLight ? <Flashlight strokeWidth={'1px'} size={'32px'} /> : <FlashlightOff strokeWidth={'1px'} size={'32px'} />}</button>
+              <button 
+                onClick={toggleFlashLight}
+                disabled={!hasFlashlight || !isScannerOpen}
+                className={`${(!hasFlashlight || !isScannerOpen) ? 'opacity-50 cursor-not-allowed' : ''}`}
+              >
+                {flashLight ? 
+                  <Flashlight strokeWidth={'1px'} size={'32px'} color={(hasFlashlight && isScannerOpen) ? 'currentColor' : 'gray'} /> : 
+                  <FlashlightOff strokeWidth={'1px'} size={'32px'} color={(hasFlashlight && isScannerOpen) ? 'currentColor' : 'gray'} />
+                }
+              </button>
             </div>
         </div>
         
