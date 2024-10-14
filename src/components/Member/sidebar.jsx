@@ -3,6 +3,7 @@ import { NavLink, useLocation } from 'react-router-dom'
 import HomeIcon from '../../../public/assets/HomeIcon.svg'
 import ProfileAddIcon from '../../../public/assets/ProfileAddIcon.svg'
 import SettingIcon from '../../../public/assets/SettingIcon.svg'
+import LogoutIcon from '../../../public/assets/LogoutIcon.svg'
 import TrainersIcon from '../../../public/assets/TrainersIcon.svg'
 import ScheduleIcon from '../../../public/assets/ScheduleIcon.svg'
 import CalendarIcon from '../../../public/assets/CalendarIcon2.svg'
@@ -11,7 +12,7 @@ import SessionsIcon from '../../../public/assets/SessionsIcon.svg'
 import { useSwipeable } from 'react-swipeable'
 
 
-function SideBar({ isOpen, setIsOpen, DropDownView, setDropDownView }) {
+function SideBar({ isOpen, setIsOpen, DropDownView, setDropDownView, setShowLogoutModal }) {
 
     const [Accordian1, setAccordian1] = useState(false);
 
@@ -138,6 +139,15 @@ function SideBar({ isOpen, setIsOpen, DropDownView, setDropDownView }) {
                 </NavLink>
             </div>
             <div className="mt-10 pl-7" >
+            
+                        <div onClick={()=>{setAccordian1(false); setIsOpen(false); setDropDownView(false); setShowLogoutModal(true)}} className='cursor-pointer flex gap-2 items-center'>
+                            <div className={`w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
+                                <img src={LogoutIcon} alt="" />
+                            </div>
+                            <span>Logout</span>
+                        </div>
+
+               
                 <NavLink to={'setting'}>
                     {({ isActive }) => (
                         <div onClick={()=>{setAccordian1(false); setIsOpen(false); setDropDownView(false)}} className='flex gap-2 items-center'>

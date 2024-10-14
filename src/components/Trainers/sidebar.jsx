@@ -58,39 +58,6 @@ function TSideBar({ isOpen, setIsOpen, DropDownView, setDropDownView }) {
                 </NavLink>
 
 
-                {/* <div className="">
-                    <div onClick={()=> {setAccordian1(!Accordian1); setDropDownView(false);}} className='flex cursor-pointer gap-2 items-center'>
-                        <div className={`${(pathname.includes('addmember') || pathname.includes('addtrainer')) && 'bg-[#f2e9e9c1]'}  w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
-                            <img src={ProfileIcon} alt="" />
-                        </div>
-                        <div className="flex justify-between items-center gap-2"><span>Add User</span> <img className={`${Accordian1 && 'rotate-180'} transition-all duration-500 ease-in-out`} src={ArrowDown} alt="" /></div>
-                    </div>
-                    <div onClick={()=>{setIsOpen(false);}} className={`ml-4  pb-0 flex-col gap-4 flex overflow-hidden ${Accordian1 ? 'h-24 p-4' : 'h-0 p-0'} transition-all duration-500 ease-in-out`}>
-                        <NavLink to={'addtrainer'} className=''>
-                            {({ isActive }) => (
-                                <div className='flex gap-2 items-center'>
-                                    <div className={`${isActive && 'bg-[#f2e9e9c1]'} w-[30px] h-[30px] rounded-xl flex items-center justify-center`}>
-                                        <img className='w-5'  src={ProfileAddIcon} alt="" />
-                                    </div>
-                                    <span>Add Trainer</span>
-                                </div>
-
-                            )}
-                        </NavLink>
-                        <NavLink to={'addmember'} className=''>
-                            {({ isActive }) => (
-                                <div onClick={()=>{setIsOpen(false);}} className='flex gap-2 items-center'>
-                                    <div className={`${isActive && 'bg-[#f2e9e9c1]'} w-[30px] h-[30px] rounded-xl flex items-center justify-center`}>
-                                        <img  className='w-5' src={ProfileAddIcon} alt="" />
-                                    </div>
-                                    <span>Add Member</span>
-                                </div>
-
-                            )}
-                        </NavLink>
-                    </div>
-                </div> */}
-
                 <NavLink to={'calendar'} className=''>
                     {({ isActive }) => (
                         <div onClick={()=>{setAccordian1(false); setIsOpen(false); setDropDownView(false)}} className='flex gap-2 items-center'>
@@ -149,8 +116,20 @@ function TSideBar({ isOpen, setIsOpen, DropDownView, setDropDownView }) {
 
                     )}
                 </NavLink>
+
             </div>
             <div className="mt-10 pl-7" >
+            <NavLink to={'profile'} className=''>
+                    {({ isActive }) => (
+                        <div onClick={()=>{setAccordian1(false); setIsOpen(false); setDropDownView(false)}} className='flex gap-2 items-center'>
+                            <div className={`${isActive && 'bg-[#f2e9e9c1]'} w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
+                                <img src={ProfileIcon} alt="" />
+                            </div>
+                            <span>Logout</span>
+                        </div>
+
+                    )}
+                </NavLink>
                 <NavLink to={'setting'}>
                     {({ isActive }) => (
                         <div onClick={()=>{setAccordian1(false); setIsOpen(false); setDropDownView(false)}} className='flex gap-2 items-center'>

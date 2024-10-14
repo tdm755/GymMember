@@ -63,7 +63,7 @@ function Sessions() {
         </h2>
       </div>
       {/* <h2>Your Sessions</h2> */}
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
+      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5'>
         {sessions.map((session) => (
           <div className='border border-[#ccc] rounded-md py-4 px-7 flex flex-col items-center justify-center gap-4' key={session.id} >
             <h3 className='text-[#db3c3c]'>{session.exercise}</h3>

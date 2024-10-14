@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, useNavigate } from 'react-router-dom'
 import PreLoader from './Utils/PreLoader'
 import LoginCredentials from './Authentication/LoginCredentials'
 import SignIn from './Authentication/SignIn'
 import ForgotPass from './Authentication/ForgotPass'
+import LogOutIcon  from '../public/assets/LogoutIcon.svg'
 
 
 // Member
@@ -28,7 +29,7 @@ import TSessions from './components/Trainers/Sessions'
 import AllMembers from './components/Trainers/AllMembers'
 import TQRCodeOf from './components/Trainers/QRCodeOf'
 import QRCodeView from './components/Member/QRCodeView'
-// import TQRCodeOf from './components/Trainers/QRCodeOf'
+import Modal from './Utils/Modal'
 
 
 function App() {
@@ -36,14 +37,21 @@ function App() {
   const [ShowQR, setShowQR] = useState(false);
   const [ShowQRCode, setShowQRCode] = useState(false);
   const [TShowQR, setTShowQR] = useState(false);
-
+  const [showLogoutModal, setShowLogoutModal] = useState(true)
   const [loader, setLoader] = useState(true);
+  const navigate = useNavigate();
+
 
   useEffect(()=>{
     setTimeout(()=>{
       setLoader(false);
     },[2000])
   })
+
+  function handleLogout() {
+    setShowLogoutModal(false);
+    navigate('/')
+  }
 
 
   if (loader) {
@@ -54,7 +62,7 @@ function App() {
     <>
 
     <Routes>
-      <Route path='/memberdashboard' element={<MembersDashDashboard ShowQR={ShowQR} setShowQR={setShowQR} setShowQRCode={setShowQRCode} />} >
+      <Route path='/memberdashboard' element={<MembersDashDashboard ShowQR={ShowQR} setShowQR={setShowQR} setShowQRCode={setShowQRCode} setShowLogoutModal={setShowLogoutModal} />} >
         <Route index  element={<IndexPage />} />
         <Route path='setting' element={<Setting />} />
         <Route path='profile' element={<Profile />} />
@@ -63,7 +71,7 @@ function App() {
         <Route path='sessions' element={<Sessions />} />
       </Route>
 
-      <Route path='/trainerdashboard' element={<TrainerDashboard ShowQR={TShowQR} setShowQR={setTShowQR} />} >
+      <Route path='/trainerdashboard' element={<TrainerDashboard ShowQR={TShowQR} setShowQR={setTShowQR} setShowLogoutModal={setShowLogoutModal} />} >
         <Route index  element={<TIndexPage />} />
         <Route path='setting' element={<TSetting />} />
         <Route path='profile' element={<TProfile />} />
@@ -82,6 +90,15 @@ function App() {
     {ShowQR && <QRCodeOf setShowQR={setShowQR} />}
     {TShowQR && <TQRCodeOf setShowQR={setTShowQR} />}
     {ShowQRCode && <QRCodeView setShowQR={setShowQRCode} />}
+    {showLogoutModal && <Modal  isOpen={showLogoutModal}
+        onClose={() => setShowLogoutModal(false)}
+        onConfirm={handleLogout}
+        icon={LogOutIcon}
+        title="Logout"
+        message="Are you sure you want to logout?"
+        cancelText="Cancel"
+        confirmText="Logout"
+      />}
 
     </>
   )
