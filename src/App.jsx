@@ -5,6 +5,8 @@ import LoginCredentials from './Authentication/LoginCredentials'
 import SignIn from './Authentication/SignIn'
 import ForgotPass from './Authentication/ForgotPass'
 import LogOutIcon  from '../public/assets/LogoutIcon.svg'
+import Modal from './Utils/Modal'
+
 
 
 // Member
@@ -16,6 +18,7 @@ import Schedule from './components/Member/Schedule'
 import CalendarPage from './components/Member/CalendarPage'
 import Sessions from './components/Member/Sessions'
 import QRCodeOf from './components/Member/QRCodeOf'
+import QRCodeView from './components/Member/QRCodeView'
 
 
 //Trainer
@@ -28,8 +31,8 @@ import TCalendarPage from './components/Trainers/CalendarPage'
 import TSessions from './components/Trainers/Sessions'
 import AllMembers from './components/Trainers/AllMembers'
 import TQRCodeOf from './components/Trainers/QRCodeOf'
-import QRCodeView from './components/Member/QRCodeView'
-import Modal from './Utils/Modal'
+import AssignedMembers from './components/Trainers/AssignedMembers'
+import MemberSchedule from './components/Trainers/MemberSchedule'
 
 
 function App() {
@@ -79,6 +82,8 @@ function App() {
         <Route path='calendar' element={<TCalendarPage />} />
         <Route path='sessions' element={<TSessions />} />
         <Route path='allmembers' element={<AllMembers />} />
+        <Route path='assignedmembers' element={<AssignedMembers />} />
+        <Route path='assignedmembers/setschedule' element={<MemberSchedule />} />
       </Route>
 
       <Route path='/' element={<LoginCredentials />} >

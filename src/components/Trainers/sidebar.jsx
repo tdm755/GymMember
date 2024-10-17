@@ -12,7 +12,7 @@ import members from '../../../public/assets/members.svg'
 import { useSwipeable } from 'react-swipeable'
 
 
-function TSideBar({ isOpen, setIsOpen, DropDownView, setDropDownView }) {
+function TSideBar({ isOpen, setIsOpen, DropDownView, setDropDownView, setShowLogoutModal }) {
 
     const [Accordian1, setAccordian1] = useState(false);
 
@@ -82,19 +82,31 @@ function TSideBar({ isOpen, setIsOpen, DropDownView, setDropDownView }) {
                     )}
                 </NavLink>
 
+                <NavLink to={'assignedmembers'} className=''>
+                    {({ isActive }) => (
+                        <div onClick={()=>{setAccordian1(false); setIsOpen(false); setDropDownView(false)}} className='flex gap-2 items-center'>
+                            <div className={`${isActive && 'bg-[#f2e9e9c1]'} w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
+                                <img src={members} alt="" />
+                            </div>
+                            <span>Assigned Members</span>
+                        </div>
+
+                    )}
+                </NavLink>
+
                 <NavLink to={'allmembers'} className=''>
                     {({ isActive }) => (
                         <div onClick={()=>{setAccordian1(false); setIsOpen(false); setDropDownView(false)}} className='flex gap-2 items-center'>
                             <div className={`${isActive && 'bg-[#f2e9e9c1]'} w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
                                 <img src={members} alt="" />
                             </div>
-                            <span>Members</span>
+                            <span>All Members</span>
                         </div>
 
                     )}
                 </NavLink>
 
-                <NavLink to={'schedule'} className=''>
+                {/* <NavLink to={'schedule'} className=''>
                     {({ isActive }) => (
                         <div onClick={()=>{setAccordian1(false); setIsOpen(false); setDropDownView(false)}} className='flex gap-2 items-center'>
                             <div className={`${isActive && 'bg-[#f2e9e9c1]'} w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
@@ -104,7 +116,7 @@ function TSideBar({ isOpen, setIsOpen, DropDownView, setDropDownView }) {
                         </div>
 
                     )}
-                </NavLink>
+                </NavLink> */}
                 <NavLink to={'profile'} className=''>
                     {({ isActive }) => (
                         <div onClick={()=>{setAccordian1(false); setIsOpen(false); setDropDownView(false)}} className='flex gap-2 items-center'>
@@ -119,17 +131,7 @@ function TSideBar({ isOpen, setIsOpen, DropDownView, setDropDownView }) {
 
             </div>
             <div className="mt-10 pl-7" >
-            <NavLink to={'profile'} className=''>
-                    {({ isActive }) => (
-                        <div onClick={()=>{setAccordian1(false); setIsOpen(false); setDropDownView(false)}} className='flex gap-2 items-center'>
-                            <div className={`${isActive && 'bg-[#f2e9e9c1]'} w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
-                                <img src={ProfileIcon} alt="" />
-                            </div>
-                            <span>Logout</span>
-                        </div>
 
-                    )}
-                </NavLink>
                 <NavLink to={'setting'}>
                     {({ isActive }) => (
                         <div onClick={()=>{setAccordian1(false); setIsOpen(false); setDropDownView(false)}} className='flex gap-2 items-center'>
@@ -141,6 +143,15 @@ function TSideBar({ isOpen, setIsOpen, DropDownView, setDropDownView }) {
 
                     )}
                 </NavLink>
+                            
+                <div onClick={()=>{setAccordian1(false); setIsOpen(false); setDropDownView(false); setShowLogoutModal(true)}} className='flex gap-2 items-center cursor-pointer'>
+                            <div className={`w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
+                                <img src={ProfileIcon} alt="" />
+                            </div>
+                            <span>Logout</span>
+                        </div>
+
+                
             </div>
         </div>
     )

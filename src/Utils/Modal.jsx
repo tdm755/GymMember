@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Modal({ isOpen, onClose, onConfirm, icon, title, message, cancelText, confirmText }) {
+function Modal({ isOpen, onClose, onConfirm, icon, title, message, cancelText, confirmText, size }) {
   if (!isOpen) return null;
 
   return (
@@ -12,7 +12,7 @@ function Modal({ isOpen, onClose, onConfirm, icon, title, message, cancelText, c
               <img src={icon} alt="" className="w-6 h-6" />
             </div>
           )}
-          <h2 className="mb-2 text-2xl font-bold text-black">{title}</h2>
+          <h2 className={`mb-2 text-${size}xl font-bold text-black`}>{title}</h2>
           <p className="mb-6 text-sm text-center text-black">{message}</p>
           <div className="flex justify-center space-x-4 w-full">
             <button

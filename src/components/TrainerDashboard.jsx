@@ -3,7 +3,7 @@ import THeader from './Trainers/Header';
 import TSideBar from './Trainers/sidebar';
 import { Outlet, useLocation } from 'react-router-dom';
 
-function TrainerDashboard({ShowQR, setShowQR}) {
+function TrainerDashboard({ShowQR, setShowQR, setShowLogoutModal}) {
     const [isOpen, setIsOpen] = useState(false);
     const [DropDownView, setDropDownView] = useState(false);
     const [] = useState(false);
@@ -16,7 +16,7 @@ function TrainerDashboard({ShowQR, setShowQR}) {
 
     return (
         <div>
-            <TSideBar isOpen={isOpen} setIsOpen={setIsOpen} DropDownView={DropDownView} setDropDownView={setDropDownView} />
+            <TSideBar isOpen={isOpen} setIsOpen={setIsOpen} DropDownView={DropDownView} setDropDownView={setDropDownView} setShowLogoutModal={setShowLogoutModal} />
 
             <div className={`md:ml-60`}>
                 <THeader isOpen={isOpen} setIsOpen={setIsOpen} DropDownView={DropDownView} setDropDownView={setDropDownView} setShowQR={setShowQR} />
