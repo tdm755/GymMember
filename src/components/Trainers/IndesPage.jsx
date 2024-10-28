@@ -11,9 +11,9 @@ function TIndexPage() {
   const OccNews = [
     '../../../public/assets/NewBanner.png',
     '../../../public/assets/NewsBanner.png',
+    '../../../public/assets/NewBanner.png',
     '../../../public/assets/NewsBanner.png',
-    '../../../public/assets/NewsBanner.png',
-    '../../../public/assets/NewsBanner.png'
+    '../../../public/assets/NewBanner.png'
   ];
 
   useEffect(() => {
