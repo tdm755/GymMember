@@ -1,87 +1,82 @@
-/* From Uiverse.io by vinodjangid07 */ 
+/* From Uiverse.io by vinodjangid07 */
 #checkbox {
-    display: none;
-  }
-  
-  .toggle {
-    position: relative;
-    width: 35px;
-    height: 30px;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 7px;
-    transition-duration: .5s;
-  }
-  
-  .bars {
-    width: 100%;
-    height: 3px;
-    background-color: #fb5c59;
-    border-radius: 4px;
-  }
-  
-  #bar2 {
-    transition-duration: .8s;
-  }
-  
-  #bar1,#bar3 {
-    width: 70%;
-  }
-  
-  #checkbox:checked + .toggle .bars {
-    position: absolute;
-    transition-duration: .5s;
-  }
-  
-  #checkbox:checked + .toggle #bar2 {
-    transform: scaleX(0);
-    transition-duration: .5s;
-  }
-  
-  #checkbox:checked + .toggle #bar1 {
-    width: 100%;
-    transform: rotate(45deg);
-    transition-duration: .5s;
-  }
-  
-  #checkbox:checked + .toggle #bar3 {
-    width: 100%;
-    transform: rotate(-45deg);
-    transition-duration: .5s;
-  }
-  
-  #checkbox:checked + .toggle {
-    transition-duration: .5s;
-    transform: rotate(180deg);
-  }
+  display: none;
+}
 
+.toggle {
+  position: relative;
+  width: 35px;
+  height: 30px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  transition-duration: 0.5s;
+}
 
+.bars {
+  width: 100%;
+  height: 3px;
+  background-color: #fb5c59;
+  border-radius: 4px;
+}
 
+#bar2 {
+  transition-duration: 0.8s;
+}
 
-    input[type="date"]::-webkit-calendar-picker-indicator {
-      color: transparent;
-      background: none;
-      z-index: 1;
-      background-image: url('../assets/CalendarIcon.svg');
-      background-size: cover;      
-    }
-  
+#bar1,
+#bar3 {
+  width: 70%;
+}
 
+#checkbox:checked + .toggle .bars {
+  position: absolute;
+  transition-duration: 0.5s;
+}
 
-    .GymBannerImage{
-      background-size: 700px;
-      animation: GymBannerAnimation 4s ease-out forwards;
-    }
+#checkbox:checked + .toggle #bar2 {
+  transform: scaleX(0);
+  transition-duration: 0.5s;
+}
 
+#checkbox:checked + .toggle #bar1 {
+  width: 100%;
+  transform: rotate(45deg);
+  transition-duration: 0.5s;
+}
 
-    
-.Members{
+#checkbox:checked + .toggle #bar3 {
+  width: 100%;
+  transform: rotate(-45deg);
+  transition-duration: 0.5s;
+}
+
+#checkbox:checked + .toggle {
+  transition-duration: 0.5s;
+  transform: rotate(180deg);
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  color: transparent;
+  background: none;
+  z-index: 1;
+  background-image: url("../assets/CalendarIcon.svg");
+  background-size: cover;
+}
+
+.GymBannerImage {
+  background-size: 700px;
+  animation: GymBannerAnimation 4s ease-out forwards;
+}
+
+.Members {
   scrollbar-width: thin;
   scroll-behavior: smooth;
   background-color: #fff;
+
   th {
     border: 1px solid #dea5a5;
     padding: 8px 24px;
@@ -95,19 +90,38 @@
     padding: 12px 24px;
     white-space: nowrap;
   }
-
-
-
 }
 
+.slide {
+  position: absolute;
+  width: 100%;
+  transition: transform 0.5s ease-in-out;
+}
 
+.right {
+  transform: translateX(100%);
+  /* Start from the right */
+}
 
+.left {
+  transform: translateX(-100%);
+  /* Start from the left */
+}
 
+.Shadow {
+  box-shadow: rgb(0 0 0 / 9%) -1px -2px 15px 0px;
+}
 
-    @keyframes GymBannerAnimation {
-      from{
-        background-size: 700px;
-      }to{
-        background-size: 1000px;
-      }
-    }
+.Shadow2 {
+  box-shadow: rgb(0 0 0 / 8%) 0px -14px 40px 0px;
+}
+
+@keyframes GymBannerAnimation {
+  from {
+    background-size: 700px;
+  }
+
+  to {
+    background-size: 1000px;
+  }
+}

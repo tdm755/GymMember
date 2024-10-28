@@ -295,7 +295,7 @@ function MemberSchedule() {
         </div>
         <hr />
         <div className={`grid ${viewMode === 'week' ? 'grid-cols-7' : 'grid-cols-7'} gap-4 border-b border-gray-200 p-2 relative py-4 px-14`}>
-          <img onClick={HandlePreviousClick} className='absolute left-2 top-[25%] h-9 rotate-90' src={ArrowIcon} alt="" />
+          <img onClick={HandlePreviousClick} className='absolute left-2 top-[60%] h-9 rotate-90 hover:scale-110 cursor-pointer transition-all duration-200 ease-in-out' src={ArrowIcon} alt="" />
           {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day, index) => (
             <div key={index} className="text-center">
              <div className="flex items-center justify-center mb-3 cursor-pointer hover:scale-105 transition-all duration-200 ease-in-out"> <img onClick={() => HandleDefaultMuscleInputChange(day)} src={AddIcon} alt="" /></div>
@@ -328,7 +328,7 @@ function MemberSchedule() {
               </div>
             </div>
           ))}
-          <img onClick={HandleNextClick} className='absolute right-2 top-[25%] h-9 -rotate-90' src={ArrowIcon} alt="" />
+          <img onClick={HandleNextClick} className='absolute right-2 top-[60%] h-9 -rotate-90 hover:scale-110 cursor-pointer transition-all duration-200 ease-in-out' src={ArrowIcon} alt="" />
         </div>
       </div>
 

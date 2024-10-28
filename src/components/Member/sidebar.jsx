@@ -37,7 +37,7 @@ function SideBar({ isOpen, setIsOpen, DropDownView, setDropDownView, setShowLogo
     return (
         <div 
             {...handlers} 
-            className={`sidebar fixed z-50 shadow-lg border-r bottom-0 top-0 overflow-y-auto no-scrollbar w-60 flex flex-col gap-20 py-7 bg-[#f9fafc] ${!isOpen ? '-left-60 md:left-0' : 'left-0'} transition-all duration-500`}
+            className={`sidebar fixed z-50 shadow-lg border-r bottom-0 top-0 overflow-y-auto no-scrollbar w-60 flex flex-col gap-10 py-7 bg-[#f9fafc] ${!isOpen ? '-left-60 md:left-0' : 'left-0'} transition-all duration-500`}
         >
             <div className="flex items-center justify-center">
                 <div className="border rounded-md h-20 w-20"></div>
@@ -140,14 +140,6 @@ function SideBar({ isOpen, setIsOpen, DropDownView, setDropDownView, setShowLogo
             </div>
             <div className="mt-10 pl-7" >
             
-                        <div onClick={()=>{setAccordian1(false); setIsOpen(false); setDropDownView(false); setShowLogoutModal(true)}} className='cursor-pointer flex gap-2 items-center'>
-                            <div className={`w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
-                                <img src={LogoutIcon} alt="" />
-                            </div>
-                            <span>Logout</span>
-                        </div>
-
-               
                 <NavLink to={'setting'}>
                     {({ isActive }) => (
                         <div onClick={()=>{setAccordian1(false); setIsOpen(false); setDropDownView(false)}} className='flex gap-2 items-center'>
@@ -159,6 +151,16 @@ function SideBar({ isOpen, setIsOpen, DropDownView, setDropDownView, setShowLogo
 
                     )}
                 </NavLink>
+
+                
+                    <div onClick={()=>{setAccordian1(false); setIsOpen(false); setDropDownView(false); setShowLogoutModal(true)}} className='cursor-pointer flex gap-2 items-center'>
+                        <div className={`w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
+                            <img src={LogoutIcon} alt="" />
+                        </div>
+                        <span>Logout</span>
+                    </div>
+
+               
             </div>
         </div>
     )

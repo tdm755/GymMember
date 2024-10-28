@@ -6,7 +6,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 function MembersDashDashboard({ShowQR, setShowQR, setShowQRCode, setShowLogoutModal}) {
     const [isOpen, setIsOpen] = useState(false);
     const [DropDownView, setDropDownView] = useState(false);
-    const [] = useState(false);
+    // const [] = useState(false);
 
     const location = useLocation();
 

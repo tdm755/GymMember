@@ -33,6 +33,8 @@ import AllMembers from './components/Trainers/AllMembers'
 import TQRCodeOf from './components/Trainers/QRCodeOf'
 import AssignedMembers from './components/Trainers/AssignedMembers'
 import MemberSchedule from './components/Trainers/MemberSchedule'
+import SetMembersbodyMetrics from './components/Trainers/SetMembersbodyMetrics'
+import MemberDetail from './components/Trainers/MemberDetail'
 
 
 function App() {
@@ -84,6 +86,8 @@ function App() {
         <Route path='allmembers' element={<AllMembers />} />
         <Route path='assignedmembers' element={<AssignedMembers />} />
         <Route path='assignedmembers/setschedule' element={<MemberSchedule />} />
+        {/* <Route path='assignedmembers/setreport' element={<SetMembersbodyMetrics />} /> */}
+        <Route path='assignedmembers/setreport' element={<MemberDetail />} />
       </Route>
 
       <Route path='/' element={<LoginCredentials />} >

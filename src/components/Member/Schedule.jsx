@@ -217,7 +217,7 @@ function Schedule() {
         </div>
         <hr />
         <div className={`grid ${viewMode === 'week' ? 'grid-cols-7' : 'grid-cols-7'} gap-4  p-2 relative py-4 px-14`}>
-          <img onClick={HandlePreviousClick} className='absolute left-2 top-[25%] h-9 rotate-90' src={ArrowIcon} alt="" />
+          <img onClick={HandlePreviousClick} className='absolute left-2 top-[50%] h-9 rotate-90 hover:scale-110 cursor-pointer transition-all duration-200 ease-in-out' src={ArrowIcon} alt="" />
           {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day, index) => (
             <div key={index} className="text-center">
               <div className={`font-semibold text-sm ${index === 0 && 'text-[#dc2626]'}`}><span className='hidden md:block'>{day}</span><span className='md:hidden'>{day.slice(0, 1)}</span></div>
@@ -239,7 +239,7 @@ function Schedule() {
               </div>
             </div>
           ))}
-          <img onClick={HandleNextClick} className='absolute right-2 top-[25%] h-9 -rotate-90' src={ArrowIcon} alt="" />
+          <img onClick={HandleNextClick} className='absolute right-2 top-[50%] h-9 -rotate-90 hover:scale-110 cursor-pointer transition-all duration-200 ease-in-out' src={ArrowIcon} alt="" />
         </div>
       </div>
 

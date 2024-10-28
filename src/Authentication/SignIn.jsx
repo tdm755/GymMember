@@ -73,7 +73,7 @@ function SignIn() {
         </div>
     </div>
    
-    <button onClick={()=>{handleUserRedirect()}} className='border py-2 w-[90%] bg-[#dc2626] text-white text-lg rounded-md'>sign In</button>
+    <button onClick={()=>{handleUserRedirect()}} className='border py-2 w-[90%] bg-[#dc2626] text-white text-lg rounded-md'>Sign In</button>
     
 </div>
   )

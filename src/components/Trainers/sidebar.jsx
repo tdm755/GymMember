@@ -37,7 +37,7 @@ function TSideBar({ isOpen, setIsOpen, DropDownView, setDropDownView, setShowLog
     return (
         <div 
             {...handlers} 
-            className={`sidebar fixed z-50 shadow-lg border-r bottom-0 top-0 overflow-y-auto no-scrollbar w-60 flex flex-col gap-20 py-7 bg-[#f9fafc] ${!isOpen ? '-left-60 md:left-0' : 'left-0'} transition-all duration-500`}
+            className={`sidebar fixed z-50 shadow-lg border-r bottom-0 top-0 overflow-y-auto no-scrollbar w-60 flex flex-col gap-10 py-7 bg-[#f9fafc] ${!isOpen ? '-left-60 md:left-0' : 'left-0'} transition-all duration-500`}
         >
             <div className="flex items-center justify-center">
                 <div className="border rounded-md h-20 w-20"></div>
@@ -57,7 +57,7 @@ function TSideBar({ isOpen, setIsOpen, DropDownView, setDropDownView, setShowLog
                     )}
                 </NavLink>
 
-
+{/* 
                 <NavLink to={'calendar'} className=''>
                     {({ isActive }) => (
                         <div onClick={()=>{setAccordian1(false); setIsOpen(false); setDropDownView(false)}} className='flex gap-2 items-center'>
@@ -68,7 +68,7 @@ function TSideBar({ isOpen, setIsOpen, DropDownView, setDropDownView, setShowLog
                         </div>
 
                     )}
-                </NavLink>
+                </NavLink> */}
 
                 <NavLink to={'sessions'} className=''>
                     {({ isActive }) => (
