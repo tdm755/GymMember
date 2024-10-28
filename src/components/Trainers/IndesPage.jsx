@@ -32,7 +32,7 @@ function TIndexPage() {
         {OccNews.map((image, index) => (
           <img
             key={index}
-            src={image}
+            src={`${image}`}
             alt=""
             className={`slide absolute w-full h-full object-cover ${index === currentIndex ? 'left-0' :
                 index < currentIndex ? 'left' : 'right'
