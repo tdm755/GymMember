@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import newsBanner from '../../../public/assets/NewBanner.png'
+import newsBanner2 from '../../../public/assets/NewsBanner.png'
 import members from '../../../public/assets/members.svg'
 import ProfileIcon from '../../../public/assets/ProfileIcon2.svg'
 import SessionsIcon from '../../../public/assets/SessionsIcon.svg'
@@ -9,11 +10,11 @@ import SettingIcon from '../../../public/assets/SettingIcon.svg'
 function IndexPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const OccNews = [
-    '../../../public/assets/NewBanner.png',
-    '../../../public/assets/NewsBanner.png',
-    '../../../public/assets/NewBanner.png',
-    '../../../public/assets/NewsBanner.png',
-    '../../../public/assets/NewBanner.png'
+    newsBanner,
+    newsBanner2,
+    newsBanner,
+    newsBanner2,
+    newsBanner
   ];
 
   useEffect(() => {
