@@ -1,64 +1,164 @@
-import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import { NavLink, useNavigate } from 'react-router-dom'
+import newsBanner from '../../../public/assets/NewBanner.png'
+import members from '../../../public/assets/members.svg'
+import ProfileIcon from '../../../public/assets/ProfileIcon2.svg'
+import SessionsIcon from '../../../public/assets/SessionsIcon.svg'
+import SettingIcon from '../../../public/assets/SettingIcon.svg'
 
 function IndexPage() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const OccNews = [
+    '../../../public/assets/NewBanner.png',
+    '../../../public/assets/NewsBanner.png',
+    '../../../public/assets/NewBanner.png',
+    '../../../public/assets/NewsBanner.png',
+    '../../../public/assets/NewBanner.png'
+  ];
 
-  const navigate = useNavigate();
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prevIndex) =>
+        prevIndex === OccNews.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 3000);
 
-  function handleNavigateClick() {
-    navigate('members')
-  }
+    return () => clearInterval(interval);
+  }, []);
 
-  function handleAddMemNavigateClick(navto) {
-    navigate(navto)
-  }
   return (
-    <div className='p-4 md:p-6 flex flex-col lg:flex-row gap-10'>
+    <div className='p-4 md:p-6 flex flex-col lg:flex-row gap-10 bg-[#f9fafc]'>
+      <div className="h-32 border relative overflow-hidden md:w-[400px]">
+        {OccNews.map((image, index) => (
+          <img
+            key={index}
+            src={`${image}`}
+            alt=""
+            className={`slide absolute w-full h-full object-cover ${index === currentIndex ? 'left-0' :
+                index < currentIndex ? 'left' : 'right'
+              }`}
+            style={{
+              transform: `translateX(${(index - currentIndex) * 100}%)`
+            }}
+          />
+        ))}
+      </div>
 
-
-        {/* Total number of active users */}
-        {/* <div className="border w-full lg:w-80 p-4 flex flex-col gap-4 items-center rounded-xl border-[#eac4c4] shadow-md">
-          <div className="">
-            <p className='text-md font-semibold uppercase'>Total number of active users</p>
+      <div className="h-44 py-5 border md:w-[400px] flex flex-col bg-white shadow-sm p-4">
+        <div className="font-semibold">
+            <h2>Quich Actions</h2>
+        </div>
+       <div className="flex justify-around h-full items-center">
+       <NavLink to={'assignedmembers'} className=''>
+          <div className='flex flex-col gap-2 items-center'>
+            <div className={`bg-[#f2e9e9c1] w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
+              {/* <img src={members} alt="" /> */}
+              <span className='text-[#dc2626] text-lg'>10</span>
+            </div>
+            <span className='text-xs text-center font-medium'>A-Members</span>
           </div>
-          <div className="flex w-full gap-4">
-             <div className="border w-1/2 h-24 rounded-xl flex items-center justify-center text-4xl font-semibold">120</div>
-             <div className="border w-1/2 h-24 rounded-xl flex items-center justify-center text-4xl font-semibold">170</div>
+        </NavLink>
+        <NavLink to={'assignedmembers'} className=''>
+          <div className='flex flex-col gap-2 items-center'>
+            <div className={`bg-[#f2e9e9c1] w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
+              <img src={ProfileIcon} alt="" />
+            </div>
+            <span className='text-xs text-center font-medium'>Profile</span>
           </div>
-          <div className="flex gap-6 justify-around w-full">
-              <button onClick={()=>handleAddMemNavigateClick('trainers')} className='w-1/2 py-2 text-sm bg-[#dc2626] text-white rounded-md'>Trainers</button>
-              <button onClick={()=>handleAddMemNavigateClick('members')} className='w-1/2 py-2 text-sm bg-[#dc2626] text-white rounded-md'>Members</button>
+        </NavLink>
+        <NavLink to={'assignedmembers'} className=''>
+          <div className='flex flex-col gap-2 items-center'>
+            <div className={`bg-[#f2e9e9c1] w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
+              <img src={SessionsIcon} alt="" />
+            </div>
+            <span className='text-xs text-center font-medium whitsp'>Sessions</span>
           </div>
-        </div> 
-        
-        
-        <div className="flex flex-col md:flex-row lg:flex-col gap-4">
-            <div className="border w-full md:w-1/2 lg:w-80 lg:h-1/2 p-4 flex flex-col gap-4 items-center justify-between rounded-xl border-[#eac4c4] shadow-md">
-              <div className="">
-                <p className='text-md font-semibold uppercase'>New member sign-ups this month</p>
-              </div>
-              <div className="flex items-center justify-around w-full">
-              <div className="text-4xl font-semibold">
-                20
-              </div>        
-                <button onClick={()=>handleAddMemNavigateClick('addmember')} className='font-semibold px-4 py-2 text-sm bg-[#dc2626] text-white rounded-md'>Add Members</button>        
-              </div>
-            </div>  
+        </NavLink>
+        <NavLink to={'assignedmembers'} className=''>
+          <div className='flex flex-col gap-2 items-center'>
+            <div className={`bg-[#f2e9e9c1] w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
+              <img src={SettingIcon} alt="" />
+            </div>
+            <span className='text-xs text-center font-medium whitsp'>Setting</span>
+          </div>
+        </NavLink>
 
-            <div className="border w-full md:w-1/2 lg:w-80 lg:h-1/2 p-4 flex flex-col gap-4 items-center rounded-xl border-[#eac4c4] shadow-md">
-                <div className="text-md font-semibold uppercase">
-                  Membership renewals due
-                </div>
-                <div className="flex items-center justify-around w-full">
-              <div className="text-4xl font-semibold">
-                20
-              </div>        
-                <button onClick={handleNavigateClick} className='font-semibold px-12 py-2 text-sm bg-[#dc2626] text-white rounded-md'>View</button>        
-              </div>
-            </div> 
-        </div>  */}
-        
+       </div>
+      </div>
+      <div className="h-44 py-5 border md:w-[400px] flex flex-col bg-white shadow-sm p-4">
+        <div className="font-semibold">
+            <h2>Quich Actions</h2>
+        </div>
+       <div className="BTTest flex justify-around h-full items-center overflow-x-auto gap-4">
+       <NavLink to={'assignedmembers'} className=''>
+          <div className='flex flex-col gap-2 items-center'>
+            <div className={`bg-[#f2e9e9c1] w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
+              {/* <img src={members} alt="" /> */}
+              <span className='text-[#dc2626] text-lg'>10</span>
+            </div>
+            <span className='text-xs text-center font-medium'>A-Members</span>
+          </div>
+        </NavLink>
+        <NavLink to={'assignedmembers'} className=''>
+          <div className='flex flex-col gap-2 items-center'>
+            <div className={`bg-[#f2e9e9c1] w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
+              <img src={ProfileIcon} alt="" />
+            </div>
+            <span className='text-xs text-center font-medium'>Profile</span>
+          </div>
+        </NavLink>
+        <NavLink to={'assignedmembers'} className=''>
+          <div className='flex flex-col gap-2 items-center'>
+            <div className={`bg-[#f2e9e9c1] w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
+              <img src={SessionsIcon} alt="" />
+            </div>
+            <span className='text-xs text-center font-medium whitsp'>Sessions</span>
+          </div>
+        </NavLink>
+        <NavLink to={'assignedmembers'} className=''>
+          <div className='flex flex-col gap-2 items-center'>
+            <div className={`bg-[#f2e9e9c1] w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
+              <img src={SettingIcon} alt="" />
+            </div>
+            <span className='text-xs text-center font-medium whitsp'>Setting</span>
+          </div>
+        </NavLink>
+        <NavLink to={'assignedmembers'} className=''>
+          <div className='flex flex-col gap-2 items-center'>
+            <div className={`bg-[#f2e9e9c1] w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
+              {/* <img src={members} alt="" /> */}
+              <span className='text-[#dc2626] text-lg'>10</span>
+            </div>
+            <span className='text-xs text-center font-medium'>A-Members</span>
+          </div>
+        </NavLink>
+        <NavLink to={'assignedmembers'} className=''>
+          <div className='flex flex-col gap-2 items-center'>
+            <div className={`bg-[#f2e9e9c1] w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
+              <img src={ProfileIcon} alt="" />
+            </div>
+            <span className='text-xs text-center font-medium'>Profile</span>
+          </div>
+        </NavLink>
+        <NavLink to={'assignedmembers'} className=''>
+          <div className='flex flex-col gap-2 items-center'>
+            <div className={`bg-[#f2e9e9c1] w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
+              <img src={SessionsIcon} alt="" />
+            </div>
+            <span className='text-xs text-center font-medium whitsp'>Sessions</span>
+          </div>
+        </NavLink>
+        <NavLink to={'assignedmembers'} className=''>
+          <div className='flex flex-col gap-2 items-center'>
+            <div className={`bg-[#f2e9e9c1] w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
+              <img src={SettingIcon} alt="" />
+            </div>
+            <span className='text-xs text-center font-medium whitsp'>Setting</span>
+          </div>
+        </NavLink>
 
+       </div>
+      </div>
     </div>
   )
 }

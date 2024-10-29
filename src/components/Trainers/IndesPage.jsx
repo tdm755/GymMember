@@ -85,6 +85,80 @@ function TIndexPage() {
 
        </div>
       </div>
+      <div className="h-44 py-5 border md:w-[400px] flex flex-col bg-white shadow-sm p-4">
+        <div className="font-semibold">
+            <h2>Quich Actions</h2>
+        </div>
+       <div className="BTTest flex justify-around h-full items-center overflow-x-auto gap-4">
+       <NavLink to={'assignedmembers'} className=''>
+          <div className='flex flex-col gap-2 items-center'>
+            <div className={`bg-[#f2e9e9c1] w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
+              {/* <img src={members} alt="" /> */}
+              <span className='text-[#dc2626] text-lg'>10</span>
+            </div>
+            <span className='text-xs text-center font-medium'>A-Members</span>
+          </div>
+        </NavLink>
+        <NavLink to={'assignedmembers'} className=''>
+          <div className='flex flex-col gap-2 items-center'>
+            <div className={`bg-[#f2e9e9c1] w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
+              <img src={ProfileIcon} alt="" />
+            </div>
+            <span className='text-xs text-center font-medium'>Profile</span>
+          </div>
+        </NavLink>
+        <NavLink to={'assignedmembers'} className=''>
+          <div className='flex flex-col gap-2 items-center'>
+            <div className={`bg-[#f2e9e9c1] w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
+              <img src={SessionsIcon} alt="" />
+            </div>
+            <span className='text-xs text-center font-medium whitsp'>Sessions</span>
+          </div>
+        </NavLink>
+        <NavLink to={'assignedmembers'} className=''>
+          <div className='flex flex-col gap-2 items-center'>
+            <div className={`bg-[#f2e9e9c1] w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
+              <img src={SettingIcon} alt="" />
+            </div>
+            <span className='text-xs text-center font-medium whitsp'>Setting</span>
+          </div>
+        </NavLink>
+        <NavLink to={'assignedmembers'} className=''>
+          <div className='flex flex-col gap-2 items-center'>
+            <div className={`bg-[#f2e9e9c1] w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
+              {/* <img src={members} alt="" /> */}
+              <span className='text-[#dc2626] text-lg'>10</span>
+            </div>
+            <span className='text-xs text-center font-medium'>A-Members</span>
+          </div>
+        </NavLink>
+        <NavLink to={'assignedmembers'} className=''>
+          <div className='flex flex-col gap-2 items-center'>
+            <div className={`bg-[#f2e9e9c1] w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
+              <img src={ProfileIcon} alt="" />
+            </div>
+            <span className='text-xs text-center font-medium'>Profile</span>
+          </div>
+        </NavLink>
+        <NavLink to={'assignedmembers'} className=''>
+          <div className='flex flex-col gap-2 items-center'>
+            <div className={`bg-[#f2e9e9c1] w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
+              <img src={SessionsIcon} alt="" />
+            </div>
+            <span className='text-xs text-center font-medium whitsp'>Sessions</span>
+          </div>
+        </NavLink>
+        <NavLink to={'assignedmembers'} className=''>
+          <div className='flex flex-col gap-2 items-center'>
+            <div className={`bg-[#f2e9e9c1] w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
+              <img src={SettingIcon} alt="" />
+            </div>
+            <span className='text-xs text-center font-medium whitsp'>Setting</span>
+          </div>
+        </NavLink>
+
+       </div>
+      </div>
     </div>
   )
 }

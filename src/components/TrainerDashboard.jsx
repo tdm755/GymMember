@@ -21,7 +21,7 @@ function TrainerDashboard({ShowQR, setShowQR, setShowLogoutModal}) {
 
             <div className={`md:ml-60`}>
                 <THeader isOpen={isOpen} setIsOpen={setIsOpen} DropDownView={DropDownView} setDropDownView={setDropDownView} setShowQR={setShowQR} setShowLogoutModal={setShowLogoutModal} />
-                <TBottomNavigator setShowQR={setShowQR} />
+                <TBottomNavigator ShowQR={ShowQR} setShowQR={setShowQR} />
 
                 <div onClick={()=>setIsOpen(false)} className="min-h-[670px] border">
                     <Outlet />

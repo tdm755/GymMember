@@ -116,6 +116,13 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   box-shadow: rgb(0 0 0 / 8%) 0px -14px 40px 0px;
 }
 
+.BTTest{
+scrollbar-width: none;
+ span {
+  display: none;
+ }
+}
+
 @keyframes GymBannerAnimation {
   from {
     background-size: 700px;
@@ -125,3 +132,5 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     background-size: 1000px;
   }
 }
+
+
