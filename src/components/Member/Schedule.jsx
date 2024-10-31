@@ -202,7 +202,7 @@ function Schedule() {
 
 
   return (
-    <div className='p-6 bg-[#f9fafc] min-h-screen'>
+    <div className=' p-2 md:p-6 bg-[#f9fafc] min-h-screen pb-[110px]'>
       <div className="bg-white border border-[#f5eeee] rounded-lg overflow-hidden">
         <div className='text-center py-6 text-2xl'>
           <span className='border rounded-full px-4 py-1'>

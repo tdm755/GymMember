@@ -109,14 +109,14 @@ function Profile() {
     };
 
     return (
-        <div className='pb-32'>
+        <div className='pb-[110px]'>
 
             <div className="relative h-40" style={{ backgroundImage: `url(${GymBackgroundImage})`, backgroundSize: 'contain' }}>
                 <div className="h-36 w-36 rounded-full absolute -bottom-12 left-7" style={{ backgroundImage: `url(${ProfileImage})`, backgroundSize: 'cover' }}></div>
             </div>
 
 
-            <div className="flex flex-col gap-16 p-7">
+            <div className="flex flex-col gap-16 p-2 md:p-6">
                 {/* personal Details */}
                 <div className="flex flex-col w-full mt-32 border border-[#decfcf] p-7">
                     <div className="relative flex items-center justify-center">
