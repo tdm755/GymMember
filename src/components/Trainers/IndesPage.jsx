@@ -94,7 +94,7 @@ function TIndexPage() {
      <div className="flex flex-col md:flex-row gap-4">
      <div className="h-44 py-5 border md:w-[400px] flex flex-col bg-white shadow-sm p-4">
         <div className="font-semibold">
-            <h2>Quich Actions</h2>
+            <h2>Quick Actions</h2>
         </div>
        <div className="flex justify-around h-full items-center">
        <NavLink to={'assignedmembers'} className=''>
