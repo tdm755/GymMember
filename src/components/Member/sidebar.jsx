@@ -146,7 +146,7 @@ function SideBar({ isOpen, setIsOpen, DropDownView, setDropDownView, setShowLogo
                             <div className={`${isActive && 'bg-[#f2e9e9c1]'} w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
                                 <img src={SettingIcon} alt="" />
                             </div>
-                            <span>Setting</span>
+                            <span>Settings</span>
                         </div>
 
                     )}
