@@ -257,7 +257,7 @@ function TQRCodeOf({setShowQR}) {
         {/* Scanning Line Animation */}
         {permissionStatus === 'granted' && !error && isCameraReady && (
           <div 
-            className="absolute left-8 right-8 h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent animate-scan pointer-events-none"
+            className="absolute left-8 right-8 h-1 bg-gradient-to-r from-transparent via-[green] to-transparent animate-scan pointer-events-none"
             style={{
               boxShadow: '0 0 8px rgba(59, 130, 246, 0.6)',
               animation: 'scan 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
@@ -266,10 +266,10 @@ function TQRCodeOf({setShowQR}) {
         )}
         
         {/* Corner Markers */}
-        <div className="absolute top-6 left-6 w-8 h-8 border-t-4 border-l-4 border-blue-500 rounded-tl-lg pointer-events-none"></div>
-        <div className="absolute top-6 right-6 w-8 h-8 border-t-4 border-r-4 border-blue-500 rounded-tr-lg pointer-events-none"></div>
-        <div className="absolute bottom-6 left-6 w-8 h-8 border-b-4 border-l-4 border-blue-500 rounded-bl-lg pointer-events-none"></div>
-        <div className="absolute bottom-6 right-6 w-8 h-8 border-b-4 border-r-4 border-blue-500 rounded-br-lg pointer-events-none"></div>
+        <div className="absolute top-6 left-6 w-8 h-8 border-t-4 border-l-4 border-[green] rounded-tl-lg pointer-events-none"></div>
+        <div className="absolute top-6 right-6 w-8 h-8 border-t-4 border-r-4 border-[green] rounded-tr-lg pointer-events-none"></div>
+        <div className="absolute bottom-6 left-6 w-8 h-8 border-b-4 border-l-4 border-[green] rounded-bl-lg pointer-events-none"></div>
+        <div className="absolute bottom-6 right-6 w-8 h-8 border-b-4 border-r-4 border-[green] rounded-br-lg pointer-events-none"></div>
 
         {/* Status Overlays */}
         {(permissionStatus !== 'granted' || error) && (
