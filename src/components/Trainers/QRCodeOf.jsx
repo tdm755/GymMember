@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Html5Qrcode } from "html5-qrcode";
 import CrossIcon from '../../../public/assets/CrossIcon.svg';
 import { useNavigate } from 'react-router-dom';
-import { Flashlight, FlashlightOff, Camera } from 'lucide-react';
+import { Flashlight, FlashlightOff, Camera, X, UploadCloud, Scan, AlertCircle } from 'lucide-react';
 
 function TQRCodeOf({setShowQR}) {
   const [isCheckedIn, setIsCheckedIn] = useState(false);
@@ -117,8 +117,9 @@ function TQRCodeOf({setShowQR}) {
       await scannerRef.current.start(
         cameras[nextCameraIndex].deviceId,
         {
-          fps: 10,
-          qrbox: { width: 250, height: 250 },
+          fps: 30,
+          qrbox: { width: 280, height: 280 },
+          aspectRatio: 1,
           experimentalFeatures: {
             useBarCodeDetectorIfSupported: true
           }
@@ -140,8 +141,9 @@ function TQRCodeOf({setShowQR}) {
         await scannerRef.current.start(
           cameras[currentCameraIndex].deviceId,
           {
-            fps: 10,
-            qrbox: { width: 250, height: 250 },
+            fps: 30,
+            qrbox: { width: 280, height: 280 },
+            aspectRatio: 1,
             experimentalFeatures: {
               useBarCodeDetectorIfSupported: true
             }
@@ -230,98 +232,134 @@ function TQRCodeOf({setShowQR}) {
     }
   }, [hasFlashlight, isScannerOpen, flashLight]);
 
+  // Animation wrapper component
+  const AnimatedBorder = () => (
+    <div className="absolute inset-0 pointer-events-none">
+      <div className="absolute top-0 left-0 w-16 h-1 bg-red-500 animate-[scanner-line_4s_ease-in-out_infinite]" />
+      <div className="absolute top-0 right-0 w-1 h-16 bg-red-500 animate-[scanner-line_4s_ease-in-out_infinite]" />
+      <div className="absolute bottom-0 right-0 w-16 h-1 bg-red-500 animate-[scanner-line_4s_ease-in-out_infinite]" />
+      <div className="absolute bottom-0 left-0 w-1 h-16 bg-red-500 animate-[scanner-line_4s_ease-in-out_infinite]" />
+    </div>
+  );
+
   return (
-    <div className='fixed inset-0 z-50 bg-black/75 backdrop-blur-[2px] flex items-center justify-center px-4'>
-      <div className="bg-white relative w-full max-w-[448px] rounded-[20px] shadow-2xl flex flex-col items-center gap-6 p-8">
-        <button 
-          onClick={handleClose} 
-          className='absolute top-4 right-4 w-8 h-8 flex items-center justify-center hover:scale-110 transition-transform duration-200'
-        >
-          <img className='w-full h-full opacity-50 hover:opacity-100 transition-opacity duration-200' src={CrossIcon} alt="Close" />
-        </button>
-        
-        <div id="reader" ref={qrRef} className="w-full aspect-square bg-gray-50 rounded-[16px] shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] flex flex-col items-center justify-center p-6">
-          {permissionStatus === 'checking' && (
-            <div className="animate-pulse text-gray-500 font-medium">Checking camera permission...</div>
-          )}
-          {permissionStatus === 'denied' && (
-            <div className="text-center space-y-4 max-w-[320px]">
-              <p className="text-red-500 font-semibold">Camera access is required for QR scanning.</p>
-              <button 
-                onClick={requestCameraPermission}
-                className="bg-[#de3131] text-white px-7 py-3 rounded-full hover:bg-[#dc2626] transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 font-medium"
-              >
-                Request Camera Permission
-              </button>
-              <p className="text-sm text-gray-500 leading-relaxed">
-                If the button doesn't work, please enable camera access in your browser settings.
-              </p>
-            </div>
-          )}
-          {permissionStatus === 'granted' && !error && isCameraReady && (
-            <div className="text-emerald-600 font-semibold">QR Scanner is active</div>
-          )}
-          {permissionStatus === 'granted' && !error && !isCameraReady && (
-            <div className="text-amber-500 animate-pulse font-medium">Camera permission granted, initializing...</div>
-          )}
-          {error && (
-            <p className="text-red-500 text-center font-semibold max-w-[320px]">{error}</p>
-          )}
-        </div>
-        
-        <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-center gap-6 px-2">
-          <div className="flex-1">
-            <p className="text-sm font-semibold text-gray-700 mb-2.5">Upload QR code image:</p>
-            <input 
-              type="file" 
-              accept="image/*" 
-              onChange={handleFileUpload}
-              className="w-full text-sm text-gray-500
-                cursor-pointer
-                file:mr-4 file:py-2.5 file:px-6
-                file:rounded-full file:border-0
-                file:text-sm file:font-semibold
-                file:bg-[#f9f5f5] file:text-[#dc2626]
-                hover:file:bg-[#f5eeee] file:transition-all
-                file:duration-300 file:shadow-sm"
-            />
+    <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4">
+      <div className="bg-gradient-to-b from-white to-gray-50 relative w-full max-w-xl rounded-3xl shadow-2xl flex flex-col items-center gap-8 p-8">
+        {/* Header */}
+        <div className="w-full flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="bg-red-500 w-2 h-8 rounded-full" />
+            <h2 className="text-2xl font-bold text-gray-800">QR Scanner</h2>
           </div>
-          <div className="flex gap-6">
+          <button 
+            onClick={handleClose}
+            className="p-2 hover:bg-gray-100 rounded-full transition-all duration-200 group"
+          >
+            <X className="w-6 h-6 text-gray-400 group-hover:text-gray-600" />
+          </button>
+        </div>
+
+        {/* Scanner Area */}
+        <div className="relative w-full aspect-square max-w-md">
+          <div 
+            id="reader" 
+            ref={qrRef}
+            className="w-full h-full bg-black rounded-2xl overflow-hidden shadow-inner"
+          >
+            {permissionStatus === 'checking' && (
+              <div className="absolute inset-0 bg-black/80 backdrop-blur flex items-center justify-center">
+                <div className="flex flex-col items-center gap-4">
+                  <div className="w-12 h-12 border-4 border-red-500 border-t-transparent rounded-full animate-spin" />
+                  <p className="text-white font-medium">Initializing Camera...</p>
+                </div>
+              </div>
+            )}
+
+            {permissionStatus === 'denied' && (
+              <div className="absolute inset-0 bg-black/90 backdrop-blur flex items-center justify-center p-6">
+                <div className="flex flex-col items-center gap-6 max-w-sm">
+                  <AlertCircle className="w-16 h-16 text-red-500" />
+                  <p className="text-white text-center text-lg font-medium">Camera access is required for QR scanning</p>
+                  <button 
+                    onClick={requestCameraPermission}
+                    className="bg-red-500 hover:bg-red-600 text-white px-8 py-3 rounded-full font-medium transform hover:scale-105 transition-all duration-200"
+                  >
+                    Enable Camera Access
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {isCameraReady && !error && <AnimatedBorder />}
+
+            {error && (
+              <div className="absolute inset-0 bg-black/90 backdrop-blur flex items-center justify-center p-6">
+                <p className="text-red-400 text-lg text-center max-w-sm font-medium">{error}</p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Controls */}
+        <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+          <div className="relative group">
+            <input 
+              type="file"
+              accept="image/*"
+              onChange={handleFileUpload}
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+            />
+            <div className="w-full bg-gray-50 hover:bg-gray-100 rounded-xl p-4 flex items-center gap-4 border-2 border-dashed border-gray-200 group-hover:border-red-500 transition-all duration-200">
+              <UploadCloud className="w-6 h-6 text-gray-400 group-hover:text-red-500" />
+              <div>
+                <p className="font-medium text-gray-700">Upload QR Image</p>
+                <p className="text-sm text-gray-500">Click or drag and drop</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex justify-end gap-4">
             <button 
               onClick={toggleFlashLight}
               disabled={!hasFlashlight || !isScannerOpen}
-              className={`p-2.5 rounded-full transition-all duration-300 ${(!hasFlashlight || !isScannerOpen) ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100 active:bg-gray-200'}`}
+              className={`p-3 rounded-xl transition-all duration-200 ${
+                !hasFlashlight || !isScannerOpen 
+                  ? 'bg-gray-100 cursor-not-allowed' 
+                  : 'hover:bg-red-50 hover:text-red-500'
+              }`}
             >
-              {flashLight ? 
-                <Flashlight strokeWidth={1.5} size={28} className="text-[#dc2626]" /> : 
-                <FlashlightOff strokeWidth={1.5} size={28} className={hasFlashlight && isScannerOpen ? "text-gray-600" : "text-gray-400"} />
-              }
+              {flashLight ? <Flashlight className="w-6 h-6" /> : <FlashlightOff className="w-6 h-6" />}
             </button>
+
             {cameras.length > 1 && (
               <button
                 onClick={switchCamera}
-                className="p-2.5 rounded-full hover:bg-gray-100 active:bg-gray-200 transition-all duration-300"
+                className="p-3 rounded-xl hover:bg-red-50 hover:text-red-500 transition-all duration-200"
               >
-                <Camera strokeWidth={1.5} size={28} className="text-gray-600" />
+                <Camera className="w-6 h-6" />
               </button>
             )}
           </div>
         </div>
-        
-        <div className="w-full px-5 py-4 bg-gray-50 rounded-[14px] shadow-[inset_0_1px_2px_rgba(0,0,0,0.04)]">
-          <p className="text-gray-700 text-center text-[15px]">
-            {data === 'No result' ? 
-              'Scan a QR code to visit' : 
-              <a className='text-[#dc2626] hover:text-[#de3131] transition-colors duration-300 break-all font-medium' href={data} target="_blank" rel="noopener noreferrer">{data}</a>
+
+        {/* Status */}
+        <div className="w-full bg-gray-50 rounded-xl p-4 flex items-center gap-3 border border-gray-200">
+          <Scan className={`w-5 h-5 ${data === 'No result' ? 'text-gray-400' : 'text-red-500'}`} />
+          <p className="flex-1 text-gray-600 text-sm">
+            {data === 'No result' 
+              ? 'Position QR code within the frame to scan' 
+              : <a href={data} className="text-red-500 hover:text-red-600 font-medium break-all">{data}</a>
             }
           </p>
         </div>
 
         <button 
           onClick={handleClose}
-          className="bg-[#f9f5f5] text-gray-700 px-8 py-3.5 rounded-full text-[17px] font-semibold hover:bg-[#f5eeee] active:bg-[#f0e9e9] transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 w-full max-w-[320px]"
+          className="w-full max-w-sm bg-gradient-to-r from-red-500 to-red-600 text-white py-4 rounded-xl font-medium
+            hover:from-red-600 hover:to-red-700 transform hover:-translate-y-0.5 transition-all duration-200
+            shadow-lg hover:shadow-xl"
         >
-          Close
+          Close Scanner
         </button>
       </div>
     </div>
