@@ -259,7 +259,7 @@ function TQRCodeOf({setShowQR}) {
           <div 
             className="absolute left-8 right-8 h-1 bg-gradient-to-r from-transparent via-[green] to-transparent animate-scan pointer-events-none"
             style={{
-              boxShadow: '0 0 8px rgba(59, 130, 246, 0.6)',
+              // boxShadow: '0 0 8px rgba(59, 130, 246, 0.6)',
               animation: 'scan 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
             }}
           />
