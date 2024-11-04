@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Html5Qrcode } from "html5-qrcode";
 import CrossIcon from '../../../public/assets/CrossIcon.svg';
 import { useNavigate } from 'react-router-dom';
-import { Flashlight, UploadCloud, Scan, FlashlightOff, Camera } from 'lucide-react';
+import { Flashlight, UploadCloud, Scan, FlashlightOff, Camera, AlertCircle, CheckCircle2 } from 'lucide-react';
 
 function TQRCodeOf({setShowQR}) {
   const [isCheckedIn, setIsCheckedIn] = useState(false);
@@ -245,46 +245,88 @@ function TQRCodeOf({setShowQR}) {
           <img className='w-full h-full opacity-50 hover:opacity-100 transition-opacity duration-200' src={CrossIcon} alt="Close" />
         </button>
         
-        <div id="reader" ref={qrRef} className="w-full aspect-square bg-gray-50 rounded-[16px] shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] flex flex-col items-center justify-center p-6 relative overflow-hidden">
-          {permissionStatus === 'checking' && (
-            <div className="absolute inset-0 flex items-center justify-center bg-gray-50/90 backdrop-blur-sm">
-              <div className="animate-pulse text-gray-500 font-medium flex items-center gap-2">
-                <div className="w-5 h-5 border-2 border-gray-500 border-t-transparent rounded-full animate-spin"></div>
-                Checking camera permission...
+        <div className="w-full max-w-xl mx-auto">
+      <div className="relative w-full aspect-square rounded-2xl overflow-hidden">
+        {/* Base QR Reader - Camera Feed */}
+        <div 
+          id="reader" 
+          ref={qrRef} 
+          className="absolute inset-0 w-full h-full bg-transparent"
+        />
+
+        {/* Scanning Line Animation */}
+        {permissionStatus === 'granted' && !error && isCameraReady && (
+          <div 
+            className="absolute left-8 right-8 h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent animate-scan pointer-events-none"
+            style={{
+              boxShadow: '0 0 8px rgba(59, 130, 246, 0.6)',
+              animation: 'scan 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+            }}
+          />
+        )}
+        
+        {/* Corner Markers */}
+        <div className="absolute top-6 left-6 w-8 h-8 border-t-4 border-l-4 border-blue-500 rounded-tl-lg pointer-events-none"></div>
+        <div className="absolute top-6 right-6 w-8 h-8 border-t-4 border-r-4 border-blue-500 rounded-tr-lg pointer-events-none"></div>
+        <div className="absolute bottom-6 left-6 w-8 h-8 border-b-4 border-l-4 border-blue-500 rounded-bl-lg pointer-events-none"></div>
+        <div className="absolute bottom-6 right-6 w-8 h-8 border-b-4 border-r-4 border-blue-500 rounded-br-lg pointer-events-none"></div>
+
+        {/* Status Overlays */}
+        {(permissionStatus !== 'granted' || error) && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+            {permissionStatus === 'checking' && (
+              <div className="bg-white/90 p-6 rounded-xl shadow-lg text-center">
+                <div className="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
+                <p className="text-gray-600 font-medium">Checking camera access...</p>
               </div>
-            </div>
-          )}
-          {permissionStatus === 'denied' && (
-            <div className="text-center space-y-4 max-w-[320px]">
-              <p className="text-red-500 font-semibold">Camera access is required for QR scanning.</p>
-              <button 
-                onClick={requestCameraPermission}
-                className="bg-[#de3131] text-white px-7 py-3 rounded-full hover:bg-[#dc2626] transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 font-medium"
-              >
-                Request Camera Permission
-              </button>
-              <p className="text-sm text-gray-500 leading-relaxed">
-                If the button doesn't work, please enable camera access in your browser settings.
-              </p>
-            </div>
-          )}
-          {permissionStatus === 'granted' && !error && isCameraReady && (
-            <div className="absolute top-4 left-4 bg-emerald-500/10 text-emerald-600 px-4 py-1.5 rounded-full text-sm font-medium">
-              Scanner Active
-            </div>
-          )}
-          {permissionStatus === 'granted' && !error && !isCameraReady && (
-            <div className="text-amber-500 animate-pulse font-medium flex items-center gap-2">
-              <div className="w-4 h-4 border-2 border-amber-500 border-t-transparent rounded-full animate-spin"></div>
-              Initializing camera...
-            </div>
-          )}
-          {error && (
-            <div className="bg-red-50 border border-red-100 rounded-lg p-4">
-              <p className="text-red-500 text-center font-semibold max-w-[320px]">{error}</p>
-            </div>
-          )}
-        </div>
+            )}
+
+            {permissionStatus === 'denied' && (
+              <div className="bg-white/90 p-8 rounded-xl shadow-lg text-center max-w-sm">
+                <div className="mb-4">
+                  <AlertCircle className="w-12 h-12 text-red-500 mx-auto" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Camera Access Required</h3>
+                <p className="text-gray-600 mb-6">Please allow camera access to scan QR codes</p>
+                <button 
+                  onClick={requestCameraPermission}
+                  className="bg-blue-500 text-white px-8 py-3 rounded-lg hover:bg-blue-600 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 font-medium w-full"
+                >
+                  Enable Camera
+                </button>
+                <p className="text-sm text-gray-500 mt-4">
+                  If the button doesn't work, please enable camera access in your browser settings
+                </p>
+              </div>
+            )}
+
+            {error && (
+              <div className="bg-white/90 p-6 rounded-xl shadow-lg text-center max-w-sm">
+                <AlertCircle className="w-8 h-8 text-red-500 mx-auto mb-3" />
+                <p className="text-red-600 font-medium">{error}</p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Status Badge */}
+        {/* {permissionStatus === 'granted' && !error && (
+          <div className="absolute top-4 left-4 pointer-events-none">
+            {isCameraReady ? (
+              <div className="bg-emerald-500/10 text-emerald-600 px-4 py-2 rounded-full text-sm font-medium flex items-center gap-2 backdrop-blur-sm">
+                <CheckCircle2 className="w-4 h-4" />
+                Scanner Active
+              </div>
+            ) : (
+              <div className="bg-amber-500/10 text-amber-600 px-4 py-2 rounded-full text-sm font-medium flex items-center gap-2 backdrop-blur-sm">
+                <div className="w-4 h-4 border-2 border-amber-500 border-t-transparent rounded-full animate-spin"></div>
+                Initializing...
+              </div>
+            )}
+          </div>
+        )} */}
+      </div>
+    </div>
         
         <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-center gap-6 px-2">
         <div className="relative group">

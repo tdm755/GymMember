@@ -133,4 +133,17 @@ scrollbar-width: none;
   }
 }
 
+@keyframes scan {
+  0%, 100% {
+    top: 20%;
+  }
+  50% {
+    top: 80%;
+  }
+}
+
+.animate-scan {
+  animation: scan 2s linear infinite;
+}
+
 
