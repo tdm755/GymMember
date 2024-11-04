@@ -35,6 +35,7 @@ import AssignedMembers from './components/Trainers/AssignedMembers'
 import MemberSchedule from './components/Trainers/MemberSchedule'
 import SetMembersbodyMetrics from './components/Trainers/SetMembersbodyMetrics'
 import MemberDetail from './components/Trainers/MemberDetail'
+import PageNotFound from './Utils/PageNotFound'
 
 
 function App() {
@@ -95,6 +96,8 @@ function App() {
           <Route path='signin' element={<SignIn />} />
           <Route path='forgotpassword' element={<ForgotPass />} />
       </Route>
+
+      <Route path='*' element={<PageNotFound />} />
     </Routes>
     {ShowQR && <QRCodeOf setShowQR={setShowQR} />}
     {TShowQR && <TQRCodeOf setShowQR={setTShowQR} />}

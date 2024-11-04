@@ -17,13 +17,13 @@ function TBottomNavigator({ShowQR, setShowQR }) {
     <div className='md:hidden Shadow fixed bottom-0 right-0 left-0 z-40 w-full h-[70px] bg-white border-black'>
       <div className="flex justify-center px-7 h-full items-center">
         <div className=" w-full flex justify-around gap-32">
-          <div onClick={() => { navigate('/trainerdashboard') }} className={`${pathname === '/trainerdashboard' && 'bg-[#f2e9e9c1]'} flex-col py-1 px-3 rounded-2xl flex gap-1 items-center justify-center`}>
+          <div onClick={() => { navigate('/trainerdashboard') }} className={`${pathname === '/trainerdashboard' && 'bg-[#f2e9e9c1]'} flex-col py-3 px-3 rounded-2xl flex gap-1 items-center justify-center`}>
             <img className='w-7' src={HomeIcon} alt="" />
-            <span className='text-xs'>Home</span>
+            {/* <span className='text-xs'>Home</span> */}
           </div>
-          <div onClick={() => { navigate('/trainerdashboard/profile') }} className={`${pathname.includes('/profile') && 'bg-[#f2e9e9c1]'} flex-col py-1 px-3 gap-1 rounded-2xl flex items-center justify-center`}>
+          <div onClick={() => { navigate('/trainerdashboard/profile') }} className={`${pathname.includes('/profile') && 'bg-[#f2e9e9c1]'} flex-col py-3 px-3 gap-1 rounded-2xl flex items-center justify-center`}>
             <img className='w-7' src={ProfileIcon} alt="" />
-            <span className='text-xs'>Profile</span>
+            {/* <span className='text-xs'>Profile</span> */}
           </div>
         </div>
 

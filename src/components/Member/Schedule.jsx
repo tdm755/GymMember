@@ -227,14 +227,14 @@ function Schedule() {
             <div
               onClick={() => { setSelectedDate(date) }}
               key={index}
-              className={`text-center cursor-pointer transition-all duration-300 ease-in-out p-1 ${(date.getMonth() === selectedDate.getMonth() &&
+              className={`text-center cursor-pointer transition-all duration-300 ease-in-out px-4 py-1 text-[16px]  flex items-center justify-center ${(date.getMonth() === selectedDate.getMonth() &&
                   date.getFullYear() === selectedDate.getFullYear() &&
                   date.getDate() === selectedDate.getDate())
                   ? 'bg-[#f5eeee] text-black transform scale-105'
                   : 'hover:bg-gray-100 border border-[#f5eeee]'
                 } ${date.getMonth() !== selectedDate.getMonth() ? 'text-gray-300 opacity-50' : ''}`}
             >
-              <div className={`text-lg ${(date.getMonth() === selectedDate.getMonth() && date.getFullYear() === selectedDate.getFullYear() && date.getDate() === selectedDate.getDate()) ? 'text-[#dc2626]' : ''}`}>
+              <div className={`${(date.getMonth() === selectedDate.getMonth() && date.getFullYear() === selectedDate.getFullYear() && date.getDate() === selectedDate.getDate()) ? 'text-[#dc2626]' : ''}`}>
                 {date.getDate()}
               </div>
             </div>
@@ -267,10 +267,10 @@ function Schedule() {
           </div>
         </div>
 
-        <div className="bg-white rounded-lg p-6 w-full md:w-1/2 mt-4 md:mt-0 border border-[#f5eeee]">
+        <div className="bg-white rounded-lg p-4 md:p-6 w-full md:w-1/2 mt-4 md:mt-0 border border-[#f5eeee]">
           {selectedExercise ? (
             <div className=''>
-              <h2 className="text-2xl font-semibold mb-4 text-gray-800">{selectedExercise.name}</h2>
+              <h2 className="text-lg ml-2 md:text-2xl font-bold mb-4 text-[]">{selectedExercise.name}</h2>
               <div className="flex flex-col gap-7">
                 <div className="bg-[#f4ededb3] p-4 rounded-lg mb-4 relative">
                   <h3 className="font-semibold mb-2 text-gray-700">Trainer's Assignment:</h3>
@@ -287,45 +287,73 @@ function Schedule() {
                     </div>
                   </div>
                 </div>
-                <div className="bg-white rounded-lg shadow-sm border border-[#f4eded] p-3">
-                  <h3 className="text-lg font-semibold mb-2 text-gray-800 border-b pb-1">Your Performance</h3>
+                <div className="bg-white rounded-xl shadow-md border border-[#f4eded] p-4 md:p-6 flex flex-col gap-4 md:gap-6">
+                  <div className="flex items-center justify-between border-b border-[#f4eded] pb-3">
+                    <h3 className="text-lg font-semibold text-gray-800">Your Performance</h3>
+                    <div className="text-xs text-gray-500 hidden md:block">Track your progress</div>
+                  </div>
+                  
                   {userPerformance.map((set, index) => (
-                    <div key={index} className="flex items-center gap-3 mb-2 last:mb-0">
-                      <div className="font-medium text-gray-700 text-sm w-16">Set {index + 1}:</div>
-                      <div className="flex items-center gap-2">
-                        <label className="text-xs font-medium text-gray-600">Reps:</label>
-                        <input
-                          type="number"
-                          value={set.reps}
-                          onChange={(e) => handlePerformanceUpdate(index, 'reps', e.target.value)}
-                          className=" border border-gray-300 rounded py-1 px-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#dc2626] focus:border-transparent"
-                        />
+                    <div key={index} className="flex flex-col gap-3 p-3 md:p-4 bg-[#fafafa] rounded-lg hover:bg-[#f7f7f7] transition-colors duration-200">
+                      <div className="flex items-center gap-3 mb-1">
+                        <div className="flex items-center whitespace-nowrap justify-center bg-[#dc2626] text-white rounded-full px-2 md:px-8 md:w-8 md:h-8 font-medium text-sm">
+                          Set {index + 1}
+                        </div>
+                        <div className="text-sm text-gray-500">Record your performance</div>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <label className="text-xs font-medium text-gray-600">Weight:</label>
-                        <input
-                          type="text"
-                          value={set.weight}
-                          onChange={(e) => handlePerformanceUpdate(index, 'weight', e.target.value)}
-                          className=" border border-gray-300 rounded py-1 px-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#dc2626] focus:border-transparent"
-                        />
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-4">
+                          <label className="text-sm font-medium text-gray-700 min-w-[60px]">Reps</label>
+                          <div className="relative w-full">
+                            <input
+                              type="number"
+                              value={set.reps}
+                              onChange={(e) => handlePerformanceUpdate(index, 'reps', e.target.value)}
+                              className="w-full border border-gray-200 rounded-lg py-2.5 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#dc2626] focus:border-transparent transition-all duration-200"
+                              placeholder="Number of reps"
+                            />
+                          </div>
+                        </div>
+                        
+                        <div className="flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-4">
+                          <label className="text-sm font-medium text-gray-700 min-w-[60px]">Weight</label>
+                          <div className="relative w-full">
+                            <input
+                              type="text"
+                              value={set.weight}
+                              onChange={(e) => handlePerformanceUpdate(index, 'weight', e.target.value)}
+                              className="w-full border border-gray-200 rounded-lg py-2.5 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#dc2626] focus:border-transparent transition-all duration-200"
+                              placeholder="Weight in kg/lbs"
+                            />
+                          </div>
+                        </div>
                       </div>
                     </div>
                   ))}
-                  <div className="mt-3 flex items-center justify-center">
-                    <button className='px-5 py-1.5 bg-[#dc2626] text-white text-sm rounded font-medium hover:bg-[#b91c1c] transition duration-150 ease-in-out'>Submit</button>
+
+                  <div className="flex items-center justify-end pt-2 mt-2">
+                    <button className="w-full md:w-auto px-6 py-2.5 bg-[#dc2626] text-white text-sm rounded-lg font-medium hover:bg-[#b91c1c] active:bg-[#991b1b] transition-all duration-200 ease-in-out shadow-sm hover:shadow-md flex items-center justify-center gap-2">
+                      <span>Save Progress</span>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </button>
                   </div>
                 </div>
               </div>
             </div>
           ) : (
             <>
-              <Lottie
-                options={defaultOptions}
-                height={380}
-                width={400}
-              />
-              <p className="text-gray-600 text-xl text-center">Select an exercise to view details and log your performance.</p>
+              <div className="w-full max-w-[400px] h-auto mx-auto">
+                <Lottie
+                  options={defaultOptions}
+                  height="100%"
+                  width="100%"
+                  isClickToPauseDisabled={true}
+                />
+              </div>
+              <p className="text-gray-600 text-base md:text-xl text-center">Select an exercise to view details and log your performance.</p>
             </>
           )}
         </div>

@@ -29,7 +29,7 @@ function AssignedMembers() {
 
       <div className="GymBannerImage flex relative items-center justify-center rounded-2xl overflow-hidden h-36 border mb-10 " style={{ backgroundImage: `url(${weightLiftingBanner})`, backgroundPosition: 'center -136px' }}>
         <div className="absolute top-0 right-0 bottom-0 left-0 bg-[#db3c3c3e]"></div>
-        <h2 className="text-5xl relative z-20 text-white font-bold mb-4">
+        <h2 className="text-3xl md:text-5xl relative z-20 text-white font-bold mb-4">
           Assigned Members
         </h2>
       </div>
@@ -41,7 +41,7 @@ function AssignedMembers() {
           <div className="relative">
             <select
               onMouseLeave={() => handleRemoverSelectClick()} onMouseDownCapture={() => handleSelectTrainerClick()}
-              className='border border-[#dc2626] h-10 w-full md:w-52 py-1 outline-none rounded-md px-2 appearance-none relative z-20 bg-transparent'
+              className='border border-[#dc2626] h-10 w-full px-7 md:w-52 py-1 outline-none rounded-md px-2 appearance-none relative z-20 bg-transparent'
               name="" id="">
               <option value="">select</option>
               <option value="">Beginner</option>
@@ -53,7 +53,7 @@ function AssignedMembers() {
           <div className="relative flex items-center">
             <img className='absolute  left-2' src={SearchIcon} alt="" />
             <input
-              className='border border-[#decfcf] pl-10 w-96 h-10 py-[5px] outline-none focus:border-[#dc2626] rounded-md'
+              className='border border-[#decfcf] pl-10 w-full md:w-96 h-10 py-[5px] outline-none focus:border-[#dc2626] rounded-md'
               placeholder='name, mobile'
               type="text"
             />

@@ -22,24 +22,24 @@ function MBottomNavigator({ ShowQR, setShowQR, setShowQRCode }) {
 
         <div className=" w-full flex justify-around gap-16">
           <div className="flex gap-4">
-            <div onClick={() => { navigate('/memberdashboard') }} className={`${pathname === '/memberdashboard' && 'bg-[#f2e9e9c1]'} flex-col py-1 px-3 rounded-2xl flex gap-1 items-center justify-center`}>
+            <div onClick={() => { navigate('/memberdashboard') }} className={`${pathname === '/memberdashboard' && 'bg-[#f2e9e9c1]'} flex-col py-3 px-3 rounded-2xl flex gap-1 items-center justify-center`}>
               <img className='w-7' src={HomeIcon} alt="" />
-              <span className='text-xs'>Home</span>
+              {/* <span className='text-xs'>Home</span> */}
             </div>
-            <div onClick={() => { navigate('/memberdashboard') }} className={`${pathname === '/trainerdashboard' && 'bg-[#f2e9e9c1]'} flex-col py-1 px-3 rounded-2xl flex gap-1 items-center justify-center`}>
+            <div onClick={() => { navigate('/memberdashboard') }} className={`${pathname === '/trainerdashboard' && 'bg-[#f2e9e9c1]'} flex-col py-3 px-3 rounded-2xl flex gap-1 items-center justify-center`}>
               <img className='w-7' src={NotificationIcon} alt="" />
-              <span className='text-xs'>Notification</span>
+              {/* <span className='text-xs'>Notification</span> */}
             </div>
             
           </div>
           <div className="flex gap-4">
-          <div onClick={()=>{setShowQRCode(true)}} className={`${pathname === '/trainerdashboard' && 'bg-[#f2e9e9c1]'} flex-col py-1 px-3 rounded-2xl flex gap-1 items-center justify-center`}>
+          <div onClick={()=>{setShowQRCode(true)}} className={`${pathname === '/trainerdashboard' && 'bg-[#f2e9e9c1]'} flex-col py-3 px-3 rounded-2xl flex gap-1 items-center justify-center`}>
               <img className='cursor-pointer' src={QRSccanner} alt="" />
-              <span className='text-xs whitespace-nowrap '>Show QR</span>
+              {/* <span className='text-xs whitespace-nowrap '>Show QR</span> */}
             </div>
-            <div onClick={() => { navigate('profile') }} className={`${pathname.includes('/profile') && 'bg-[#f2e9e9c1]'} flex-col py-1 px-3 gap-1 rounded-2xl flex items-center justify-center`}>
+            <div onClick={() => { navigate('profile') }} className={`${pathname.includes('/profile') && 'bg-[#f2e9e9c1]'} flex-col py-3 px-3 gap-1 rounded-2xl flex items-center justify-center`}>
               <img className='w-7' src={ProfileIcon} alt="" />
-              <span className='text-xs'>Profile</span>
+              {/* <span className='text-xs'>Profile</span> */}
             </div>
           </div>
         </div>

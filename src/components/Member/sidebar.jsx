@@ -91,7 +91,7 @@ function SideBar({ isOpen, setIsOpen, DropDownView, setDropDownView, setShowLogo
                     </div>
                 </div> */}
 
-                <NavLink to={'calendar'} className=''>
+                {/* <NavLink to={'calendar'} className=''>
                     {({ isActive }) => (
                         <div onClick={()=>{setAccordian1(false); setIsOpen(false); setDropDownView(false)}} className='flex gap-2 items-center'>
                             <div className={`${isActive && 'bg-[#f2e9e9c1]'} w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
@@ -101,7 +101,7 @@ function SideBar({ isOpen, setIsOpen, DropDownView, setDropDownView, setShowLogo
                         </div>
 
                     )}
-                </NavLink>
+                </NavLink> */}
 
                 <NavLink to={'sessions'} className=''>
                     {({ isActive }) => (

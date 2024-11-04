@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Html5Qrcode } from "html5-qrcode";
 import CrossIcon from '../../../public/assets/CrossIcon.svg';
 import { useNavigate } from 'react-router-dom';
-import { Flashlight, FlashlightOff } from 'lucide-react';
+import { Flashlight, FlashlightOff, Camera } from 'lucide-react';
 
 function TQRCodeOf({setShowQR}) {
   const [isCheckedIn, setIsCheckedIn] = useState(false);
@@ -16,6 +16,8 @@ function TQRCodeOf({setShowQR}) {
   const [isCameraReady, setIsCameraReady] = useState(false);
   const [hasFlashlight, setHasFlashlight] = useState(false);
   const [isScannerOpen, setIsScannerOpen] = useState(false);
+  const [cameras, setCameras] = useState([]);
+  const [currentCameraIndex, setCurrentCameraIndex] = useState(0);
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
@@ -35,6 +37,11 @@ function TQRCodeOf({setShowQR}) {
       stream.getTracks().forEach(track => track.stop());
       setPermissionStatus('granted');
       setIsCameraReady(true);
+      
+      // Get available cameras
+      const availableCameras = await Html5Qrcode.getCameras();
+      setCameras(availableCameras);
+      
       initializeScanner();
     } catch (error) {
       console.error("Camera permission not granted or camera not accessible:", error);
@@ -64,13 +71,45 @@ function TQRCodeOf({setShowQR}) {
     }
   };
 
+  const switchCamera = async () => {
+    if (cameras.length < 2) return;
+    
+    // Stop current scanner
+    if (scannerRef.current) {
+      await scannerRef.current.stop();
+    }
+
+    // Update camera index
+    const nextCameraIndex = (currentCameraIndex + 1) % cameras.length;
+    setCurrentCameraIndex(nextCameraIndex);
+
+    // Start scanner with new camera
+    try {
+      await scannerRef.current.start(
+        cameras[nextCameraIndex].id,
+        {
+          fps: 10,
+          qrbox: { width: 250, height: 250 },
+          experimentalFeatures: {
+            useBarCodeDetectorIfSupported: true,
+            torch: flashLight
+          }
+        },
+        onScanSuccess,
+        onScanFailure
+      );
+    } catch (err) {
+      console.error("Error switching camera:", err);
+      setError("Failed to switch camera. Please try again.");
+    }
+  };
+
   const initializeScanner = async () => {
     if (qrRef.current && !scannerRef.current && isCameraReady) {
       try {
         scannerRef.current = new Html5Qrcode("reader");
-        const cameras = await Html5Qrcode.getCameras();
         if (cameras && cameras.length) {
-          const cameraId = cameras[cameras.length - 1].id; // Use the last camera (usually back camera on mobile)
+          const cameraId = cameras[currentCameraIndex].id;
           await scannerRef.current.start(
             cameraId,
             {
@@ -173,8 +212,8 @@ function TQRCodeOf({setShowQR}) {
   }, [hasFlashlight, isScannerOpen, flashLight]);
 
   return (
-    <div className='fixed inset-0 z-50 bg-black bg-opacity-60 flex items-center justify-center'>
-      <div className="bg-white relative w-full max-w-md rounded-2xl flex flex-col items-center gap-6 p-6">
+    <div className='fixed inset-0 z-50 bg-black bg-opacity-60 flex items-center justify-center px-1'>
+      <div className="bg-white relative w-full max-w-md rounded-md flex flex-col items-center gap-6 p-6">
         <button 
           onClick={handleClose} 
           className='absolute top-4 right-4 w-7 h-7 flex items-center justify-center'
@@ -182,7 +221,7 @@ function TQRCodeOf({setShowQR}) {
           <img className='w-full h-full' src={CrossIcon} alt="Close" />
         </button>
         
-        <div id="reader" ref={qrRef} className="min-h-52 my-7 w-[95%] bg-gray-100 flex items-center justify-center">
+        <div id="reader" ref={qrRef} className="min-h-52 my-7 w-[95%] bg-gray-100 flex flex-col px-7 py-4 gap-4 items-center justify-center">
           {permissionStatus === 'checking' && (
             <p className="text-gray-500">Checking camera permission...</p>
           )}
@@ -227,18 +266,26 @@ function TQRCodeOf({setShowQR}) {
               hover:file:bg-[#f5eeee]"
           />
           </div>
-            <div className="text-center">
-              <button 
-                onClick={toggleFlashLight}
-                disabled={!hasFlashlight || !isScannerOpen}
-                className={`${(!hasFlashlight || !isScannerOpen) ? 'opacity-50 cursor-not-allowed' : ''}`}
+          <div className="flex gap-4">
+            <button 
+              onClick={toggleFlashLight}
+              disabled={!hasFlashlight || !isScannerOpen}
+              className={`${(!hasFlashlight || !isScannerOpen) ? 'opacity-50 cursor-not-allowed' : ''}`}
+            >
+              {flashLight ? 
+                <Flashlight strokeWidth={'1px'} size={'32px'} color={(hasFlashlight && isScannerOpen) ? 'currentColor' : 'gray'} /> : 
+                <FlashlightOff strokeWidth={'1px'} size={'32px'} color={(hasFlashlight && isScannerOpen) ? 'currentColor' : 'gray'} />
+              }
+            </button>
+            {cameras.length > 1 && (
+              <button
+                onClick={switchCamera}
+                className="hover:scale-110 transition-transform duration-200"
               >
-                {flashLight ? 
-                  <Flashlight strokeWidth={'1px'} size={'32px'} color={(hasFlashlight && isScannerOpen) ? 'currentColor' : 'gray'} /> : 
-                  <FlashlightOff strokeWidth={'1px'} size={'32px'} color={(hasFlashlight && isScannerOpen) ? 'currentColor' : 'gray'} />
-                }
+                <Camera strokeWidth={'1px'} size={'32px'} />
               </button>
-            </div>
+            )}
+          </div>
         </div>
         
         <p className="text-gray-700 text-center px-4 text-sm">

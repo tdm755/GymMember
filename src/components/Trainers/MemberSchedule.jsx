@@ -280,7 +280,7 @@ function MemberSchedule() {
 
 
   return (
-    <div className='p-6 bg-[#f9fafc]  min-h-screen'>
+    <div className='p-2 md:p-6 bg-[#f9fafc]  min-h-screen mb-[110px]'>
       <div className="bg-white rounded-lg border border-[#f5eeee] overflow-hidden">
         <div className='text-center py-6 text-2xl'>
           <span className='border rounded-full px-4 py-1'>
@@ -306,7 +306,7 @@ function MemberSchedule() {
             <div
               onClick={() => setSelectedDate(date)}
               key={index}
-              className={`text-center cursor-pointer transition-all duration-300 ease-in-out p-1 ${
+              className={`text-center cursor-pointer transition-all duration-300 ease-in-out px-4 py-1  text-[16px] flex items-center justify-center ${
                 (date.getMonth() === selectedDate.getMonth() &&
                 date.getFullYear() === selectedDate.getFullYear() &&
                 date.getDate() === selectedDate.getDate())
@@ -429,11 +429,15 @@ function MemberSchedule() {
             </div>
           ) : (
             <>
+              
+
+              <div className="w-full max-w-[400px] h-auto mx-auto">
               <Lottie
                 options={defaultOptions}
-                height={380}
-                width={400}
+                height="100%"
+                width="100%"
               />
+              </div>
               <p className="text-gray-600 text-xl text-center">Select or add an exercise to set details.</p>
             </>
           )}

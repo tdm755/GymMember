@@ -118,7 +118,7 @@ function Profile() {
 
             <div className="flex flex-col gap-16 p-2 md:p-6">
                 {/* personal Details */}
-                <div className="flex flex-col w-full mt-32 border border-[#decfcf] p-7">
+                <div className="flex flex-col w-full mt-32 border border-[#decfcf] px-4 py-7 md:p-7">
                     <div className="relative flex items-center justify-center">
                         <h2 className='pb-6  bg-white z-10 px-4' style={{ fontSize: '1.5em', marginBottom: '20px', textAlign: 'center' }}>Personal Details</h2>
                         <hr className='absolute top-6 z-0 border-1 w-[90%] md:w-[50%] border-[#dc2626]' />
@@ -193,7 +193,7 @@ function Profile() {
                 </div>
 
                 {/* body matrices */}
-                <div className="w-full mt-8 border border-[#decfcf] p-7 relative">
+                <div className="w-full mt-8 border border-[#decfcf] p-2 pt-14 md:p-7 relative">
                     <div className="flex flex-col items-center justify-center relative">
                         <h2 className='pb-6 relative bg-white z-10 px-4' style={{ fontSize: '1.5em', marginBottom: '20px', textAlign: 'center' }}>Monthly Body Metrics</h2>
                         <hr className='absolute top-6 z-0 border-1 w-[90%] md:w-[50%] border-[#dc2626]' />
