@@ -68,16 +68,26 @@ function TQRCodeOf({setShowQR}) {
    // Modify the checkCameraPermission function to automatically initialize the scanner
    const checkCameraPermission = useCallback(async () => {
     try {
+      // First check if the browser supports mediaDevices API
+      if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+        throw new Error('Browser does not support media devices');
+      }
+
+      // Request camera permissions first
+      await navigator.mediaDevices.getUserMedia({ video: true });
+
+      // After permission is granted, enumerate devices
       const devices = await navigator.mediaDevices.enumerateDevices();
       const videoDevices = devices.filter(device => device.kind === 'videoinput');
       
       if (videoDevices.length === 0) {
-        throw new Error('No cameras found');
+        throw new Error('No cameras found on this device');
       }
 
       setCameras(videoDevices);
       setCurrentCameraIndex(0);
 
+      // Test the first camera
       const stream = await navigator.mediaDevices.getUserMedia({ 
         video: { 
           deviceId: videoDevices[0].deviceId,
@@ -97,10 +107,24 @@ function TQRCodeOf({setShowQR}) {
       await initializeScanner();
 
     } catch (error) {
-      console.error("Camera permission not granted or camera not accessible:", error);
+      console.error("Camera error:", error);
+      let errorMessage = "Camera not accessible: ";
+      
+      if (error.name === 'NotFoundError' || error.name === 'DevicesNotFoundError') {
+        errorMessage += "No camera found on this device";
+      } else if (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError') {
+        errorMessage += "Camera permission denied";
+      } else if (error.name === 'NotReadableError' || error.name === 'TrackStartError') {
+        errorMessage += "Camera is in use by another application";
+      } else if (error.message === 'Browser does not support media devices') {
+        errorMessage = "Your browser doesn't support camera access";
+      } else {
+        errorMessage += "Unknown error occurred";
+      }
+      
+      setError(errorMessage);
       setPermissionStatus('denied');
       setIsCameraReady(false);
-      // ... error handling ...
     }
   }, [scannerDimensions]);
 
