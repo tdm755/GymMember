@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Html5Qrcode } from "html5-qrcode";
 import CrossIcon from '../../../public/assets/CrossIcon.svg';
 import { useNavigate } from 'react-router-dom';
-import { Flashlight, FlashlightOff, Camera } from 'lucide-react';
+import { Flashlight, FlashlightOff, Camera, QrCode } from 'lucide-react';
 
 function TQRCodeOf({setShowQR}) {
   const [isCheckedIn, setIsCheckedIn] = useState(false);
@@ -18,6 +18,47 @@ function TQRCodeOf({setShowQR}) {
   const [isScannerOpen, setIsScannerOpen] = useState(false);
   const [cameras, setCameras] = useState([]);
   const [currentCameraIndex, setCurrentCameraIndex] = useState(0);
+  const [scannerDimensions, setScannerDimensions] = useState({ width: 250, height: 250 });
+  const navigate = useNavigate();
+
+  const handleClose = useCallback(() => {
+    if (scannerRef.current) {
+      scannerRef.current.stop().then(() => {
+        setShowQR(false);
+        setIsScannerOpen(false);
+        setFlashLight(false);
+      }).catch(err => {
+        console.error("Error stopping QR scanner:", err);
+      });
+    } else {
+      setShowQR(false);
+    }
+  }, [setShowQR]);
+
+  useEffect(() => {
+    const updateDimensions = () => {
+      const width = window.innerWidth;
+      let scannerSize;
+      if (width < 480) {
+        scannerSize = Math.min(width - 40, 280);
+      } else if (width < 768) {
+        scannerSize = 320;
+      } else {
+        scannerSize = 380;
+      }
+      setScannerDimensions({ width: scannerSize, height: scannerSize });
+    };
+
+    updateDimensions();
+    window.addEventListener('resize', updateDimensions);
+    return () => {
+      window.removeEventListener('resize', updateDimensions);
+      // Cleanup scanner on unmount
+      if (scannerRef.current) {
+        scannerRef.current.stop().catch(console.error);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
@@ -29,7 +70,6 @@ function TQRCodeOf({setShowQR}) {
       const devices = await navigator.mediaDevices.enumerateDevices();
       const videoDevices = devices.filter(device => device.kind === 'videoinput');
       
-      // Sort cameras to prioritize back camera
       const sortedCameras = [...videoDevices].sort((a, b) => {
         const aLabel = a.label.toLowerCase();
         const bLabel = b.label.toLowerCase();
@@ -39,7 +79,7 @@ function TQRCodeOf({setShowQR}) {
       });
 
       setCameras(sortedCameras);
-      setCurrentCameraIndex(0); // Start with first camera (back camera if available)
+      setCurrentCameraIndex(0);
 
       const stream = await navigator.mediaDevices.getUserMedia({ 
         video: { 
@@ -82,62 +122,6 @@ function TQRCodeOf({setShowQR}) {
     }
   };
 
-  const checkFlashlightCapability = async (deviceId) => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { deviceId: deviceId }
-      });
-      const track = stream.getVideoTracks()[0];
-      const capabilities = track.getCapabilities();
-      const hasFlash = 'torch' in capabilities;
-      stream.getTracks().forEach(track => track.stop());
-      return hasFlash;
-    } catch (error) {
-      console.error("Error checking flashlight capability:", error);
-      return false;
-    }
-  };
-
-  const switchCamera = async () => {
-    if (cameras.length < 2) return;
-    
-    // Stop current scanner
-    if (scannerRef.current) {
-      await scannerRef.current.stop();
-      setIsScannerOpen(false);
-    }
-
-    // Update camera index
-    const nextCameraIndex = (currentCameraIndex + 1) % cameras.length;
-    setCurrentCameraIndex(nextCameraIndex);
-
-    // Check flashlight capability for new camera
-    const hasFlash = await checkFlashlightCapability(cameras[nextCameraIndex].deviceId);
-    setHasFlashlight(hasFlash);
-    if (!hasFlash) setFlashLight(false);
-
-    // Start scanner with new camera
-    try {
-      scannerRef.current = new Html5Qrcode("reader");
-      await scannerRef.current.start(
-        cameras[nextCameraIndex].deviceId,
-        {
-          fps: 10,
-          qrbox: { width: 250, height: 250 },
-          experimentalFeatures: {
-            useBarCodeDetectorIfSupported: true
-          }
-        },
-        onScanSuccess,
-        onScanFailure
-      );
-      setIsScannerOpen(true);
-    } catch (err) {
-      console.error("Error switching camera:", err);
-      setError("Failed to switch camera. Please try again.");
-    }
-  };
-
   const initializeScanner = async () => {
     if (qrRef.current && !scannerRef.current && isCameraReady && cameras.length > 0) {
       try {
@@ -146,7 +130,7 @@ function TQRCodeOf({setShowQR}) {
           cameras[currentCameraIndex].deviceId,
           {
             fps: 10,
-            qrbox: { width: 250, height: 250 },
+            qrbox: { width: scannerDimensions.width * 0.7, height: scannerDimensions.height * 0.7 },
             experimentalFeatures: {
               useBarCodeDetectorIfSupported: true
             }
@@ -163,21 +147,24 @@ function TQRCodeOf({setShowQR}) {
     }
   };
 
-  useEffect(() => {
-    if (isCameraReady && cameras.length > 0) {
-      initializeScanner();
-    }
-  }, [isCameraReady, cameras]);
-
-  const onScanSuccess = (decodedText, decodedResult) => {
+  const onScanSuccess = useCallback((decodedText) => {
     setData(decodedText);
     setIsCheckedIn(!isCheckedIn);
     handleNavigateToLink(decodedText);
-  };
+  }, [isCheckedIn]);
 
   const onScanFailure = (error) => {
-    // Silently handle scan failures to avoid flooding the console
+    // Silent failure handling
   };
+
+  const handleNavigateToLink = useCallback((scannedData) => {
+    if (scannedData.includes('youtube.com') || scannedData.includes('youtu.be')) {
+      window.open(scannedData, '_blank', 'noopener,noreferrer');
+    } else {
+      navigate(scannedData);
+    }
+    handleClose();
+  }, [navigate, handleClose]);
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
@@ -187,6 +174,7 @@ function TQRCodeOf({setShowQR}) {
         .then(decodedText => {
           setData(decodedText);
           setIsCheckedIn(!isCheckedIn);
+          handleNavigateToLink(decodedText);
         })
         .catch(err => {
           console.error("Error scanning file:", err);
@@ -194,35 +182,6 @@ function TQRCodeOf({setShowQR}) {
         });
     }
   };
-
-  const handleClose = useCallback(() => {
-    setShowQR(false);
-    if (scannerRef.current) {
-      scannerRef.current.stop().catch(err => {
-        console.error("Error stopping QR scanner:", err);
-      }).finally(() => {
-        setShowQR(false);
-        setIsScannerOpen(false);
-        setFlashLight(false);
-      });
-    } else {
-      setShowQR(false);
-    }
-  }, [setShowQR]);
-
-  const navigate = useNavigate();
-  
-  const handleNavigateToLink = useCallback((scannedData) => {
-    if (scannedData.includes('youtube.com') || scannedData.includes('youtu.be')) {
-      // YouTube link: open in a new tab
-      window.open(scannedData, '_blank', 'noopener,noreferrer');
-    } else {
-      // Non-YouTube link: navigate within the app
-      
-    }
-    // Close the QR scanner after redirection
-    handleClose();
-  }, [navigate, handleClose]);
 
   const toggleFlashLight = useCallback(async () => {
     if (!hasFlashlight || !isScannerOpen || !scannerRef.current) return;
@@ -238,93 +197,183 @@ function TQRCodeOf({setShowQR}) {
     }
   }, [hasFlashlight, isScannerOpen, flashLight]);
 
+  const switchCamera = async () => {
+    if (cameras.length < 2) return;
+    
+    if (scannerRef.current) {
+      await scannerRef.current.stop();
+      setIsScannerOpen(false);
+    }
+
+    const nextCameraIndex = (currentCameraIndex + 1) % cameras.length;
+    setCurrentCameraIndex(nextCameraIndex);
+
+    try {
+      const hasFlash = await checkFlashlightCapability(cameras[nextCameraIndex].deviceId);
+      setHasFlashlight(hasFlash);
+      if (!hasFlash) setFlashLight(false);
+
+      scannerRef.current = new Html5Qrcode("reader");
+      await scannerRef.current.start(
+        cameras[nextCameraIndex].deviceId,
+        {
+          fps: 10,
+          qrbox: { width: scannerDimensions.width * 0.7, height: scannerDimensions.height * 0.7 },
+          experimentalFeatures: {
+            useBarCodeDetectorIfSupported: true
+          }
+        },
+        onScanSuccess,
+        onScanFailure
+      );
+      setIsScannerOpen(true);
+    } catch (err) {
+      console.error("Error switching camera:", err);
+      setError("Failed to switch camera. Please try again.");
+    }
+  };
+
+  const checkFlashlightCapability = async (deviceId) => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { deviceId: deviceId }
+      });
+      const track = stream.getVideoTracks()[0];
+      const capabilities = track.getCapabilities();
+      const hasFlash = 'torch' in capabilities;
+      stream.getTracks().forEach(track => track.stop());
+      return hasFlash;
+    } catch (error) {
+      console.error("Error checking flashlight capability:", error);
+      return false;
+    }
+  };
+
   return (
-    <div className='fixed inset-0 z-50 bg-black bg-opacity-60 flex items-center justify-center px-1'>
-      <div className="bg-white relative w-full max-w-md rounded-md flex flex-col items-center gap-6 p-6">
+    <div className='fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4'>
+      <div className="bg-white relative w-full max-w-xl rounded-2xl shadow-2xl flex flex-col items-center gap-6 p-4 md:p-8">
         <button 
           onClick={handleClose} 
-          className='absolute top-4 right-4 w-7 h-7 flex items-center justify-center'
+          className='absolute top-4 right-4 w-8 h-8 flex items-center justify-center hover:bg-gray-100 rounded-full transition-colors duration-200'
         >
-          <img className='w-full h-full' src={CrossIcon} alt="Close" />
+          <img className='w-5 h-5' src={CrossIcon} alt="Close" />
         </button>
         
-        <div id="reader" ref={qrRef} className="min-h-52 my-7 w-[95%] bg-gray-100 flex flex-col px-7 py-4 gap-4 items-center justify-center">
-          {permissionStatus === 'checking' && (
-            <p className="text-gray-500">Checking camera permission...</p>
-          )}
-          {permissionStatus === 'denied' && (
-            <div className="text-center">
-              <p className="text-red-500 mb-2">Camera access is required for QR scanning.</p>
-              <button 
-                onClick={requestCameraPermission}
-                className="bg-[#de3131] text-white px-4 py-2 rounded-full hover:bg-[#dc2626] transition duration-300"
-              >
-                Request Camera Permission
-              </button>
-              <p className="text-sm text-gray-500 mt-2">
-                If the button doesn't work, please enable camera access in your browser settings.
-              </p>
+        <div className="relative w-full flex flex-col items-center">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
+            <QrCode className="w-6 h-6 text-[#dc2626]" />
+            QR Scanner
+          </h2>
+          
+          <div 
+            id="reader" 
+            ref={qrRef} 
+            style={{
+              width: `${scannerDimensions.width}px`,
+              height: `${scannerDimensions.height}px`
+            }}
+            className="relative rounded-lg overflow-hidden bg-gray-900 shadow-inner"
+          >
+            {/* Scanner overlay */}
+            <div className="absolute inset-0 pointer-events-none">
+              <div className="absolute inset-0 border-2 border-white/30"></div>
+              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] h-[70%] border-2 border-[#dc2626] rounded-lg">
+                <div className="absolute -top-2 -left-2 w-4 h-4 border-t-2 border-l-2 border-[#dc2626]"></div>
+                <div className="absolute -top-2 -right-2 w-4 h-4 border-t-2 border-r-2 border-[#dc2626]"></div>
+                <div className="absolute -bottom-2 -left-2 w-4 h-4 border-b-2 border-l-2 border-[#dc2626]"></div>
+                <div className="absolute -bottom-2 -right-2 w-4 h-4 border-b-2 border-r-2 border-[#dc2626]"></div>
+              </div>
             </div>
-          )}
-          {permissionStatus === 'granted' && !error && isCameraReady && (
-            <p className="text-gray-500">QR Scanner is active</p>
-          )}
-          {permissionStatus === 'granted' && !error && !isCameraReady && (
-            <p className="text-yellow-500">Camera permission granted, but camera is not ready. Please wait or refresh the page.</p>
-          )}
-          {error && (
-            <p className="text-red-500 text-center">{error}</p>
-          )}
+
+            {/* Status overlays */}
+            {permissionStatus === 'checking' && (
+              <div className="absolute inset-0 flex items-center justify-center bg-gray-900/90 backdrop-blur-sm">
+                <div className="flex flex-col items-center gap-2">
+                  <div className="w-8 h-8 border-4 border-[#dc2626] border-t-transparent rounded-full animate-spin"></div>
+                  <div className="text-white text-lg">Initializing camera...</div>
+                </div>
+              </div>
+            )}
+            
+            {permissionStatus === 'denied' && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-900/95 backdrop-blur-sm p-6">
+                <p className="text-red-400 text-lg mb-4 text-center font-medium">Camera access is required</p>
+                <button 
+                  onClick={requestCameraPermission}
+                  className="bg-[#dc2626] text-white px-6 py-3 rounded-lg hover:bg-[#b91c1c] transition duration-300 shadow-lg"
+                >
+                  Enable Camera Access
+                </button>
+                <p className="text-gray-400 text-sm mt-4 text-center">
+                  Please enable camera access in your browser settings
+                </p>
+              </div>
+            )}
+            
+            {error && (
+              <div className="absolute inset-0 flex items-center justify-center bg-gray-900/95 backdrop-blur-sm">
+                <p className="text-red-400 text-lg text-center px-6">{error}</p>
+              </div>
+            )}
+          </div>
         </div>
         
-        <div className="w-full flex justify-between items-center px-7">
-          <div className="">
-          <p className="text-sm text-gray-600 mb-2">Or upload a QR code image:</p>
-          <input 
-            type="file" 
-            accept="image/*" 
-            onChange={handleFileUpload}
-            className="w-full text-sm text-gray-500
-              cursor-pointer
-              file:mr-4 file:py-2 file:px-4
-              file:rounded-full file:border-0
-              file:text-sm file:font-semibold
-              file:bg-[#f9f5f5] file:text-[#dc2626]
-              hover:file:bg-[#f5eeee]"
-          />
+        <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-center px-2">
+          <div className="w-full">
+            <p className="text-sm text-gray-600 mb-2 font-medium">Upload QR code image:</p>
+            <input 
+              type="file" 
+              accept="image/*" 
+              onChange={handleFileUpload}
+              className="w-full text-sm text-gray-500
+                cursor-pointer
+                file:mr-4 file:py-2.5 file:px-5
+                file:rounded-full file:border-0
+                file:text-sm file:font-medium
+                file:bg-[#f9f5f5] file:text-[#dc2626]
+                hover:file:bg-[#f5eeee]
+                transition-all duration-200"
+            />
           </div>
-          <div className="flex gap-4">
+          <div className="flex justify-center md:justify-end gap-6">
             <button 
               onClick={toggleFlashLight}
               disabled={!hasFlashlight || !isScannerOpen}
-              className={`${(!hasFlashlight || !isScannerOpen) ? 'opacity-50 cursor-not-allowed' : ''}`}
+              className={`p-3 rounded-full hover:bg-gray-100 transition-colors duration-200 
+                ${(!hasFlashlight || !isScannerOpen) ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               {flashLight ? 
-                <Flashlight strokeWidth={'1px'} size={'32px'} color={(hasFlashlight && isScannerOpen) ? 'currentColor' : 'gray'} /> : 
-                <FlashlightOff strokeWidth={'1px'} size={'32px'} color={(hasFlashlight && isScannerOpen) ? 'currentColor' : 'gray'} />
+                <Flashlight strokeWidth={1.5} size={28} color={(hasFlashlight && isScannerOpen) ? '#dc2626' : 'gray'} /> : 
+                <FlashlightOff strokeWidth={1.5} size={28} color={(hasFlashlight && isScannerOpen) ? '#dc2626' : 'gray'} />
               }
             </button>
             {cameras.length > 1 && (
               <button
                 onClick={switchCamera}
-                className="hover:scale-110 transition-transform duration-200"
+                className="p-3 rounded-full hover:bg-gray-100 transition-colors duration-200"
               >
-                <Camera strokeWidth={'1px'} size={'32px'} />
+                <Camera strokeWidth={1.5} size={28} color="#dc2626" />
               </button>
             )}
           </div>
         </div>
         
-        <p className="text-gray-700 text-center px-4 text-sm">
-          {data === 'No result' ? 'Scan a QR code to visit' : <a className='text-blue-500 hover:text-blue-700' href={data}>{data}</a>}
-        </p>
+        <div className="w-full px-4 py-3 bg-gray-50 rounded-lg">
+          <p className="text-gray-700 text-center">
+            {data === 'No result' ? 
+              'Position QR code within the frame to scan' : 
+              <a className='text-[#dc2626] hover:text-[#b91c1c] transition-colors duration-200 break-all' href={data}>{data}</a>
+            }
+          </p>
+        </div>
 
-       
         <button 
           onClick={handleClose}
-          className="bg-[#f9f5f5] text-gray-700 px-8 py-2 rounded-full text-lg font-semibold hover:bg-[#f5eeee] transition duration-300 shadow-sm w-full max-w-xs"
+          className="bg-[#dc2626] text-white px-8 py-3 rounded-lg text-lg font-medium 
+            hover:bg-[#b91c1c] active:bg-[#991b1b] transition-all duration-200 
+            shadow-md hover:shadow-lg w-full max-w-xs"
         >
-          Close
+          Close Scanner
         </button>
       </div>
     </div>
