@@ -252,7 +252,7 @@ function TQRCodeOf({setShowQR}) {
 
       scannerRef.current = new Html5Qrcode("reader");
       await scannerRef.current.start(
-        cameras[nextCameraIndex].deviceId,
+        { deviceId: cameras[nextCameraIndex].deviceId },
         config,
         onScanSuccess,
         onScanFailure
