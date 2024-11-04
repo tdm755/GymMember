@@ -21,7 +21,7 @@ function MembersDashDashboard({ShowQR, setShowQR, setShowQRCode, setShowLogoutMo
 
             <div className={`md:ml-60`}>
                 <Header isOpen={isOpen} setIsOpen={setIsOpen} DropDownView={DropDownView} setDropDownView={setDropDownView} setShowQR={setShowQR} setShowQRCode={setShowQRCode} />
-                <MBottomNavigator ShowQR={ShowQR} setShowQR={setShowQR} />
+                <MBottomNavigator ShowQR={ShowQR} setShowQR={setShowQR} setShowQRCode={setShowQRCode} />
                 <div onClick={()=>setIsOpen(false)} className="min-h-[670px] border">
                     <Outlet />
                 </div>
