@@ -91,10 +91,6 @@ function TQRCodeOf({setShowQR}) {
       stream.getTracks().forEach(track => track.stop());
       setPermissionStatus('granted');
       setIsCameraReady(true);
-      
-      setTimeout(() => {
-        initializeScanner();
-      }, 1000);
 
     } catch (error) {
       console.error("Camera permission not granted or camera not accessible:", error);
@@ -117,6 +113,9 @@ function TQRCodeOf({setShowQR}) {
   const requestCameraPermission = async () => {
     try {
       await checkCameraPermission();
+      if (isCameraReady) {
+        initializeScanner();
+      }
     } catch (error) {
       console.error("Error requesting camera permission:", error);
       setError("Unable to request camera permission. Please check your browser settings and try again.");
