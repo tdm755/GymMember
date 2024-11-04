@@ -65,17 +65,18 @@ function TQRCodeOf({setShowQR}) {
     return () => clearInterval(timer);
   }, []);
 
-  const checkCameraPermission = useCallback(async () => {
+   // Modify the checkCameraPermission function to automatically initialize the scanner
+   const checkCameraPermission = useCallback(async () => {
     try {
       const devices = await navigator.mediaDevices.enumerateDevices();
       const videoDevices = devices.filter(device => device.kind === 'videoinput');
       
-      setCameras(videoDevices);
-      setCurrentCameraIndex(0);
-
       if (videoDevices.length === 0) {
         throw new Error('No cameras found');
       }
+
+      setCameras(videoDevices);
+      setCurrentCameraIndex(0);
 
       const stream = await navigator.mediaDevices.getUserMedia({ 
         video: { 
@@ -92,22 +93,29 @@ function TQRCodeOf({setShowQR}) {
       setPermissionStatus('granted');
       setIsCameraReady(true);
 
+      // Initialize scanner immediately after permissions are granted
+      await initializeScanner();
+
     } catch (error) {
       console.error("Camera permission not granted or camera not accessible:", error);
       setPermissionStatus('denied');
       setIsCameraReady(false);
-      if (error.name === 'NotAllowedError') {
-        setError("Camera permission denied. Please grant permission in your browser settings.");
-      } else if (error.name === 'NotFoundError') {
-        setError("No camera found on your device. Please ensure a camera is connected and not in use by another application.");
-      } else {
-        setError("Unable to access the camera. Please check your device settings and try again.");
-      }
+      // ... error handling ...
     }
   }, [scannerDimensions]);
 
   useEffect(() => {
     checkCameraPermission();
+
+    return () => {
+      if (scannerRef.current) {
+        scannerRef.current.stop()
+          .then(() => {
+            scannerRef.current = null;
+          })
+          .catch(console.error);
+      }
+    };
   }, [checkCameraPermission]);
 
   const requestCameraPermission = async () => {
@@ -126,6 +134,12 @@ function TQRCodeOf({setShowQR}) {
   const initializeScanner = async () => {
     if (qrRef.current && !scannerRef.current && isCameraReady && cameras.length > 0) {
       try {
+        // First stop any existing scanner instance
+        if (scannerRef.current) {
+          await scannerRef.current.stop();
+          scannerRef.current = null;
+        }
+
         const config = {
           fps: 10,
           qrbox: { width: scannerDimensions.width * 0.7, height: scannerDimensions.height * 0.7 },
@@ -133,23 +147,22 @@ function TQRCodeOf({setShowQR}) {
             useBarCodeDetectorIfSupported: true
           },
           videoConstraints: {
-            deviceId: cameras[currentCameraIndex].deviceId,
-            width: scannerDimensions.width,
-            height: scannerDimensions.height
+            deviceId: { exact: cameras[currentCameraIndex].deviceId }, // Use exact constraint
+            width: { ideal: scannerDimensions.width },
+            height: { ideal: scannerDimensions.height }
           }
         };
 
-        if (scannerRef.current) {
-          await scannerRef.current.stop();
-        }
-
         scannerRef.current = new Html5Qrcode("reader");
+        
+        // Start the scanner with the specific camera device
         await scannerRef.current.start(
-          { deviceId: cameras[currentCameraIndex].deviceId },
+          cameras[currentCameraIndex].deviceId, // Pass deviceId directly
           config,
           onScanSuccess,
           onScanFailure
         );
+        
         setIsScannerOpen(true);
       } catch (err) {
         console.error("Error starting QR scanner:", err);
