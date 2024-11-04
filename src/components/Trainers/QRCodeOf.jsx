@@ -103,10 +103,8 @@ function TQRCodeOf({setShowQR}) {
       setPermissionStatus('granted');
       setIsCameraReady(true);
       
-      // Delay initializing scanner to ensure DOM is ready
-      setTimeout(() => {
-        initializeScanner();
-      }, 1000);
+      // Initialize scanner immediately after permissions are granted
+      initializeScanner();
 
     } catch (error) {
       console.error("Camera permission not granted or camera not accessible:", error);
@@ -156,7 +154,7 @@ function TQRCodeOf({setShowQR}) {
           await scannerRef.current.stop();
         }
 
-        scannerRef.current = new Html5Qrcode("reader");
+        scannerRef.current = new Html5Qrcode("reader", { verbose: false });
         await scannerRef.current.start(
           { deviceId: cameras[currentCameraIndex].deviceId },
           config,
@@ -251,7 +249,7 @@ function TQRCodeOf({setShowQR}) {
         }
       };
 
-      scannerRef.current = new Html5Qrcode("reader");
+      scannerRef.current = new Html5Qrcode("reader", { verbose: false });
       await scannerRef.current.start(
         { deviceId: cameras[nextCameraIndex].deviceId },
         config,
@@ -305,7 +303,7 @@ function TQRCodeOf({setShowQR}) {
               height: `${scannerDimensions.height}px`,
               position: 'relative'
             }}
-            className="rounded-lg overflow-hidden bg-gray-900 shadow-inner"
+            className="rounded-lg overflow-hidden shadow-inner"
           >
             {/* Scanner overlay */}
             <div className="absolute inset-0 pointer-events-none z-10">
