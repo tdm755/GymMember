@@ -28,12 +28,22 @@ function TQRCodeOf({setShowQR}) {
     try {
       const devices = await navigator.mediaDevices.enumerateDevices();
       const videoDevices = devices.filter(device => device.kind === 'videoinput');
-      setCameras(videoDevices);
+      
+      // Sort cameras to prioritize back camera
+      const sortedCameras = [...videoDevices].sort((a, b) => {
+        const aLabel = a.label.toLowerCase();
+        const bLabel = b.label.toLowerCase();
+        if (aLabel.includes('back') || aLabel.includes('rear')) return -1;
+        if (bLabel.includes('back') || bLabel.includes('rear')) return 1;
+        return 0;
+      });
+
+      setCameras(sortedCameras);
+      setCurrentCameraIndex(0); // Start with first camera (back camera if available)
 
       const stream = await navigator.mediaDevices.getUserMedia({ 
         video: { 
-          deviceId: videoDevices.length > 0 ? videoDevices[0].deviceId : undefined,
-          facingMode: 'environment'
+          deviceId: sortedCameras.length > 0 ? sortedCameras[0].deviceId : undefined
         } 
       });
       
@@ -72,6 +82,22 @@ function TQRCodeOf({setShowQR}) {
     }
   };
 
+  const checkFlashlightCapability = async (deviceId) => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { deviceId: deviceId }
+      });
+      const track = stream.getVideoTracks()[0];
+      const capabilities = track.getCapabilities();
+      const hasFlash = 'torch' in capabilities;
+      stream.getTracks().forEach(track => track.stop());
+      return hasFlash;
+    } catch (error) {
+      console.error("Error checking flashlight capability:", error);
+      return false;
+    }
+  };
+
   const switchCamera = async () => {
     if (cameras.length < 2) return;
     
@@ -84,6 +110,11 @@ function TQRCodeOf({setShowQR}) {
     // Update camera index
     const nextCameraIndex = (currentCameraIndex + 1) % cameras.length;
     setCurrentCameraIndex(nextCameraIndex);
+
+    // Check flashlight capability for new camera
+    const hasFlash = await checkFlashlightCapability(cameras[nextCameraIndex].deviceId);
+    setHasFlashlight(hasFlash);
+    if (!hasFlash) setFlashLight(false);
 
     // Start scanner with new camera
     try {
