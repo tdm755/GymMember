@@ -53,7 +53,6 @@ function TQRCodeOf({setShowQR}) {
     window.addEventListener('resize', updateDimensions);
     return () => {
       window.removeEventListener('resize', updateDimensions);
-      // Cleanup scanner on unmount
       if (scannerRef.current) {
         scannerRef.current.stop().catch(console.error);
       }
@@ -83,7 +82,9 @@ function TQRCodeOf({setShowQR}) {
 
       const stream = await navigator.mediaDevices.getUserMedia({ 
         video: { 
-          deviceId: sortedCameras.length > 0 ? sortedCameras[0].deviceId : undefined
+          deviceId: sortedCameras.length > 0 ? sortedCameras[0].deviceId : undefined,
+          width: scannerDimensions.width,
+          height: scannerDimensions.height
         } 
       });
       
@@ -106,7 +107,7 @@ function TQRCodeOf({setShowQR}) {
         setError("Unable to access the camera. Please check your device settings and try again.");
       }
     }
-  }, []);
+  }, [scannerDimensions]);
 
   useEffect(() => {
     checkCameraPermission();
@@ -125,16 +126,23 @@ function TQRCodeOf({setShowQR}) {
   const initializeScanner = async () => {
     if (qrRef.current && !scannerRef.current && isCameraReady && cameras.length > 0) {
       try {
+        const config = {
+          fps: 10,
+          qrbox: { width: scannerDimensions.width * 0.7, height: scannerDimensions.height * 0.7 },
+          experimentalFeatures: {
+            useBarCodeDetectorIfSupported: true
+          },
+          videoConstraints: {
+            deviceId: cameras[currentCameraIndex].deviceId,
+            width: scannerDimensions.width,
+            height: scannerDimensions.height
+          }
+        };
+
         scannerRef.current = new Html5Qrcode("reader");
         await scannerRef.current.start(
           cameras[currentCameraIndex].deviceId,
-          {
-            fps: 10,
-            qrbox: { width: scannerDimensions.width * 0.7, height: scannerDimensions.height * 0.7 },
-            experimentalFeatures: {
-              useBarCodeDetectorIfSupported: true
-            }
-          },
+          config,
           onScanSuccess,
           onScanFailure
         );
@@ -213,16 +221,23 @@ function TQRCodeOf({setShowQR}) {
       setHasFlashlight(hasFlash);
       if (!hasFlash) setFlashLight(false);
 
+      const config = {
+        fps: 10,
+        qrbox: { width: scannerDimensions.width * 0.7, height: scannerDimensions.height * 0.7 },
+        experimentalFeatures: {
+          useBarCodeDetectorIfSupported: true
+        },
+        videoConstraints: {
+          deviceId: cameras[nextCameraIndex].deviceId,
+          width: scannerDimensions.width,
+          height: scannerDimensions.height
+        }
+      };
+
       scannerRef.current = new Html5Qrcode("reader");
       await scannerRef.current.start(
         cameras[nextCameraIndex].deviceId,
-        {
-          fps: 10,
-          qrbox: { width: scannerDimensions.width * 0.7, height: scannerDimensions.height * 0.7 },
-          experimentalFeatures: {
-            useBarCodeDetectorIfSupported: true
-          }
-        },
+        config,
         onScanSuccess,
         onScanFailure
       );
@@ -270,12 +285,13 @@ function TQRCodeOf({setShowQR}) {
             ref={qrRef} 
             style={{
               width: `${scannerDimensions.width}px`,
-              height: `${scannerDimensions.height}px`
+              height: `${scannerDimensions.height}px`,
+              position: 'relative'
             }}
-            className="relative rounded-lg overflow-hidden bg-gray-900 shadow-inner"
+            className="rounded-lg overflow-hidden bg-gray-900 shadow-inner"
           >
             {/* Scanner overlay */}
-            <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute inset-0 pointer-events-none z-10">
               <div className="absolute inset-0 border-2 border-white/30"></div>
               <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] h-[70%] border-2 border-[#dc2626] rounded-lg">
                 <div className="absolute -top-2 -left-2 w-4 h-4 border-t-2 border-l-2 border-[#dc2626]"></div>
@@ -287,7 +303,7 @@ function TQRCodeOf({setShowQR}) {
 
             {/* Status overlays */}
             {permissionStatus === 'checking' && (
-              <div className="absolute inset-0 flex items-center justify-center bg-gray-900/90 backdrop-blur-sm">
+              <div className="absolute inset-0 flex items-center justify-center bg-gray-900/90 backdrop-blur-sm z-20">
                 <div className="flex flex-col items-center gap-2">
                   <div className="w-8 h-8 border-4 border-[#dc2626] border-t-transparent rounded-full animate-spin"></div>
                   <div className="text-white text-lg">Initializing camera...</div>
@@ -296,7 +312,7 @@ function TQRCodeOf({setShowQR}) {
             )}
             
             {permissionStatus === 'denied' && (
-              <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-900/95 backdrop-blur-sm p-6">
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-900/95 backdrop-blur-sm p-6 z-20">
                 <p className="text-red-400 text-lg mb-4 text-center font-medium">Camera access is required</p>
                 <button 
                   onClick={requestCameraPermission}
@@ -311,7 +327,7 @@ function TQRCodeOf({setShowQR}) {
             )}
             
             {error && (
-              <div className="absolute inset-0 flex items-center justify-center bg-gray-900/95 backdrop-blur-sm">
+              <div className="absolute inset-0 flex items-center justify-center bg-gray-900/95 backdrop-blur-sm z-20">
                 <p className="text-red-400 text-lg text-center px-6">{error}</p>
               </div>
             )}
