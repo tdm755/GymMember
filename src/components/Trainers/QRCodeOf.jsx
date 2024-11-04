@@ -21,17 +21,18 @@ function TQRCodeOf({setShowQR}) {
   const [scannerDimensions, setScannerDimensions] = useState({ width: 250, height: 250 });
   const navigate = useNavigate();
 
-  const handleClose = useCallback(() => {
-    if (scannerRef.current) {
-      scannerRef.current.stop().then(() => {
-        setShowQR(false);
-        setIsScannerOpen(false);
-        setFlashLight(false);
-      }).catch(err => {
-        console.error("Error stopping QR scanner:", err);
-      });
-    } else {
+  const handleClose = useCallback(async () => {
+    try {
+      if (scannerRef.current) {
+        await scannerRef.current.stop();
+        scannerRef.current.clear();
+        scannerRef.current = null;
+      }
       setShowQR(false);
+      setIsScannerOpen(false);
+      setFlashLight(false);
+    } catch (err) {
+      console.error("Error stopping QR scanner:", err);
     }
   }, [setShowQR]);
 
