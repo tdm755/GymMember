@@ -101,7 +101,12 @@ function TQRCodeOf({setShowQR}) {
       stream.getTracks().forEach(track => track.stop());
       setPermissionStatus('granted');
       setIsCameraReady(true);
-      initializeScanner();
+      
+      // Delay initializing scanner to ensure DOM is ready
+      setTimeout(() => {
+        initializeScanner();
+      }, 1000);
+
     } catch (error) {
       console.error("Camera permission not granted or camera not accessible:", error);
       setPermissionStatus('denied');
@@ -146,9 +151,13 @@ function TQRCodeOf({setShowQR}) {
           }
         };
 
+        if (scannerRef.current) {
+          await scannerRef.current.stop();
+        }
+
         scannerRef.current = new Html5Qrcode("reader");
         await scannerRef.current.start(
-          cameras[currentCameraIndex].deviceId,
+          { deviceId: cameras[currentCameraIndex].deviceId },
           config,
           onScanSuccess,
           onScanFailure
