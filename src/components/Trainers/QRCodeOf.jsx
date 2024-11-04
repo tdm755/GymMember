@@ -70,27 +70,16 @@ function TQRCodeOf({setShowQR}) {
       const devices = await navigator.mediaDevices.enumerateDevices();
       const videoDevices = devices.filter(device => device.kind === 'videoinput');
       
-      // Find back camera
-      const backCamera = videoDevices.find(device => 
-        device.label.toLowerCase().includes('back') || 
-        device.label.toLowerCase().includes('rear')
-      );
-      
-      // If back camera exists, put it first in the array
-      const sortedCameras = backCamera 
-        ? [backCamera, ...videoDevices.filter(d => d.deviceId !== backCamera.deviceId)]
-        : videoDevices;
+      setCameras(videoDevices);
+      setCurrentCameraIndex(0);
 
-      setCameras(sortedCameras);
-      setCurrentCameraIndex(0); // Always start with first camera (back if available)
-
-      if (sortedCameras.length === 0) {
+      if (videoDevices.length === 0) {
         throw new Error('No cameras found');
       }
 
       const stream = await navigator.mediaDevices.getUserMedia({ 
         video: { 
-          deviceId: sortedCameras[0].deviceId,
+          deviceId: videoDevices[0].deviceId,
           width: scannerDimensions.width,
           height: scannerDimensions.height
         } 
@@ -103,8 +92,9 @@ function TQRCodeOf({setShowQR}) {
       setPermissionStatus('granted');
       setIsCameraReady(true);
       
-      // Initialize scanner immediately after permissions are granted
-      initializeScanner();
+      setTimeout(() => {
+        initializeScanner();
+      }, 1000);
 
     } catch (error) {
       console.error("Camera permission not granted or camera not accessible:", error);
@@ -154,7 +144,7 @@ function TQRCodeOf({setShowQR}) {
           await scannerRef.current.stop();
         }
 
-        scannerRef.current = new Html5Qrcode("reader", { verbose: false });
+        scannerRef.current = new Html5Qrcode("reader");
         await scannerRef.current.start(
           { deviceId: cameras[currentCameraIndex].deviceId },
           config,
@@ -249,7 +239,7 @@ function TQRCodeOf({setShowQR}) {
         }
       };
 
-      scannerRef.current = new Html5Qrcode("reader", { verbose: false });
+      scannerRef.current = new Html5Qrcode("reader");
       await scannerRef.current.start(
         { deviceId: cameras[nextCameraIndex].deviceId },
         config,
@@ -303,20 +293,8 @@ function TQRCodeOf({setShowQR}) {
               height: `${scannerDimensions.height}px`,
               position: 'relative'
             }}
-            className="rounded-lg overflow-hidden shadow-inner"
+            className="rounded-lg overflow-hidden bg-gray-900 shadow-inner"
           >
-            {/* Scanner overlay */}
-            <div className="absolute inset-0 pointer-events-none z-10">
-              <div className="absolute inset-0 border-2 border-white/30"></div>
-              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] h-[70%] border-2 border-[#dc2626] rounded-lg">
-                <div className="absolute -top-2 -left-2 w-4 h-4 border-t-2 border-l-2 border-[#dc2626]"></div>
-                <div className="absolute -top-2 -right-2 w-4 h-4 border-t-2 border-r-2 border-[#dc2626]"></div>
-                <div className="absolute -bottom-2 -left-2 w-4 h-4 border-b-2 border-l-2 border-[#dc2626]"></div>
-                <div className="absolute -bottom-2 -right-2 w-4 h-4 border-b-2 border-r-2 border-[#dc2626]"></div>
-              </div>
-            </div>
-
-            {/* Status overlays */}
             {permissionStatus === 'checking' && (
               <div className="absolute inset-0 flex items-center justify-center bg-gray-900/90 backdrop-blur-sm z-20">
                 <div className="flex flex-col items-center gap-2">
