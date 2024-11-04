@@ -1,27 +1,29 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Html5Qrcode } from "html5-qrcode";
-import CrossIcon from '../../../public/assets/CrossIcon.svg';
 import { useNavigate } from 'react-router-dom';
 import { Flashlight, FlashlightOff, Camera, X, UploadCloud, Scan, AlertCircle } from 'lucide-react';
 
-function TQRCodeOf({setShowQR}) {
+function TQRCodeOf({ setShowQR }) {
   const [isCheckedIn, setIsCheckedIn] = useState(false);
-  const [currentTime, setCurrentTime] = useState(new Date());
   const [data, setData] = useState('No result');
   const [error, setError] = useState(null);
   const [permissionStatus, setPermissionStatus] = useState('checking');
-  const qrRef = useRef(null);
-  const scannerRef = useRef(null);
   const [flashLight, setFlashLight] = useState(false);
   const [isCameraReady, setIsCameraReady] = useState(false);
   const [hasFlashlight, setHasFlashlight] = useState(false);
   const [isScannerOpen, setIsScannerOpen] = useState(false);
   const [cameras, setCameras] = useState([]);
   const [currentCameraIndex, setCurrentCameraIndex] = useState(0);
+  
+  const navigate = useNavigate();
+  const scannerRef = useRef(null);
+  const streamRef = useRef(null);
 
-  useEffect(() => {
-    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
-    return () => clearInterval(timer);
+  const stopCurrentStream = useCallback(() => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(track => track.stop());
+      streamRef.current = null;
+    }
   }, []);
 
   const checkCameraPermission = useCallback(async () => {
@@ -40,82 +42,52 @@ function TQRCodeOf({setShowQR}) {
       setCameras(sortedCameras);
       setCurrentCameraIndex(0);
 
+      if (sortedCameras.length === 0) {
+        throw new Error('No cameras found');
+      }
+
       const stream = await navigator.mediaDevices.getUserMedia({ 
         video: { 
-          deviceId: sortedCameras.length > 0 ? sortedCameras[0].deviceId : undefined
+          deviceId: sortedCameras[0].deviceId 
         } 
       });
       
+      streamRef.current = stream;
       const track = stream.getVideoTracks()[0];
       const capabilities = track.getCapabilities();
       setHasFlashlight('torch' in capabilities);
-      stream.getTracks().forEach(track => track.stop());
+      
       setPermissionStatus('granted');
       setIsCameraReady(true);
-      initializeScanner();
+      
+      return true;
     } catch (error) {
-      console.error("Camera permission not granted or camera not accessible:", error);
+      console.error("Camera permission error:", error);
       setPermissionStatus('denied');
       setIsCameraReady(false);
+      
       if (error.name === 'NotAllowedError') {
         setError("Camera permission denied. Please grant permission in your browser settings.");
       } else if (error.name === 'NotFoundError') {
-        setError("No camera found on your device. Please ensure a camera is connected and not in use by another application.");
+        setError("No camera found on your device.");
       } else {
-        setError("Unable to access the camera. Please check your device settings and try again.");
+        setError("Unable to access the camera. Please check your device settings.");
       }
+      return false;
     }
   }, []);
 
-  useEffect(() => {
-    checkCameraPermission();
-  }, [checkCameraPermission]);
-
-  const requestCameraPermission = async () => {
-    try {
-      await checkCameraPermission();
-    } catch (error) {
-      console.error("Error requesting camera permission:", error);
-      setError("Unable to request camera permission. Please check your browser settings and try again.");
-      setIsCameraReady(false);
-    }
-  };
-
-  const checkFlashlightCapability = async (deviceId) => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { deviceId: deviceId }
-      });
-      const track = stream.getVideoTracks()[0];
-      const capabilities = track.getCapabilities();
-      const hasFlash = 'torch' in capabilities;
-      stream.getTracks().forEach(track => track.stop());
-      return hasFlash;
-    } catch (error) {
-      console.error("Error checking flashlight capability:", error);
-      return false;
-    }
-  };
-
-  const switchCamera = async () => {
-    if (cameras.length < 2) return;
-    
-    if (scannerRef.current) {
-      await scannerRef.current.stop();
-      setIsScannerOpen(false);
-    }
-
-    const nextCameraIndex = (currentCameraIndex + 1) % cameras.length;
-    setCurrentCameraIndex(nextCameraIndex);
-
-    const hasFlash = await checkFlashlightCapability(cameras[nextCameraIndex].deviceId);
-    setHasFlashlight(hasFlash);
-    if (!hasFlash) setFlashLight(false);
+  const initializeScanner = useCallback(async () => {
+    if (!isCameraReady || cameras.length === 0) return;
 
     try {
+      if (scannerRef.current) {
+        await scannerRef.current.stop();
+      }
+
       scannerRef.current = new Html5Qrcode("reader");
       await scannerRef.current.start(
-        cameras[nextCameraIndex].deviceId,
+        cameras[currentCameraIndex].deviceId,
         {
           fps: 30,
           qrbox: { width: 280, height: 280 },
@@ -129,97 +101,89 @@ function TQRCodeOf({setShowQR}) {
       );
       setIsScannerOpen(true);
     } catch (err) {
-      console.error("Error switching camera:", err);
-      setError("Failed to switch camera. Please try again.");
+      console.error("Scanner initialization error:", err);
+      setError("Failed to start QR scanner. Please try again.");
+      setIsCameraReady(false);
     }
-  };
+  }, [isCameraReady, cameras, currentCameraIndex]);
 
-  const initializeScanner = async () => {
-    if (qrRef.current && !scannerRef.current && isCameraReady && cameras.length > 0) {
-      try {
-        scannerRef.current = new Html5Qrcode("reader");
-        await scannerRef.current.start(
-          cameras[currentCameraIndex].deviceId,
-          {
-            fps: 30,
-            qrbox: { width: 280, height: 280 },
-            aspectRatio: 1,
-            experimentalFeatures: {
-              useBarCodeDetectorIfSupported: true
-            }
-          },
-          onScanSuccess,
-          onScanFailure
-        );
-        setIsScannerOpen(true);
-      } catch (err) {
-        console.error("Error starting QR scanner:", err);
-        setError("Unable to start the QR scanner. Your browser might not support this feature or the camera might be in use by another application.");
-        setIsCameraReady(false);
+  useEffect(() => {
+    checkCameraPermission();
+    
+    return () => {
+      stopCurrentStream();
+      if (scannerRef.current) {
+        scannerRef.current.stop().catch(console.error);
       }
-    }
-  };
+    };
+  }, [checkCameraPermission, stopCurrentStream]);
 
   useEffect(() => {
     if (isCameraReady && cameras.length > 0) {
       initializeScanner();
     }
-  }, [isCameraReady, cameras]);
+  }, [isCameraReady, cameras, initializeScanner]);
 
-  const onScanSuccess = (decodedText, decodedResult) => {
+  const onScanSuccess = (decodedText) => {
     setData(decodedText);
     setIsCheckedIn(!isCheckedIn);
     handleNavigateToLink(decodedText);
   };
 
-  const onScanFailure = (error) => {
-    // Silently handle scan failures
+  const onScanFailure = () => {
+    // Silent failure handling
   };
 
-  const handleFileUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const html5QrCode = new Html5Qrcode("reader");
-      html5QrCode.scanFile(file, true)
-        .then(decodedText => {
-          setData(decodedText);
-          setIsCheckedIn(!isCheckedIn);
-        })
-        .catch(err => {
-          console.error("Error scanning file:", err);
-          setError("Unable to scan the uploaded file. Please try a different image.");
-        });
-    }
-  };
-
-  const handleClose = useCallback(() => {
-    setShowQR(false);
-    if (scannerRef.current) {
-      scannerRef.current.stop().catch(err => {
-        console.error("Error stopping QR scanner:", err);
-      }).finally(() => {
-        setShowQR(false);
-        setIsScannerOpen(false);
-        setFlashLight(false);
-      });
-    } else {
-      setShowQR(false);
-    }
-  }, [setShowQR]);
-
-  const navigate = useNavigate();
-  
   const handleNavigateToLink = useCallback((scannedData) => {
     if (scannedData.includes('youtube.com') || scannedData.includes('youtu.be')) {
       window.open(scannedData, '_blank', 'noopener,noreferrer');
-    } else {
-      // Handle other links
     }
     handleClose();
-  }, [navigate, handleClose]);
+  }, []);
 
-  const toggleFlashLight = useCallback(async () => {
+  const handleClose = useCallback(() => {
+    stopCurrentStream();
+    if (scannerRef.current) {
+      scannerRef.current.stop().catch(console.error);
+    }
+    setShowQR(false);
+    setIsScannerOpen(false);
+    setFlashLight(false);
+  }, [setShowQR, stopCurrentStream]);
+
+  const switchCamera = async () => {
+    if (cameras.length < 2) return;
+    
+    const nextCameraIndex = (currentCameraIndex + 1) % cameras.length;
+    setCurrentCameraIndex(nextCameraIndex);
+    
+    stopCurrentStream();
+    if (scannerRef.current) {
+      await scannerRef.current.stop();
+      setIsScannerOpen(false);
+    }
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { deviceId: cameras[nextCameraIndex].deviceId }
+      });
+      
+      streamRef.current = stream;
+      const track = stream.getVideoTracks()[0];
+      const capabilities = track.getCapabilities();
+      setHasFlashlight('torch' in capabilities);
+      if (!('torch' in capabilities)) setFlashLight(false);
+
+      await initializeScanner();
+    } catch (error) {
+      console.error("Camera switch error:", error);
+      setError("Failed to switch camera. Please try again.");
+    }
+  };
+
+  const toggleFlashLight = async () => {
     if (!hasFlashlight || !isScannerOpen || !scannerRef.current) return;
+    
     try {
       const newFlashLightState = !flashLight;
       await scannerRef.current.applyVideoConstraints({
@@ -227,10 +191,38 @@ function TQRCodeOf({setShowQR}) {
       });
       setFlashLight(newFlashLightState);
     } catch (error) {
-      console.error("Error toggling flashlight:", error);
-      setError("Unable to toggle flashlight. This feature may not be supported on your device or browser.");
+      console.error("Flashlight toggle error:", error);
+      setError("Unable to toggle flashlight. Feature may not be supported.");
     }
-  }, [hasFlashlight, isScannerOpen, flashLight]);
+  };
+
+  const handleFileUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    try {
+      if (scannerRef.current) {
+        await scannerRef.current.stop();
+        setIsScannerOpen(false);
+      }
+
+      const html5QrCode = new Html5Qrcode("reader");
+      const decodedText = await html5QrCode.scanFile(file, true);
+      
+      setData(decodedText);
+      setIsCheckedIn(!isCheckedIn);
+      handleNavigateToLink(decodedText);
+      
+      html5QrCode.clear();
+    } catch (err) {
+      console.error("File scan error:", err);
+      setError("Unable to scan file. Please ensure it contains a valid QR code.");
+      
+      if (isCameraReady && cameras.length > 0) {
+        initializeScanner();
+      }
+    }
+  };
 
   // Animation wrapper component
   const AnimatedBorder = () => (
@@ -262,8 +254,7 @@ function TQRCodeOf({setShowQR}) {
         {/* Scanner Area */}
         <div className="relative w-full aspect-square max-w-md">
           <div 
-            id="reader" 
-            ref={qrRef}
+            id="reader"
             className="w-full h-full bg-black rounded-2xl overflow-hidden shadow-inner"
           >
             {permissionStatus === 'checking' && (
@@ -281,7 +272,7 @@ function TQRCodeOf({setShowQR}) {
                   <AlertCircle className="w-16 h-16 text-red-500" />
                   <p className="text-white text-center text-lg font-medium">Camera access is required for QR scanning</p>
                   <button 
-                    onClick={requestCameraPermission}
+                    onClick={checkCameraPermission}
                     className="bg-red-500 hover:bg-red-600 text-white px-8 py-3 rounded-full font-medium transform hover:scale-105 transition-all duration-200"
                   >
                     Enable Camera Access
