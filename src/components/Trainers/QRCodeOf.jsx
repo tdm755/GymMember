@@ -69,20 +69,27 @@ function TQRCodeOf({setShowQR}) {
       const devices = await navigator.mediaDevices.enumerateDevices();
       const videoDevices = devices.filter(device => device.kind === 'videoinput');
       
-      const sortedCameras = [...videoDevices].sort((a, b) => {
-        const aLabel = a.label.toLowerCase();
-        const bLabel = b.label.toLowerCase();
-        if (aLabel.includes('back') || aLabel.includes('rear')) return -1;
-        if (bLabel.includes('back') || bLabel.includes('rear')) return 1;
-        return 0;
-      });
+      // Find back camera
+      const backCamera = videoDevices.find(device => 
+        device.label.toLowerCase().includes('back') || 
+        device.label.toLowerCase().includes('rear')
+      );
+      
+      // If back camera exists, put it first in the array
+      const sortedCameras = backCamera 
+        ? [backCamera, ...videoDevices.filter(d => d.deviceId !== backCamera.deviceId)]
+        : videoDevices;
 
       setCameras(sortedCameras);
-      setCurrentCameraIndex(0);
+      setCurrentCameraIndex(0); // Always start with first camera (back if available)
+
+      if (sortedCameras.length === 0) {
+        throw new Error('No cameras found');
+      }
 
       const stream = await navigator.mediaDevices.getUserMedia({ 
         video: { 
-          deviceId: sortedCameras.length > 0 ? sortedCameras[0].deviceId : undefined,
+          deviceId: sortedCameras[0].deviceId,
           width: scannerDimensions.width,
           height: scannerDimensions.height
         } 
