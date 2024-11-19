@@ -3,6 +3,8 @@ import React from 'react';
 function Modal({ isOpen, onClose, onConfirm, icon, title, message, cancelText, confirmText, size }) {
   if (!isOpen) return null;
 
+
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div className="w-80 p-6 bg-white rounded-3xl shadow-lg">

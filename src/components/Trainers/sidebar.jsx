@@ -117,7 +117,7 @@ function TSideBar({ isOpen, setIsOpen, DropDownView, setDropDownView, setShowLog
 
                     )}
                 </NavLink> */}
-                <NavLink to={'profile'} className=''>
+                {/* <NavLink to={'profile'} className=''>
                     {({ isActive }) => (
                         <div onClick={()=>{setAccordian1(false); setIsOpen(false); setDropDownView(false)}} className='flex gap-2 items-center'>
                             <div className={`${isActive && 'bg-[#f2e9e9c1]'} w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
@@ -127,7 +127,7 @@ function TSideBar({ isOpen, setIsOpen, DropDownView, setDropDownView, setShowLog
                         </div>
 
                     )}
-                </NavLink>
+                </NavLink> */}
 
             </div>
             <div className="mt-10 pl-7" >

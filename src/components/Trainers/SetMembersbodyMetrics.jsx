@@ -4,18 +4,18 @@ import Arrow from '../../../public/assets/ArrowDown.svg'
 function SetMembersbodyMetrics() {
     const [selectedYear, setSelectedYear] = React.useState(new Date().getFullYear());
     const [bodyMetrics, setBodyMetrics] = React.useState([
-        { month: 'Jan', weight: 0, smm: 0, pbf: 0 },
-        { month: 'Feb', weight: 0, smm: 0, pbf: 0 },
-        { month: 'Mar', weight: 0, smm: 0, pbf: 0 },
-        { month: 'Apr', weight: 0, smm: 0, pbf: 0 },
-        { month: 'May', weight: 0, smm: 0, pbf: 0 },
-        { month: 'Jun', weight: 0, smm: 0, pbf: 0 },
-        { month: 'Jul', weight: 0, smm: 0, pbf: 0 },
-        { month: 'Aug', weight: 0, smm: 0, pbf: 0 },
-        { month: 'Sep', weight: 0, smm: 0, pbf: 0 },
-        { month: 'Oct', weight: 0, smm: 0, pbf: 0 },
-        { month: 'Nov', weight: 0, smm: 0, pbf: 0 },
-        { month: 'Dec', weight: 0, smm: 0, pbf: 0 },
+        { month: 'Jan', weight: 0, smm: 0, pbf: 0, spo2: 0, bmi: 0, rhr: 0 },
+        { month: 'Feb', weight: 0, smm: 0, pbf: 0, spo2: 0, bmi: 0, rhr: 0 },
+        { month: 'Mar', weight: 0, smm: 0, pbf: 0, spo2: 0, bmi: 0, rhr: 0 },
+        { month: 'Apr', weight: 0, smm: 0, pbf: 0, spo2: 0, bmi: 0, rhr: 0 },
+        { month: 'May', weight: 0, smm: 0, pbf: 0, spo2: 0, bmi: 0, rhr: 0 },
+        { month: 'Jun', weight: 0, smm: 0, pbf: 0, spo2: 0, bmi: 0, rhr: 0 },
+        { month: 'Jul', weight: 0, smm: 0, pbf: 0, spo2: 0, bmi: 0, rhr: 0 },
+        { month: 'Aug', weight: 0, smm: 0, pbf: 0, spo2: 0, bmi: 0, rhr: 0 },
+        { month: 'Sep', weight: 0, smm: 0, pbf: 0, spo2: 0, bmi: 0, rhr: 0 },
+        { month: 'Oct', weight: 0, smm: 0, pbf: 0, spo2: 0, bmi: 0, rhr: 0 },
+        { month: 'Nov', weight: 0, smm: 0, pbf: 0, spo2: 0, bmi: 0, rhr: 0 },
+        { month: 'Dec', weight: 0, smm: 0, pbf: 0, spo2: 0, bmi: 0, rhr: 0 },
     ]);
 
     const [yearToggle, setYearToggle] = useState(false);
@@ -28,18 +28,18 @@ function SetMembersbodyMetrics() {
         } else {
             // Reset to default values if no data exists for selected year
             setBodyMetrics([
-                { month: 'January', weight: 0, smm: 0, pbf: 0 },
-                { month: 'February', weight: 0, smm: 0, pbf: 0 },
-                { month: 'March', weight: 0, smm: 0, pbf: 0 },
-                { month: 'April', weight: 0, smm: 0, pbf: 0 },
-                { month: 'May', weight: 0, smm: 0, pbf: 0 },
-                { month: 'June', weight: 0, smm: 0, pbf: 0 },
-                { month: 'July', weight: 0, smm: 0, pbf: 0 },
-                { month: 'August', weight: 0, smm: 0, pbf: 0 },
-                { month: 'September', weight: 0, smm: 0, pbf: 0 },
-                { month: 'October', weight: 0, smm: 0, pbf: 0 },
-                { month: 'November', weight: 0, smm: 0, pbf: 0 },
-                { month: 'December', weight: 0, smm: 0, pbf: 0 },
+                { month: 'January', weight: 0, smm: 0, pbf: 0, spo2: 0, bmi: 0, rhr: 0 },
+                { month: 'February', weight: 0, smm: 0, pbf: 0, spo2: 0, bmi: 0, rhr: 0 },
+                { month: 'March', weight: 0, smm: 0, pbf: 0, spo2: 0, bmi: 0, rhr: 0 },
+                { month: 'April', weight: 0, smm: 0, pbf: 0, spo2: 0, bmi: 0, rhr: 0 },
+                { month: 'May', weight: 0, smm: 0, pbf: 0, spo2: 0, bmi: 0, rhr: 0 },
+                { month: 'June', weight: 0, smm: 0, pbf: 0, spo2: 0, bmi: 0, rhr: 0 },
+                { month: 'July', weight: 0, smm: 0, pbf: 0, spo2: 0, bmi: 0, rhr: 0 },
+                { month: 'August', weight: 0, smm: 0, pbf: 0, spo2: 0, bmi: 0, rhr: 0 },
+                { month: 'September', weight: 0, smm: 0, pbf: 0, spo2: 0, bmi: 0, rhr: 0 },
+                { month: 'October', weight: 0, smm: 0, pbf: 0, spo2: 0, bmi: 0, rhr: 0 },
+                { month: 'November', weight: 0, smm: 0, pbf: 0, spo2: 0, bmi: 0, rhr: 0 },
+                { month: 'December', weight: 0, smm: 0, pbf: 0, spo2: 0, bmi: 0, rhr: 0 },
             ]);
         }
     }, [selectedYear]);
@@ -54,6 +54,7 @@ function SetMembersbodyMetrics() {
 
     // Generate year options (5 years back and 5 years forward from current year)
     const currentYear = new Date().getFullYear();
+    const currentMonth = new Date().getMonth(); // Get current month (0-11)
     const yearOptions = Array.from({length: 11}, (_, i) => currentYear - 5 + i);
 
     return (
@@ -63,9 +64,7 @@ function SetMembersbodyMetrics() {
                         <h2 className='pb-6  bg-white z-10 px-4' style={{ fontSize: '1.5em', marginBottom: '20px', textAlign: 'center' }}>Body Metrics</h2>
                         <hr className='absolute top-6 z-0 border-1 w-[90%] md:w-[50%] border-[#dc2626]' />
                     </div>
-            {/* <h2 className="text-xl font-semibold text-center">Body Metrics</h2> */}
             <div className="flex items-center absolute top-0 right-0">
-                {/* <label className="mr-2 font-medium">Select Year:</label> */}
                 <img className={`absolute right-3 z-0 ${yearToggle && 'rotate-180'} translate-all duration-300 ease-in-out`} src={Arrow} alt="" />
                 <select 
                     value={selectedYear}
@@ -87,6 +86,9 @@ function SetMembersbodyMetrics() {
                     <th className='border p-2'>Weight (kg)</th>
                     <th className='border p-2'>SMM (kg)</th>
                     <th className='border p-2'>PBF (%)</th>
+                    <th className='border p-2'>SPO2 (%)</th>
+                    <th className='border p-2'>BMI</th>
+                    <th className='border p-2'>RHR (bpm)</th>
                 </tr>
             </thead>
             <tbody>
@@ -99,6 +101,7 @@ function SetMembersbodyMetrics() {
                                 value={metric.weight}
                                 onChange={(e) => handleMetricChange(index, 'weight', e.target.value)}
                                 className='border p-1 w-full rounded focus:outline-none focus:ring-2 focus:ring-[#dc2626]'
+                                disabled={selectedYear > currentYear || (selectedYear === currentYear && index > currentMonth)}
                             />
                         </td>
                         <td className='border p-2'>
@@ -107,6 +110,7 @@ function SetMembersbodyMetrics() {
                                 value={metric.smm}
                                 onChange={(e) => handleMetricChange(index, 'smm', e.target.value)}
                                 className='border p-1 w-full rounded focus:outline-none focus:ring-2 focus:ring-[#dc2626]'
+                                disabled={selectedYear > currentYear || (selectedYear === currentYear && index > currentMonth)}
                             />
                         </td>
                         <td className='border p-2'>
@@ -115,6 +119,34 @@ function SetMembersbodyMetrics() {
                                 value={metric.pbf}
                                 onChange={(e) => handleMetricChange(index, 'pbf', e.target.value)}
                                 className='border p-1 w-full rounded focus:outline-none focus:ring-2 focus:ring-[#dc2626]'
+                                disabled={selectedYear > currentYear || (selectedYear === currentYear && index > currentMonth)}
+                            />
+                        </td>
+                        <td className='border p-2'>
+                            <input
+                                type="number"
+                                value={metric.spo2}
+                                onChange={(e) => handleMetricChange(index, 'spo2', e.target.value)}
+                                className='border p-1 w-full rounded focus:outline-none focus:ring-2 focus:ring-[#dc2626]'
+                                disabled={selectedYear > currentYear || (selectedYear === currentYear && index > currentMonth)}
+                            />
+                        </td>
+                        <td className='border p-2'>
+                            <input
+                                type="number"
+                                value={metric.bmi}
+                                onChange={(e) => handleMetricChange(index, 'bmi', e.target.value)}
+                                className='border p-1 w-full rounded focus:outline-none focus:ring-2 focus:ring-[#dc2626]'
+                                disabled={selectedYear > currentYear || (selectedYear === currentYear && index > currentMonth)}
+                            />
+                        </td>
+                        <td className='border p-2'>
+                            <input
+                                type="number"
+                                value={metric.rhr}
+                                onChange={(e) => handleMetricChange(index, 'rhr', e.target.value)}
+                                className='border p-1 w-full rounded focus:outline-none focus:ring-2 focus:ring-[#dc2626]'
+                                disabled={selectedYear > currentYear || (selectedYear === currentYear && index > currentMonth)}
                             />
                         </td>
                     </tr>
