@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import ProfileImage from '../../../public/assets/GymProfileImage.jpg'
 import GymBackgroundImage from '../../../public/assets/GymBackgroundImage.jpg'
-import toast, { Toaster } from 'react-hot-toast';
-import CustomToast from '../../Utils/ToastMessage';
+// import toast, { Toaster } from 'react-hot-toast';
+// import CustomToast from '../../Utils/ToastMessage';
 
 function Profile() {
 
@@ -111,16 +111,16 @@ function Profile() {
         setBodyMetrics(updatedMetrics);
     };
 
-    function HandleDataSave() {
-        // Success notification
-        const { showToast } = CustomToast({
-            title: "Profile Saved",
-            message: "Your profile has been saved successfully",
-            type: "success"
-        });
+    // function HandleDataSave() {
+    //     // Success notification
+    //     const { showToast } = CustomToast({
+    //         title: "Profile Saved",
+    //         message: "Your profile has been saved successfully",
+    //         type: "success"
+    //     });
 
-        showToast();
-    }
+    //     showToast();
+    // }
 
 
 
@@ -311,10 +311,10 @@ function Profile() {
                 </div>
             </div>
 
-            <Toaster
+            {/* <Toaster
                 position="top-right"
                 reverseOrder={false}
-            />
+            /> */}
 
         </div>
     )
