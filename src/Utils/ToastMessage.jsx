@@ -3,11 +3,7 @@ import { toast } from 'react-hot-toast';
 
 import { CheckCircle, XCircle, AlertCircle } from 'lucide-react';
 
-const CustomToast = ({ 
-  title = "Fitness Hub",
-  message = "Changes saved successfully",
-  type = "success" // success, error, warning
-}) => {
+const CustomToast = ({title, message, type}) => {
   const getConfig = () => {
     switch(type) {
       case "error":
