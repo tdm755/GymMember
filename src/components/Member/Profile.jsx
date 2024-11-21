@@ -111,7 +111,16 @@ function Profile() {
         setBodyMetrics(updatedMetrics);
     };
 
-    
+
+    function HandleDataSave() {     
+        const { showToast } = CustomToast({ // Corrected the way to call CustomToast
+            title: "Profile Saved",
+            message: "Your profile has been saved successfully",
+            type: "success"
+        });
+        
+        showToast(); // This line is correct
+    }    
 
 
 
