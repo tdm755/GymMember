@@ -111,16 +111,16 @@ function Profile() {
         setBodyMetrics(updatedMetrics);
     };
 
-    // function HandleDataSave() {
-    //     // Success notification
-    //     const { showToast } = CustomToast({
-    //         title: "Profile Saved",
-    //         message: "Your profile has been saved successfully",
-    //         type: "success"
-    //     });
+    function HandleDataSave() {
+        // Success notification
+        const { showToast } = CustomToast({
+            title: "Profile Saved",
+            message: "Your profile has been saved successfully",
+            type: "success"
+        });
 
-    //     showToast();
-    // }
+        showToast();
+    }
 
 
 
@@ -311,10 +311,10 @@ function Profile() {
                 </div>
             </div>
 
-            {/* <Toaster
+            <Toaster
                 position="top-right"
                 reverseOrder={false}
-            /> */}
+            />
 
         </div>
     )

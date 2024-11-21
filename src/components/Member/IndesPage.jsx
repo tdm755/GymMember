@@ -8,7 +8,7 @@ import ProfileIcon from '../../../public/assets/ProfileIcon2.svg'
 import SessionsIcon from '../../../public/assets/SessionsIcon.svg'
 import SettingIcon from '../../../public/assets/SettingIcon.svg'
 import { User, Star, Award, ArrowRight, Clock, Users, Calendar, Trophy } from 'lucide-react';
-// import ViewProfile from './ViewProfile'
+import ViewProfile from './ViewProfile.jsx'
 
 function IndexPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -248,7 +248,7 @@ function IndexPage() {
           </div>
         </div>
       </div>
-      {/* {viewProfileModal && <ViewProfile setViewProfileModal={setViewProfileModal} />} */}
+      {viewProfileModal && <ViewProfile setViewProfileModal={setViewProfileModal} />}
     </div>
   )
 }
