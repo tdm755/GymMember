@@ -334,7 +334,7 @@ function Profile() {
                 </div>
 
                 <div className="w-full flex items-center justify-end">
-                    <button onClick={()=>{HandleDataSave()}} className='border px-7 py-3 rounded-lg bg-[#dc2626] text-white'>Save Changes</button>
+                    {/* <button onClick={()=>{HandleDataSave()}} className='border px-7 py-3 rounded-lg bg-[#dc2626] text-white'>Save Changes</button> */}
                 </div>
             </div>
 
