@@ -213,7 +213,8 @@ function Profile() {
                     <div className="absolute top-2 right-0">
                         <span className={`border-b border-l rounded-bl-lg border-[#decfcf]  py-2 px-4 `}>2024</span>
                     </div>
-                    <table className='w-full border-collapse'>
+                   <div className=" overflow-x-auto">
+                   <table className='w-full border-collapse'>
                         <thead className='bg-[#dc2626] text-white'>
                             <tr>
                                 <th className='border p-2'>Month</th>
@@ -251,6 +252,7 @@ function Profile() {
                             ))}
                         </tbody>
                     </table>
+                   </div>
                 </div>
 
                 {/* health considerations */}
