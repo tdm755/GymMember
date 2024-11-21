@@ -4,7 +4,7 @@ import CrossIcon from '../../../public/assets/CrossIcon.svg';
 import { useNavigate } from 'react-router-dom';
 import { Flashlight, FlashlightOff } from 'lucide-react';
 
-function QRCodeOf({setShowQR}) {
+function QRCodeOf({ setShowQR }) {
   const [isCheckedIn, setIsCheckedIn] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [data, setData] = useState('No result');
@@ -19,10 +19,10 @@ function QRCodeOf({setShowQR}) {
 
   const checkCameraPermission = useCallback(async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ 
-        video: { 
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: {
           facingMode: 'environment'
-        } 
+        }
       });
       const track = stream.getVideoTracks()[0];
       const capabilities = track.getCapabilities();
@@ -135,7 +135,7 @@ function QRCodeOf({setShowQR}) {
   }, [setShowQR]);
 
   const navigate = useNavigate();
-  
+
   const handleNavigateToLink = useCallback((scannedData) => {
     if (scannedData.includes('youtube.com') || scannedData.includes('youtu.be')) {
       window.open(scannedData, '_blank', 'noopener,noreferrer');
@@ -161,77 +161,81 @@ function QRCodeOf({setShowQR}) {
   }, [hasFlashlight, isScannerOpen, flashLight]);
 
   return (
-    <div className='fixed inset-0 z-50 bg-black bg-opacity-60 flex items-center justify-center'>
-      <div className="bg-white relative w-full max-w-md rounded-md flex flex-col items-center gap-6 p-6">
-        <button 
-          onClick={handleClose} 
-          className='absolute top-4 right-4 w-7 h-7 flex items-center justify-center'
-        >
-          <img className='w-full h-full' src={CrossIcon} alt="Close" />
-        </button>
-        
-        <div id="reader" ref={qrRef} className="min-h-40 md:min-h-52 my-7 w-[95%] bg-gray-100 flex items-center justify-center transition-all duration-500 ease-in-out">
-          {permissionStatus === 'checking' && (
-            <p className="text-gray-500">Checking camera permission...</p>
-          )}
-          {permissionStatus === 'denied' && (
-            <div className="text-center">
-              <p className="text-red-500 mb-2">Camera access is required for QR scanning.</p>
-              <button 
-                onClick={requestCameraPermission}
-                className="bg-[#de3131] text-white px-4 py-2 rounded-full hover:bg-[#dc2626] transition duration-300"
-              >
-                Request Camera Permission
-              </button>
-              <p className="text-sm text-gray-500 mt-2">
-                If the button doesn't work, please enable camera access in your browser settings.
-              </p>
-            </div>
-          )}
-          {permissionStatus === 'granted' && !error && isCameraReady && (
-            <p className="text-gray-500">QR Scanner is active</p>
-          )}
-          {permissionStatus === 'granted' && !error && !isCameraReady && (
-            <p className="text-yellow-500">Initializing camera... Please wait.</p>
-          )}
-          {error && (
-            <p className="text-red-500 text-center">{error}</p>
-          )}
-        </div>
-        
-        <div className="w-full flex justify-between items-center px-7">
-          <div className="">
-          <p className="text-sm text-gray-600 mb-2">Or upload a QR code image:</p>
-          <input 
-            type="file" 
-            accept="image/*" 
-            onChange={handleFileUpload}
-            className="w-full text-sm text-gray-500
+    <div className='fixed top-0 right-0 bottom-0 left-0 z-50 flex items-center justify-center'>
+      <div onClick={()=>{setShowQR(false)}} className='fixed inset-0 z-50 bg-black bg-opacity-60'>
+      </div>
+      <div className="relative z-50">
+        <div className="bg-white relative w-full max-w-md rounded-md flex flex-col items-center gap-6 p-6">
+          <button
+            onClick={handleClose}
+            className='absolute top-4 right-4 w-7 h-7 flex items-center justify-center'
+          >
+            <img className='w-full h-full' src={CrossIcon} alt="Close" />
+          </button>
+
+          <div id="reader" ref={qrRef} className="min-h-40 md:min-h-52 my-7 w-[95%] bg-gray-100 flex items-center justify-center transition-all duration-500 ease-in-out">
+            {permissionStatus === 'checking' && (
+              <p className="text-gray-500">Checking camera permission...</p>
+            )}
+            {permissionStatus === 'denied' && (
+              <div className="text-center">
+                <p className="text-red-500 mb-2">Camera access is required for QR scanning.</p>
+                <button
+                  onClick={requestCameraPermission}
+                  className="bg-[#de3131] text-white px-4 py-2 rounded-full hover:bg-[#dc2626] transition duration-300"
+                >
+                  Request Camera Permission
+                </button>
+                <p className="text-sm text-gray-500 mt-2">
+                  If the button doesn't work, please enable camera access in your browser settings.
+                </p>
+              </div>
+            )}
+            {permissionStatus === 'granted' && !error && isCameraReady && (
+              <p className="text-gray-500">QR Scanner is active</p>
+            )}
+            {permissionStatus === 'granted' && !error && !isCameraReady && (
+              <p className="text-yellow-500">Initializing camera... Please wait.</p>
+            )}
+            {error && (
+              <p className="text-red-500 text-center">{error}</p>
+            )}
+          </div>
+
+          <div className="w-full flex justify-between items-center px-7">
+            <div className="">
+              <p className="text-sm text-gray-600 mb-2">Or upload a QR code image:</p>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFileUpload}
+                className="w-full text-sm text-gray-500
               cursor-pointer
               file:mr-4 file:py-2 file:px-4
               file:rounded-full file:border-0
               file:text-sm file:font-semibold
               file:bg-[#f9f5f5] file:text-[#dc2626]
               hover:file:bg-[#f5eeee]"
-          />
-          </div>
+              />
+            </div>
             <div className="text-center">
-              <button 
+              <button
                 onClick={toggleFlashLight}
                 disabled={!hasFlashlight || !isScannerOpen}
                 className={`${(!hasFlashlight || !isScannerOpen) ? 'opacity-50 cursor-not-allowed' : ''}`}
               >
-                {flashLight ? 
-                  <Flashlight strokeWidth={'1px'} size={'32px'} color={(hasFlashlight && isScannerOpen) ? 'currentColor' : 'gray'} /> : 
+                {flashLight ?
+                  <Flashlight strokeWidth={'1px'} size={'32px'} color={(hasFlashlight && isScannerOpen) ? 'currentColor' : 'gray'} /> :
                   <FlashlightOff strokeWidth={'1px'} size={'32px'} color={(hasFlashlight && isScannerOpen) ? 'currentColor' : 'gray'} />
                 }
               </button>
             </div>
-        </div>
+          </div>
 
-        <p className="text-gray-700 text-center px-4 text-sm">
-          {data === 'No result' ? 'Scan a QR code to visit' : <span className='text-blue-500'>{data}</span>}
-        </p>
+          <p className="text-gray-700 text-center px-4 text-sm">
+            {data === 'No result' ? 'Scan a QR code to visit' : <span className='text-blue-500'>{data}</span>}
+          </p>
+        </div>
       </div>
     </div>
   );

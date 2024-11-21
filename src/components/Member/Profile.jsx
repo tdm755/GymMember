@@ -314,8 +314,8 @@ function Profile() {
             </div>
 
             <Toaster
-                position="top-right"
-                reverseOrder={false}
+                position={window.innerWidth < 768 ? 'top-center' : 'top-right'}
+                // reverseOrder={false}
             />
 
         </div>
