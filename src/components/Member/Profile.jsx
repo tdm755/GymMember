@@ -111,15 +111,7 @@ function Profile() {
         setBodyMetrics(updatedMetrics);
     };
 
-    function HandleDataSave() {     
-        const { showToast } = CustomToast({ // This line is correct
-            title: "Profile Saved",
-            message: "Your profile has been saved successfully",
-            type: "success"
-        });
     
-        showToast(); // This line is correct
-    }
 
 
 
@@ -306,7 +298,7 @@ function Profile() {
                 </div>
 
                 <div className="w-full flex items-center justify-end">
-                    <button onClick={()=>{HandleDataSave()}} className='border px-7 py-3 rounded-lg bg-[#dc2626] text-white'>Save Changes</button>
+                    <button  className='border px-7 py-3 rounded-lg bg-[#dc2626] text-white'>Save Changes</button>
                 </div>
             </div>
 
