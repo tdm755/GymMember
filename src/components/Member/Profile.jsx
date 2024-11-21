@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import ProfileImage from '../../../public/assets/GymProfileImage.jpg'
 import GymBackgroundImage from '../../../public/assets/GymBackgroundImage.jpg'
-import toast, { Toaster } from 'react-hot-toast';
+// import toast, { Toaster } from 'react-hot-toast';
 // import CustomToast from '../../Utils/ToastMessage';
 
 function Profile() {
@@ -338,10 +338,10 @@ function Profile() {
                 </div>
             </div>
 
-            <Toaster
+            {/* <Toaster
                 position="top-right"
                 reverseOrder={false}
-            />
+            /> */}
 
         </div>
     )
