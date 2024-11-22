@@ -237,16 +237,16 @@ function TQRCodeOf({setShowQR}) {
   
   return (
     <div className='fixed inset-0 z-50 bg-black/75 backdrop-blur-[2px] flex items-center justify-center px-4'>
-      <div className="bg-white relative w-full max-w-[448px] rounded-[20px] shadow-2xl flex flex-col items-center gap-6 p-8">
+      <div className="bg-white relative w-full max-w-[448px] rounded-md shadow-2xl flex flex-col items-center gap-6 p-8">
         <button 
           onClick={handleClose} 
-          className='absolute top-4 right-4 w-8 h-8 flex items-center justify-center hover:scale-110 transition-transform duration-200'
+          className='absolute top-1 right-1 w-8 h-8 flex items-center justify-center hover:scale-110 transition-transform duration-200'
         >
-          <img className='w-full h-full opacity-50 hover:opacity-100 transition-opacity duration-200' src={CrossIcon} alt="Close" />
+          <img className='w-6 opacity-50 hover:opacity-100 transition-opacity duration-200' src={CrossIcon} alt="Close" />
         </button>
         
         <div className="w-full max-w-xl mx-auto">
-      <div className="relative w-full aspect-square rounded-2xl overflow-hidden">
+      <div className="relative w-full aspect-square rounded-md overflow-hidden">
         {/* Base QR Reader - Camera Feed */}
         <div 
           id="reader" 
@@ -273,7 +273,7 @@ function TQRCodeOf({setShowQR}) {
 
         {/* Status Overlays */}
         {(permissionStatus !== 'granted' || error) && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="absolute inset-0 flex flex-col gap-2 items-center justify-evenly bg-black/50 backdrop-blur-sm">
             {permissionStatus === 'checking' && (
               <div className="bg-white/90 p-6 rounded-xl shadow-lg text-center">
                 <div className="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
@@ -282,28 +282,28 @@ function TQRCodeOf({setShowQR}) {
             )}
 
             {permissionStatus === 'denied' && (
-              <div className="bg-white/90 p-8 rounded-xl shadow-lg text-center max-w-sm">
+              <div className="bg-white/90 p-2.5 mx-2 rounded-md shadow-lg text-center">
                 <div className="mb-4">
-                  <AlertCircle className="w-12 h-12 text-red-500 mx-auto" />
+                  <AlertCircle className="w-7 h-7 text-[#dc2626] mx-auto" />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Camera Access Required</h3>
-                <p className="text-gray-600 mb-6">Please allow camera access to scan QR codes</p>
+                <h3 className="text-md font-semibold text-gray-900 mb-2">Camera Access Required</h3>
+                <p className="text-gray-600 text-xs mb-6">Please allow camera access to scan QR codes</p>
                 <button 
                   onClick={requestCameraPermission}
-                  className="bg-blue-500 text-white px-8 py-3 rounded-lg hover:bg-blue-600 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 font-medium w-full"
+                  className="bg-[#dc2626] text-white px-6 py-1.5 rounded-lg text-sm transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 "
                 >
                   Enable Camera
                 </button>
-                <p className="text-sm text-gray-500 mt-4">
+                <p className="text-xs text-gray-500 mt-4">
                   If the button doesn't work, please enable camera access in your browser settings
                 </p>
               </div>
             )}
 
             {error && (
-              <div className="bg-white/90 p-6 rounded-xl shadow-lg text-center max-w-sm">
-                <AlertCircle className="w-8 h-8 text-red-500 mx-auto mb-3" />
-                <p className="text-red-600 font-medium">{error}</p>
+              <div className="bg-white/90 p-2.5 mx-2 rounded-md shadow-lg text-center max-w-sm">
+                <AlertCircle className="w-7 h-7 text-[#dc2626] mx-auto mb-3" />
+                <p className="text-[#dc2626] text-sm">{error}</p>
               </div>
             )}
           </div>

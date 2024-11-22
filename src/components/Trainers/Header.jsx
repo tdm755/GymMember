@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import NotificationIcon from '../../../public/assets/NotificationIcon.svg'
-import QRSccanner from '../../../public/assets/QRSccanner.svg'
+// import QRSccanner from '../../../public/assets/'
 import ProfileImage from '../../../public/assets/GymProfileImage.jpg'
 import Arrow from '../../../public/assets/ArrowDown.svg'
 import ProfileIcon from '../../../public/assets/ProfileIcon2.svg'
@@ -9,7 +9,7 @@ import SettingIcon from '../../../public/assets/SettingIcon.svg'
 import LogoutIcon from '../../../public/assets/LogoutIcon.svg'
 
 import '../../../public/styles/Global.css';
-import { CheckCheck } from 'lucide-react'
+import { CheckCheck, ScanBarcode } from 'lucide-react'
 import { NavLink, useNavigate } from 'react-router-dom'
 
 function THeader({ setShowQR, isOpen, setIsOpen, DropDownView, setDropDownView, setShowLogoutModal }) {
@@ -29,12 +29,12 @@ function THeader({ setShowQR, isOpen, setIsOpen, DropDownView, setDropDownView, 
       </div>
       <div className="flex gap-2 items-center">
 
-        <div onClick={() => { setShowQR(true) }} className="rounded-full h-12 w-12 hidden md:flex items-center justify-center bg-[#f9fafc]"><img src={QRSccanner} alt="" /></div>
-        <div onClick={() => { DropDownClick(); setIsOpen(false); navigate('profile') }} className="border cursor-pointer relative z-40 rounded-full h-14 w-14" style={{ backgroundImage: `url(${ProfileImage})`, backgroundSize: 'contain', backgroundPosition: 'center' }}>
+        <div onClick={() => { setShowQR(true) }} className="cursor-pointer rounded-full h-12 w-12 hidden md:flex items-center justify-center bg-[#f9fafc]"><ScanBarcode color='#dc2626' strokeWidth={'1.5px'} width={'30px'} height={'30px'} /></div>
+        <div onClick={() => { DropDownClick(); setIsOpen(false)}} className="border cursor-pointer relative z-40 rounded-full h-14 w-14" style={{ backgroundImage: `url(${ProfileImage})`, backgroundSize: 'contain', backgroundPosition: 'center' }}>
         </div>
-        {/* <div onClick={() => { DropDownClick(); setIsOpen(false) }} className={`cursor-pointer transition-all duration-500 ease-in-out ${DropDownView && 'rotate-180'} `}><img src={Arrow} alt="" /></div> */}
+        <div onClick={() => { DropDownClick(); setIsOpen(false) }} className={`cursor-pointer transition-all duration-500 ease-in-out ${DropDownView && 'rotate-180'} `}><img src={Arrow} alt="" /></div>
 
-        {/* <div className={` absolute z-40 bg-white shadow-md border border-[#decfcf] rounded-lg transition-all duration-500 ease-in-out ${DropDownView ? 'block top-24 h-40 w-64 right-20 py-2' : 'top-16 h-0 w-0 right-36 py-0'} overflow-hidden`}>
+        <div className={` absolute z-40 bg-white shadow-md border border-[#decfcf] rounded-lg transition-all duration-500 ease-in-out ${DropDownView ? 'block top-24 h-40 w-64 right-20 py-2' : 'top-16 h-0 w-0 right-36 py-0'} overflow-hidden`}>
           <ul className='flex flex-col gap-4 justify-evenly h-full'>
             <div className="flex flex-col gap-3">
               <div className="flex items-center justify-center">
@@ -88,7 +88,7 @@ function THeader({ setShowQR, isOpen, setIsOpen, DropDownView, setDropDownView, 
             </div>
 
           </ul>
-        </div> */}
+        </div>
         <div className=" md:hidden">
           <input onClick={() => { setIsOpen(!isOpen); setDropDownView(false) }} type="checkbox" id="checkbox" checked={isOpen} />
           <label for="checkbox" className="toggle">

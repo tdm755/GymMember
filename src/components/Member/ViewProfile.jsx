@@ -30,7 +30,7 @@ const ViewProfile = ({ setViewProfileModal }) => {
     return (
         <div className="fixed inset-0 bg-[#00000046] flex items-center justify-center p-4 z-50 ">
             <div className="absolute flex items-center justify-center top-4 left-1 right-1 overflow-y-auto bottom-4">
-                <div className="w-full max-w-3xl bg-white shadow-2xl rounded- relative overflow-hidden mt-20 md:mt-0">
+                <div className="w-full max-w-3xl bg-white shadow-2xl rounded- relative mt-16 md:mt-0">
                     {/* Header */}
                     <div className="bg-gradient-to-r from-red-600 to-red-700 px-8 py-6 text-white">
                         <button
@@ -43,8 +43,8 @@ const ViewProfile = ({ setViewProfileModal }) => {
                     </div>
 
                     {/* Profile Section */}
-                    <div className="p-8">
-                        <div className="flex flex-col md:flex-row items-center gap-8 mb-8">
+                    <div className="p-4 py-6">
+                        <div className="flex flex-row  items-center gap-8 mb-8">
                             <div className="relative">
                                 <img
                                     src={ProfileImage}
@@ -58,11 +58,11 @@ const ViewProfile = ({ setViewProfileModal }) => {
                             <div className="text-center md:text-left">
                                 <h3 className="text-2xl font-bold text-gray-800">{profileData.fullName}</h3>
                                 <p className="text-gray-500 mt-1">Professional Fitness Trainer</p>
-                                <div className="mt-3 flex gap-2">
-                                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-700">
+                                <div className="mt-3 flex flex-col md:flex-row gap-2">
+                                    <span className=" items-center px-2 md:px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-700">
                                         {profileData.experience} Years Experience
                                     </span>
-                                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-700">
+                                    <span className=" items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-700">
                                         Certified Trainer
                                     </span>
                                 </div>
@@ -74,7 +74,7 @@ const ViewProfile = ({ setViewProfileModal }) => {
                             {profileItems.map((item, index) => (
                                 <div
                                     key={index}
-                                    className="group p-4 rounded-xl border border-gray-200 hover:border-red-200 hover:bg-red-50/50 transition-all duration-200"
+                                    className="group p-3 md:p-4 rounded-xl border border-gray-200 hover:border-red-200 hover:bg-red-50/50 transition-all duration-200"
                                 >
                                     <div className="flex items-center gap-4">
                                         <div className="flex-shrink-0 p-2 bg-[#f4eded] rounded-lg group-hover:bg-red-100 transition-colors">

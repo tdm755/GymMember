@@ -46,7 +46,7 @@ function TSideBar({ isOpen, setIsOpen, DropDownView, setDropDownView, setShowLog
                 <NavLink to={'/trainerdashboard'} className=''>
                     {({ isActive }) => (
                         <div onClick={()=>{setAccordian1(false); setIsOpen(false); setDropDownView(false)}} className='flex gap-2 items-center'>
-                            <div className={`${pathname === '/dashboard' && 'bg-[#f2e9e9c1]'} w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
+                            <div className={`${pathname === '/trainerdashboard' && 'bg-[#f2e9e9c1]'} w-[50px] h-[50px] rounded-2xl flex items-center justify-center`}>
                                 <img src={HomeIcon} alt="" />
                             </div>
 

@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import ProfileImage from '../../../public/assets/GymProfileImage.jpg'
-import GymBackgroundImage from '../../../public/assets/GymBackgroundImage.jpg'
+import weightLiftingBanner from '../../../public/assets/weightLiftingBanner-min.jpg'
 import { Toaster } from 'react-hot-toast';
 import CustomToast from '../../Utils/ToastMessage';
+import { TreeDeciduous } from 'lucide-react';
 
 function Profile() {
 
@@ -127,7 +128,7 @@ function Profile() {
     return (
         <div className='pb-[110px]'>
 
-            <div className="relative h-40" style={{ backgroundImage: `url(${GymBackgroundImage})`, backgroundSize: 'contain' }}>
+            <div className="GymBannerImage relative h-40" style={{ backgroundImage: `url(${weightLiftingBanner})`, backgroundPosition: 'center bottom -27px' }}>
                 <div className="h-36 w-36 rounded-full absolute -bottom-12 left-7" style={{ backgroundImage: `url(${ProfileImage})`, backgroundSize: 'cover' }}></div>
             </div>
 
@@ -315,7 +316,7 @@ function Profile() {
 
             <Toaster
                 position={window.innerWidth < 768 ? 'top-center' : 'top-right'}
-                // reverseOrder={false}
+                reverseOrder={false}
             />
 
         </div>
