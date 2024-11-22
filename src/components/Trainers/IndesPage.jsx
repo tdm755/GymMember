@@ -172,8 +172,8 @@ function TIndexPage() {
               </div>
             </div>
           </div>
-          <div className="h-44 py-5 border md:w-1/3 flex flex-col bg-white shadow-sm p-4"></div>
-          <div className="h-44 py-5 border md:w-1/3 flex flex-col bg-white shadow-sm p-4"></div>
+          <div className="h-44 py-5 border md:w-1/3 flex-col bg-white shadow-sm p-4 hidden md:flex"></div>
+          <div className="h-44 py-5 border md:w-1/3 flex-col bg-white shadow-sm p-4 hidden md:flex"></div>
         </div>
 
         {/* Recent Sessions */}

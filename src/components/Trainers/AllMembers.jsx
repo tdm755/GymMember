@@ -18,10 +18,9 @@ function AllMembers() {
   }
 
   return (
-    <div className='p-6'>
+    <div className='p-6 pb-[110px]'>
 
       <div className="GymBannerImage flex relative items-center justify-center rounded-2xl overflow-hidden h-36 border mb-10 " style={{ backgroundImage: `url(${weightLiftingBanner})`, backgroundPosition: 'center -136px' }}>
-        <div className="absolute top-0 right-0 bottom-0 left-0 bg-[#db3c3c3e]"></div>
         <h2 className="text-4xl md:text-5xl relative z-20 text-white font-bold mb-4">
           Members
         </h2>
@@ -34,20 +33,20 @@ function AllMembers() {
           <div className="relative">
             <select
               onMouseLeave={() => handleRemoverSelectClick()} onMouseDownCapture={() => handleSelectTrainerClick()}
-              className='border border-[#dc2626] h-10 w-full md:w-52 py-1 outline-none rounded-md px-2 appearance-none relative z-20 bg-transparent'
+              className='border border-[#dc2626] h-10 w-full px-7 md:w-52 py-1 outline-none rounded-md px-2 appearance-none relative z-20 bg-transparent'
               name="" id="">
               <option value="">select</option>
-              <option value="">due date</option>
-              <option value="">balance</option>
-              {/* <option value=""></option> */}
+              <option value="">Beginner</option>
+              <option value="">Intermediate</option>
+              <option value="">Advance</option>
             </select>
             <span ref={shortRef} className='absolute z-10 right-2 top-1 transition-all duration-300 ease-in-out'><img src={Arrow} alt="" /></span>
           </div>
           <div className="relative flex items-center">
             <img className='absolute  left-2' src={SearchIcon} alt="" />
             <input
-              className='border border-[#decfcf] pl-10 w-96 h-10 py-[5px] outline-none focus:border-[#dc2626] rounded-md'
-              placeholder='search....'
+              className='border border-[#decfcf] pl-10 w-full md:w-96 h-10 py-[5px] outline-none focus:border-[#dc2626] rounded-md'
+              placeholder='name, mobile'
               type="text"
             />
           </div>
